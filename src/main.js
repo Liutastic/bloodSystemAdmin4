@@ -28,13 +28,14 @@ import {
 import { D2pAreaSelector, D2pFileUploader, D2pIconSelector, D2pTreeSelector, D2pFullEditor, D2pUploader, D2pDemoExtend } from 'd2p-extends' // 源码方式引入，上传组件支持懒加载
 
 
+Vue.use(D2pAreaSelector)
 // Vue.use(D2pFileUploader)
 Vue.use(D2pFullEditor, {
   // ueditor: {
   //   serverUrl: '/api/ueditor/'
   // }
 })
-// Vue.use(D2pIconSelector)
+Vue.use(D2pIconSelector)
 // Vue.use(D2pDemoExtend)
 // Vue.use(D2pUploader, {
 //   defaultType: 'cos',
