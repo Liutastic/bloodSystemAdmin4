@@ -39,7 +39,6 @@ import { AddObj, GetList, UpdateObj, DelObj, BatchDel } from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 import helper from './helper'
-import log from '@/libs/util.log'
 export default {
   name: 'page1',
   components: {},
@@ -60,7 +59,6 @@ export default {
     },
     async pageRequest (query) {
       const ret = await GetList(query)
-      console.log(ret,'retret');
       // 请至少保证有一列没有设置固定宽度，否则也会有错位问题
       // 修复合计行错位问题
       this.$nextTick(async () => { // 这里要异步执行

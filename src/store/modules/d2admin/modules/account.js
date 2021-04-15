@@ -17,7 +17,7 @@ export default {
       username = '',
       password = ''
     } = {}) {
-      const {data} = await api.SYS_USER_LOGIN({ username, password })
+      const { data } = await api.SYS_USER_LOGIN({ username, password })
       console.log('登录成功：', data)
 
       // 设置 cookie 一定要存 uuid 和 token 两个 cookie
