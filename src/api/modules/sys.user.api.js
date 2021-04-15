@@ -6,12 +6,19 @@ const users = [
   { username: 'user1', password: 'user1', uuid: 'user1-uuid', name: 'User1' }
 ]
 
-export default ({ service, request, serviceForMock, requestForMock, mock, faker, tools }) => ({
+export default ({ service, request, serviceForMock,requestForMock, mock, faker, tools }) => ({
   /**
    * @description 登录
    * @param {Object} data 登录携带的信息
    */
   SYS_USER_LOGIN (data = {}) {
+    if (process.env.VUE_APP_PM_ENABLED === 'true') {
+      return request({
+        url: '/login',
+        method: 'post',
+        data
+      })
+    }
     // 模拟数据
     mock
       .onAny('/login')

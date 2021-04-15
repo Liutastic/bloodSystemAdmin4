@@ -35,7 +35,8 @@ function createService () {
         switch (code) {
           case 0:
             // [ 示例 ] code === 0 代表没有错误
-            return dataAxios.data
+            // TODO 可能结果还需要code和msg进行后续处理，所以返回全部结果
+            return dataAxios
           case 'xxx':
             // [ 示例 ] 其它和后台约定的 code
             errorCreate(`[ code: xxx ] ${dataAxios.msg}: ${response.config.url}`)
@@ -75,6 +76,7 @@ function createService () {
  * @param {Object} service axios 实例
  */
 function createRequestFunction (service) {
+  console.log(2222);
   return function (config) {
     const token = util.cookies.get('token')
     const configDefault = {
@@ -98,5 +100,6 @@ export const request = createRequestFunction(service)
 export const serviceForMock = createService()
 export const requestForMock = createRequestFunction(serviceForMock)
 
+
 // 网络请求数据模拟工具
-export const mock = new Adapter(serviceForMock)
+export const mock = new Adapter(serviceForMock, { delayResponse: 10 })
