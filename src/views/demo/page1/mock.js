@@ -4,6 +4,7 @@ const options = {
   name: 'column',
   idGenerator: 0
 }
+
 const list = [
   {
     data: '我会懒加载',
@@ -82,7 +83,7 @@ const list = [
 ]
 options.list = list
 const mock = mockUtil.buildMock(options)
-console.log(mock,'dasdasd');
+console.log(mock, 'dasdasd')
 
 mock.push({
   path: '/column/children',

@@ -76,7 +76,7 @@ function createService () {
  * @param {Object} service axios 实例
  */
 function createRequestFunction (service) {
-  console.log(2222);
+  console.log(2222)
   return function (config) {
     const token = util.cookies.get('token')
     const configDefault = {
@@ -99,7 +99,6 @@ export const request = createRequestFunction(service)
 // 用于模拟网络请求的实例和请求方法
 export const serviceForMock = createService()
 export const requestForMock = createRequestFunction(serviceForMock)
-
 
 // 网络请求数据模拟工具
 export const mock = new Adapter(serviceForMock, { delayResponse: 10 })

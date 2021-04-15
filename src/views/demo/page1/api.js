@@ -3,7 +3,6 @@ import request from '@/api/request.mock'
 // import { requestForMock } from '@/api/service'
 // const request = requestForMock
 
-
 export function GetList (query) {
   return request({
     url: '/column/page',

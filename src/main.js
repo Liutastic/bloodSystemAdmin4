@@ -7,27 +7,32 @@ import d2Admin from '@/plugin/d2admin'
 // store
 import store from '@/store/index'
 
-import { request, requestForMock } from '@/api/service'
+import {
+  // request,
+  requestForMock
+} from '@/api/service'
 // 菜单和路由设置
 import router from './router'
-import {
-  menuHeader,
-  menuAside
-} from '@/menu'
-import {
-  frameInRoutes
-} from '@/router/routes'
+import { menuHeader, menuAside } from '@/menu'
+import { frameInRoutes } from '@/router/routes'
 
 // import '@/api/mock' // mock数据，实际开发要去掉
 
 import D2CrudX from 'd2-crud-x'
+import { d2CrudPlus } from 'd2-crud-plus'
+
 import {
-  d2CrudPlus
-} from 'd2-crud-plus'
+  D2pAreaSelector,
+  // D2pFileUploader,
+  D2pIconSelector,
+  // D2pTreeSelector,
+  D2pFullEditor
+  // D2pUploader,
+  // D2pDemoExtend
+} from 'd2p-extends' // 源码方式引入，上传组件支持懒加载
+import pluginExport from '@d2-projects/vue-table-export'
 
-import { D2pAreaSelector, D2pFileUploader, D2pIconSelector, D2pTreeSelector, D2pFullEditor, D2pUploader, D2pDemoExtend } from 'd2p-extends' // 源码方式引入，上传组件支持懒加载
-
-
+Vue.use(pluginExport)
 Vue.use(D2pAreaSelector)
 // Vue.use(D2pFileUploader)
 Vue.use(D2pFullEditor, {
@@ -133,10 +138,12 @@ Vue.use(d2CrudPlus, {
       return ret.data
     })
   },
-  commonOption () { // 公共配置
+  commonOption () {
+    // 公共配置
     return {
       format: {
-        page: { // page接口返回的数据结构配置，
+        page: {
+          // page接口返回的数据结构配置，
           request: {
             current: 'current',
             size: 'size'
@@ -182,8 +189,7 @@ Vue.use(d2CrudPlus, {
     }
   }
 })
-// #endregion 
-
+// #endregion
 
 //  自定义字段类型示例
 d2CrudPlus.util.columnResolve.addTypes({
@@ -203,10 +209,10 @@ d2CrudPlus.util.columnResolve.addTypes({
         }
       }
     }, // 搜索时只支持日期
-    formatter(row, column, value, index) {
+    formatter (row, column, value, index) {
       return value + '-->我是自定义字段类型：time2'
     },
-    _handle(column) {
+    _handle (column) {
       //  此方法主要将column中某些依赖的用户配置的属性放到默认配置中，比如数据字典的配置
       if (column.dict != null) {
         this.form.component.props.dict = column.dict
@@ -220,7 +226,6 @@ d2CrudPlus.util.columnResolve.addTypes({
 const selectType = d2CrudPlus.util.columnResolve.getType('select')
 selectType.component.props.color = 'auto' // 修改官方的字段类型，设置select的单元格组件支持自动染色
 
-
 // 核心插件
 Vue.use(d2Admin)
 
@@ -229,7 +234,7 @@ new Vue({
   store,
   i18n,
   render: h => h(App),
-  created() {
+  created () {
     // 处理路由 得到每一级的路由设置
     this.$store.commit('d2admin/page/init', frameInRoutes)
     // 设置顶栏菜单
@@ -239,7 +244,7 @@ new Vue({
     // 初始化菜单搜索功能
     this.$store.commit('d2admin/search/init', menuHeader)
   },
-  mounted() {
+  mounted () {
     // 展示系统信息
     this.$store.commit('d2admin/releases/versionShow')
     // 用户登录后从数据库加载一系列的设置

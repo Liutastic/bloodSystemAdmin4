@@ -1,6 +1,6 @@
 import { mock } from '@/api/service'
 import * as tools from '@/api/tools'
-console.log("mock: " , mock);
+console.log('mock: ', mock)
 const req = context => context.keys().map(context)
 const apiList1 = req(require.context('./api/', true, /\.js$/))
   .filter(e => e.default)
@@ -12,7 +12,7 @@ const apiList = req(require.context('../../views/', true, /mock\.js$/))
   .map(e => e.default)
 apiList.push(...apiList1)
 
-console.log("apiList: " , apiList);
+console.log('apiList: ', apiList)
 
 apiList.forEach(apiFile => {
   for (const item of apiFile) {
