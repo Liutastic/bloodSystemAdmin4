@@ -4,7 +4,6 @@ import { service, request, serviceForMock, requestForMock, mock } from './servic
 import * as tools from './tools'
 
 import '@/api/mock'
-console.log(33333) // mock数据，实际开发要去掉
 
 const files = require.context('./modules', true, /\.api\.js$/)
 const generators = files.keys().map(key => files(key).default)

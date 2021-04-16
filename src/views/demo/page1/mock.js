@@ -83,7 +83,6 @@ const list = [
 ]
 options.list = list
 const mock = mockUtil.buildMock(options)
-console.log(mock, 'dasdasd')
 
 mock.push({
   path: '/column/children',

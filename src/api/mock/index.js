@@ -1,6 +1,5 @@
 import { mock } from '@/api/service'
 import * as tools from '@/api/tools'
-console.log('mock: ', mock)
 const req = context => context.keys().map(context)
 const apiList1 = req(require.context('./api/', true, /\.js$/))
   .filter(e => e.default)
@@ -12,14 +11,11 @@ const apiList = req(require.context('../../views/', true, /mock\.js$/))
   .map(e => e.default)
 apiList.push(...apiList1)
 
-console.log('apiList: ', apiList)
-
 apiList.forEach(apiFile => {
   for (const item of apiFile) {
     mock
       .onAny(new RegExp('/api' + item.path))
       .reply(config => {
-        console.log('------------fake request start -------------')
         console.log('request:', config)
         const data = config.data ? JSON.parse(config.data) : {}
         const query = config.url.indexOf('?') >= 0 ? config.url.substring(config.url.indexOf('?') + 1) : undefined
@@ -39,7 +35,6 @@ apiList.forEach(apiFile => {
         }
         const ret = item.handle(req)
         console.log('response:', ret)
-        console.log('------------fake request end-------------')
         if (ret.code === 0) {
           return tools.responseSuccess(ret.data, ret.msg)
         } else {
