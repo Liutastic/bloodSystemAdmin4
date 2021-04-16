@@ -76,7 +76,6 @@ function createService () {
  * @param {Object} service axios 实例
  */
 function createRequestFunction (service) {
-  console.log(2222)
   return function (config) {
     const token = util.cookies.get('token')
     const configDefault = {
