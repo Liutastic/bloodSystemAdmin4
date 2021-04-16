@@ -1,13 +1,16 @@
 import { uniqueId } from 'lodash'
-import header from '@/menu/header'
-import aside from '@/menu/aside'
+// import header from '@/menu/header'
+// import aside from '@/menu/aside'
+
+import demo from '@/menu/modules/demo'
+import d1 from '@/menu/modules/d1'
 
 /**
  * @description 给菜单数据补充上 path 字段
  * @description https://github.com/d2-projects/d2-admin/issues/209
  * @param {Array} menu 原始的菜单数据
  */
-export function supplementPath (menu) {
+function supplementPath (menu) {
   return menu.map(e => ({
     ...e,
     path: e.path || uniqueId('d2-menu-empty-'),
@@ -17,6 +20,23 @@ export function supplementPath (menu) {
   }))
 }
 
-export const menuHeader = supplementPath(header)
+// 菜单 侧边栏
+export const menuAside = supplementPath([
+  demo,
+  d1
+])
 
-export const menuAside = supplementPath(aside)
+// 菜单 顶栏
+export const menuHeader = supplementPath([
+  {
+    path: '/index',
+    title: '首页',
+    icon: 'home'
+  },
+  demo,
+  d1
+])
+
+// export const menuHeader = supplementPath(header)
+
+// export const menuAside = supplementPath(aside)

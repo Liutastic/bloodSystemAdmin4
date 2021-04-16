@@ -6,11 +6,11 @@ import App from './App'
 import d2Admin from '@/plugin/d2admin'
 // store
 import store from '@/store/index'
-
 import {
   // request,
   requestForMock
 } from '@/api/service'
+
 // 菜单和路由设置
 import router from './router'
 import { menuHeader, menuAside } from '@/menu'
@@ -18,112 +18,8 @@ import { frameInRoutes } from '@/router/routes'
 
 // import '@/api/mock' // mock数据，实际开发要去掉
 
-import D2CrudX from 'd2-crud-x'
 import { d2CrudPlus } from 'd2-crud-plus'
 
-import {
-  D2pAreaSelector,
-  // D2pFileUploader,
-  D2pIconSelector,
-  // D2pTreeSelector,
-  D2pFullEditor
-  // D2pUploader,
-  // D2pDemoExtend
-} from 'd2p-extends' // 源码方式引入，上传组件支持懒加载
-import pluginExport from '@d2-projects/vue-table-export'
-
-Vue.use(pluginExport)
-Vue.use(D2pAreaSelector)
-// Vue.use(D2pFileUploader)
-Vue.use(D2pFullEditor, {
-  // ueditor: {
-  //   serverUrl: '/api/ueditor/'
-  // }
-})
-Vue.use(D2pIconSelector)
-// Vue.use(D2pDemoExtend)
-// Vue.use(D2pUploader, {
-//   defaultType: 'cos',
-//   cos: {
-//     domain: 'https://d2p-demo-1251260344.cos.ap-guangzhou.myqcloud.com',
-//     bucket: 'd2p-demo-1251260344',
-//     region: 'ap-guangzhou',
-//     secretId: '', //
-//     secretKey: '', // 传了secretKey 和secretId 代表使用本地签名模式（不安全，生产环境不推荐）
-//     getAuthorization  (custom) { // 不传secretKey代表使用临时签名模式,此时此参数必传（安全，生产环境推荐）
-//       return request({
-//         url: '/upload/cos/getAuthorization',
-//         method: 'get'
-//       }).then(ret => {
-//         // 返回结构如下
-//         // ret.data:{
-//         //   TmpSecretId,
-//         //   TmpSecretKey,
-//         //   XCosSecurityToken,
-//         //   ExpiredTime, // SDK 在 ExpiredTime 时间前，不会再次调用 getAuthorization
-//         // }
-//         return ret.data
-//       })
-//     },
-//     successHandle (ret) { // 上传完成后可以在此处处理结果，修改url什么的
-//       console.log('success handle:', ret)
-//       return ret
-//     }
-//   },
-//   alioss: {
-//     domain: 'https://d2p-demo.oss-cn-shenzhen.aliyuncs.com',
-//     bucket: 'd2p-demo',
-//     region: 'oss-cn-shenzhen',
-//     accessKeyId: '',
-//     accessKeySecret: '',
-//     getAuthorization  (custom, context) { // 不传accessKeySecret代表使用临时签名模式,此时此参数必传（安全，生产环境推荐）
-//       return request({
-//         url: '/upload/alioss/getAuthorization',
-//         method: 'get'
-//       }).then(ret => {
-//         return ret.data
-//       })
-//     },
-//     sdkOpts: { // sdk配置
-//       secure: true // 默认为非https上传,为了安全，设置为true
-//     },
-//     successHandle (ret) { // 上传完成后可以在此处处理结果，修改url什么的
-//       console.log('success handle:', ret)
-//       return ret
-//     }
-//   },
-//   qiniu: {
-//     bucket: 'd2p-demo',
-//     getToken (custom) {
-//       return request({
-//         url: '/upload/qiniu/getToken',
-//         method: 'get'
-//       }).then(ret => {
-//         return ret.data // {token:xxx,expires:xxx}
-//       })
-//     },
-//     successHandle (ret) { // 上传完成后可以在此处处理结果，修改url什么的
-//       console.log('success handle:', ret)
-//       return ret
-//     },
-//     domain: 'http://d2p.file.veryreader.com'
-//   },
-//   form: {
-//     action: process.env.VUE_APP_API + 'upload/form/upload',
-//     name: 'file',
-//     withCredentials: false,
-//     successHandle (ret) { // 上传完成后的结果处理， 此处后台返回的结果应该为 ret = {data:'fileurl'}
-//       if (ret.data == null || ret.data === '') {
-//         throw new Error('上传失败')
-//       }
-//       return { url: ret.data }
-//     }
-//   }
-// })
-
-Vue.use(D2CrudX, {
-  name: 'd2-crud-x'
-})
 // #region 引入d2CrudPlus
 Vue.use(d2CrudPlus, {
   starTip: false,
@@ -239,8 +135,8 @@ new Vue({
     this.$store.commit('d2admin/page/init', frameInRoutes)
     // 设置顶栏菜单
     this.$store.commit('d2admin/menu/headerSet', menuHeader)
-    // 设置侧边栏菜单
-    this.$store.commit('d2admin/menu/asideSet', menuAside)
+    // // 设置侧边栏菜单
+    // this.$store.commit('d2admin/menu/asideSet', menuAside)
     // 初始化菜单搜索功能
     this.$store.commit('d2admin/search/init', menuHeader)
   },
@@ -253,5 +149,17 @@ new Vue({
     this.$store.commit('d2admin/ua/get')
     // 初始化全屏监听
     this.$store.dispatch('d2admin/fullscreen/listen')
+  },
+  watch: {
+    // 检测路由变化切换侧边栏内容
+    '$route.matched': {
+      handler (matched) {
+        if (matched.length > 0) {
+          const _side = menuAside.filter(menu => menu.path === matched[0].path)
+          this.$store.commit('d2admin/menu/asideSet', _side.length > 0 ? _side[0].children : [])
+        }
+      },
+      immediate: true
+    }
   }
 }).$mount('#app')
