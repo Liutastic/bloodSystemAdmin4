@@ -119,9 +119,11 @@
       // logo区域
       .logo-group {
         float: left;
-        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         img {
-          height: 60px;
+          height: 40px;
         }
       }
       .logo-transition {

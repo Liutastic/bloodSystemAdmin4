@@ -1,5 +1,5 @@
-import d1 from './modules/d1'
 import demo from './modules/demo'
+import shopping from './modules/shopping'
 
 import layoutHeaderAside from '@/layout/header-aside'
 
@@ -52,9 +52,8 @@ const frameIn = [
       // ...demo
     ]
   },
-  d1,
-  demo
-
+  demo,
+  shopping
 ]
 
 /**

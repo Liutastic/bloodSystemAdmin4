@@ -3,7 +3,7 @@ import { uniqueId } from 'lodash'
 // import aside from '@/menu/aside'
 
 import demo from '@/menu/modules/demo'
-import d1 from '@/menu/modules/d1'
+import shopping from '@/menu/modules/shopping'
 
 /**
  * @description 给菜单数据补充上 path 字段
@@ -23,7 +23,7 @@ function supplementPath (menu) {
 // 菜单 侧边栏
 export const menuAside = supplementPath([
   demo,
-  d1
+  shopping
 ])
 
 // 菜单 顶栏
@@ -34,7 +34,7 @@ export const menuHeader = supplementPath([
     icon: 'home'
   },
   demo,
-  d1
+  shopping
 ])
 
 // export const menuHeader = supplementPath(header)
