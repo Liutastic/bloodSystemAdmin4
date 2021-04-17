@@ -20,6 +20,11 @@ import { frameInRoutes } from '@/router/routes'
 
 import { d2CrudPlus } from 'd2-crud-plus'
 
+// 引入echarts
+import echarts from 'echarts'
+
+Vue.prototype.$echarts = echarts
+
 // #region 引入d2CrudPlus
 Vue.use(d2CrudPlus, {
   starTip: false,

@@ -21,6 +21,7 @@
     "d2-crud-x": "^2.16.0",
     "d2p-extends": "^2.16.1",
     "dayjs": "^1.8.17",
+    "echarts": "^5.1.0",
     "element-ui": "^2.15.1",
     "faker": "^4.1.0",
     "flex.css": "^1.1.7",
