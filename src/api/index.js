@@ -6,7 +6,7 @@ import { BASEURL, WEb_BASEURL } from './config'
 
 import '@/api/mock'
 
-const files = require.context('./modules', true, /\.api\.js$/)
+const files = require.context('./modules', true, /\.js$/)
 const generators = files.keys().map(key => files(key).default)
 export default assign({
   BASEURL,
