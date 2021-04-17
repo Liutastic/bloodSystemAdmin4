@@ -11,6 +11,8 @@ export default {
         url: this.$apis.BASEURL + '/api/qiniu-uptoken22',
         method: 'get'
       }).then(ret => {
+        console.log('ret: ', ret)
+
         return ret.data // {token:xxx,expires:xxx}
       })
     },
@@ -18,7 +20,7 @@ export default {
       console.log('success handle:', ret)
       return ret
     },
-    domain: 'https://image.vodeshop.com'
+    domain: 'https://image.v1.vodeshop.com'
   },
   form: {
     action: 'https://upload-z2.qiniup.com',
