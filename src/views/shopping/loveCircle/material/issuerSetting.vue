@@ -1,12 +1,12 @@
 <template>
   <d2-container>
     <template slot="header">d1</template>
-    Hello World
+    发布人设置
   </d2-container>
 </template>
 
 <script>
 export default {
-  name: 'd2111111'
+  name: 'loveCircle'
 }
 </script>
