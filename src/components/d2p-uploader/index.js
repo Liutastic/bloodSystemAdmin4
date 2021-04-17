@@ -8,7 +8,7 @@ export default {
     bucket: 'd2p-demo',
     getToken (custom) {
       return request({
-        url: this.$apis.MBASEURL + '/api/qiniu-uptoken',
+        url: this.$apis.BASEURL + '/api/qiniu-uptoken22',
         method: 'get'
       }).then(ret => {
         return ret.data // {token:xxx,expires:xxx}

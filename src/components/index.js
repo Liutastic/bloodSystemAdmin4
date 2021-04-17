@@ -62,7 +62,7 @@ Vue.use(D2pUploader)
 
 Vue.use(D2pFullEditor, {
   ueditor: {
-    serverUrl: 'https://upload-z2.qiniup.com'
+    serverUrl: 'https://test.api.vodeshop.com/ueditor/server?_token=Dfq1jzcgLz38tzWTx4YFE8Knp7p1eABjYEstY7RJ'
   }
 })
 Vue.use(D2pIconSelector)
