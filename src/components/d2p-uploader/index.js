@@ -8,7 +8,7 @@ export default {
     bucket: 'd2p-demo',
     getToken (custom) {
       return request({
-        url: 'https://test.api.vodeshop.com/api/qiniu-uptoken',
+        url: this.$apis.MBASEURL + '/api/qiniu-uptoken',
         method: 'get'
       }).then(ret => {
         return ret.data // {token:xxx,expires:xxx}
@@ -21,7 +21,7 @@ export default {
     domain: 'https://image.vodeshop.com'
   },
   form: {
-    action: this.$apis.MBASEURL + 'upload/form/upload',
+    action: 'https://upload-z2.qiniup.com',
     name: 'file',
     withCredentials: false,
     successHandle (ret) { // 上传完成后的结果处理， 此处后台返回的结果应该为 ret = {data:'fileurl'}

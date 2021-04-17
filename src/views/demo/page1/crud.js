@@ -189,42 +189,6 @@ export const crudOptions = function (vm) {
         }
       },
       {
-        title: '切换编辑器',
-        key: 'change',
-        sortable: false,
-        type: 'radio',
-        disabled: true,
-        dict: { data: [{ value: 'quill', label: 'Quill' }, { value: 'ueditor', label: 'UEditor' }, { value: 'wang', label: 'WangEditor' }] }
-      },
-      {
-        title: '内容',
-        key: 'content',
-        sortable: true,
-        width: 300,
-        type: 'editor-quill', // 富文本图片上传依赖file-uploader，请先配置好file-uploader
-        disabled: true, // 设置true可以在行展示中隐藏
-        form: {
-          component: {
-            disabled: () => {
-              return vm.getEditForm().disable
-            },
-            props: {
-              uploader: {
-                type: 'form' // 上传后端类型【cos,aliyun,oss,form】
-              }
-            },
-            events: {
-              'text-change': (event) => {
-                console.log('text-change:', event)
-              }
-            },
-            show (context) {
-              return context.form.change === 'quill'
-            }
-          }
-        }
-      },
-      {
         title: '内容',
         key: 'content_ueditor',
         sortable: true,
@@ -238,35 +202,9 @@ export const crudOptions = function (vm) {
             },
             props: {
               config: {
-                serverUrl: '/api/ueditor/'
+                // serverUrl: 'https://test.api.vodeshop.com/ueditor/server?action=config'
+                imageActionName: 'upload-image', imageFieldName: 'upfile', imageMaxSize: 2097152, imageAllowFiles: ['.png', '.jpg', '.jpeg', '.gif', '.bmp'], imageCompressEnable: true, imageCompressBorder: 1600, imageInsertAlign: 'none', imageUrlPrefix: '', imagePathFormat: '\/uploads\/image\/{yyyy}\/{mm}\/{dd}\/', scrawlActionName: 'upload-scrawl', scrawlFieldName: 'upfile', scrawlPathFormat: '\/uploads\/image\/{yyyy}\/{mm}\/{dd}\/', scrawlMaxSize: 2048000, scrawlUrlPrefix: '', scrawlInsertAlign: 'none', snapscreenActionName: 'upload-image', snapscreenPathFormat: '\/uploads\/image\/{yyyy}\/{mm}\/{dd}\/', snapscreenUrlPrefix: '', snapscreenInsertAlign: 'none', catcherLocalDomain: ['127.0.0.1', 'localhost', 'img.baidu.com'], catcherActionName: 'catch-image', catcherFieldName: 'source', catcherPathFormat: '\/uploads\/image\/{yyyy}\/{mm}\/{dd}\/', catcherUrlPrefix: '', catcherMaxSize: 2048000, catcherAllowFiles: ['.png', '.jpg', '.jpeg', '.gif', '.bmp'], videoActionName: 'upload-video', videoFieldName: 'upfile', videoPathFormat: '\/uploads\/video\/{yyyy}\/{mm}\/{dd}\/', videoUrlPrefix: '', videoMaxSize: 102400000, videoAllowFiles: ['.flv', '.swf', '.mkv', '.avi', '.rm', '.rmvb', '.mpeg', '.mpg', '.ogg', '.ogv', '.mov', '.wmv', '.mp4', '.webm', '.mp3', '.wav', '.mid'], fileActionName: 'upload-file', fileFieldName: 'upfile', filePathFormat: '\/uploads\/file\/{yyyy}\/{mm}\/{dd}\/', fileUrlPrefix: '', fileMaxSize: 51200000, fileAllowFiles: ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.flv', '.swf', '.mkv', '.avi', '.rm', '.rmvb', '.mpeg', '.mpg', '.ogg', '.ogv', '.mov', '.wmv', '.mp4', '.webm', '.mp3', '.wav', '.mid', '.rar', '.zip', '.tar', '.gz', '.7z', '.bz2', '.cab', '.iso', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.pdf', '.txt', '.md', '.xml'], imageManagerActionName: 'list-image', imageManagerListPath: '\/uploads\/image\/', imageManagerListSize: 20, imageManagerUrlPrefix: '', imageManagerInsertAlign: 'none', imageManagerAllowFiles: ['.png', '.jpg', '.jpeg', '.gif', '.bmp'], fileManagerActionName: 'list-file', fileManagerListPath: '\/uploads\/file\/', fileManagerUrlPrefix: '', fileManagerListSize: 20, fileManagerAllowFiles: ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.flv', '.swf', '.mkv', '.avi', '.rm', '.rmvb', '.mpeg', '.mpg', '.ogg', '.ogv', '.mov', '.wmv', '.mp4', '.webm', '.mp3', '.wav', '.mid', '.rar', '.zip', '.tar', '.gz', '.7z', '.bz2', '.cab', '.iso', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.pdf', '.txt', '.md', '.xml']
               }
-            },
-            show (context) {
-              return context.form.change === 'ueditor'
-            }
-          }
-        }
-      },
-      {
-        title: '内容',
-        key: 'content_wang',
-        sortable: true,
-        width: 300,
-        type: 'editor-wang', // 富文本图片上传依赖file-uploader，请先配置好file-uploader
-        disabled: true, // 设置true可以在行展示中隐藏
-        form: {
-          component: {
-            disabled: () => {
-              return vm.getEditForm().disable
-            },
-            props: {
-              config: {
-                // withCredentials: false,
-                // uploadImgServer: 'http://localhost:7070/api/upload/form/upload'
-              }
-            },
-            show (context) {
-              return context.form.change === 'wang'
             }
           }
         }
