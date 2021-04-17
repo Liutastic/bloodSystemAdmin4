@@ -14,11 +14,11 @@ import * as echarts from 'echarts'
 
 import {
   D2pAreaSelector,
-  // D2pFileUploader,
+  D2pFileUploader,
   D2pIconSelector,
   // D2pTreeSelector,
-  D2pFullEditor
-//   D2pUploader
+  D2pFullEditor,
+  D2pUploader
   // D2pDemoExtend
 } from 'd2p-extends' // 源码方式引入，上传组件支持懒加载
 import pluginExport from '@d2-projects/vue-table-export'
@@ -36,10 +36,12 @@ Vue.use(D2CrudX, {
 
 Vue.use(pluginExport)
 Vue.use(D2pAreaSelector)
-// Vue.use(D2pFileUploader)
+Vue.use(D2pFileUploader)
+Vue.use(D2pUploader)
+
 Vue.use(D2pFullEditor, {
   ueditor: {
-    serverUrl: '/api/ueditor/'
+    serverUrl: 'https://test.api.vodeshop.com'
   }
 })
 Vue.use(D2pIconSelector)

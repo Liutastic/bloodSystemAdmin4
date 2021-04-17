@@ -6,10 +6,6 @@ import App from './App'
 import d2Admin from '@/plugin/d2admin'
 // store
 import store from '@/store/index'
-import {
-  // request,
-  requestForMock
-} from '@/api/service'
 
 // 菜单和路由设置
 import $apis from '@/api/'
