@@ -70,7 +70,7 @@ export const crudOptions = function (vm) {
       lazy: true,
       load: (tree, treeNode, resolve) => {
         request({
-          url: '/column/children',
+          url: '/api/column/children',
           method: 'get',
           data: { id: tree.id }
         }).then(ret => {
