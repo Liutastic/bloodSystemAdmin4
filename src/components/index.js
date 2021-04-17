@@ -48,17 +48,22 @@ Vue.use(D2pFileUploader, {
         url: BASEURL + '/api/qiniu-uptoken',
         method: 'get'
       }).then(ret => {
-        return ret.data // {token:xxx,expires:xxx}
+        console.log('ret: ', ret)
+        const obj = {
+          token: ret.uptoken,
+          expires: 100000
+        }
+        return obj // {token:xxx,expires:xxx}
       })
     },
     successHandle (ret) { // 上传完成后可以在此处处理结果，修改url什么的
       console.log('success handle:', ret)
       return ret
     },
-    domain: 'https://image.vodeshop.com'
+    domain: 'https://image.v1.vodeshop.com'
   }
 })
-Vue.use(D2pUploader)
+// Vue.use(D2pUploader)
 
 Vue.use(D2pFullEditor, {
   ueditor: {
