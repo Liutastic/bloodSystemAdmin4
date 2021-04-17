@@ -47,7 +47,7 @@ export default {
       path: 'page1',
       name: 'page1',
       meta: {
-        title: '页面 1',
+        title: 'd2-crud-plus 实例',
         auth: true
       },
       component: _import('demo/page1')
@@ -56,7 +56,7 @@ export default {
       path: 'page2',
       name: 'page2',
       meta: {
-        title: '页面 2',
+        title: '接口请求 实例',
         auth: true
       },
       component: _import('demo/page2')
@@ -65,7 +65,7 @@ export default {
       path: 'page3',
       name: 'page3',
       meta: {
-        title: '页面 3',
+        title: '七牛上传 实例',
         auth: true
       },
       component: _import('demo/page3')

@@ -1,4 +1,4 @@
-import * as $apis from '@/api/'
+import { imgBaseUrl } from '@/api/config'
 
 /**
  * @desc 七牛压缩以及域名处理
@@ -16,11 +16,11 @@ export function qiniu (url, width = 768, type = 'image') {
       return url
     }
     if (type === 'image' && url !== 'gysa-default-logo.png') {
-      return `${$apis.imgBaseUrl}${url}?imageView2/2/w/${width}/format/png`
+      return `${imgBaseUrl}${url}?imageView2/2/w/${width}/format/png`
     }
-    return `${$apis.imgBaseUrl}${url}`
+    return `${imgBaseUrl}${url}`
   }
-  return `${$apis.imgBaseUrl}gysa-default-logo.png`
+  return `${imgBaseUrl}gysa-default-logo.png`
 }
 
 // 格式化w单位
