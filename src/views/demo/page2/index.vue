@@ -6,8 +6,6 @@
 </template>
 
 <script>
-import { Message } from 'element-ui'
-
 export default {
   name: 'page2',
   data () {
@@ -23,7 +21,7 @@ export default {
     if (code === 0) {
       this.version = data
     } else {
-      Message.error(msg)
+      this.$message.error(msg)
     }
   }
 }

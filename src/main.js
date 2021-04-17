@@ -10,10 +10,11 @@ import {
   // request,
   requestForMock
 } from '@/api/service'
-import $apis from '@/api/'
 
 // 菜单和路由设置
+import $apis from '@/api/'
 import router from './router'
+import * as filters from './filters/'
 import { menuHeader, menuAside } from '@/menu'
 import { frameInRoutes } from '@/router/routes'
 
@@ -24,8 +25,13 @@ import { d2CrudPlus } from 'd2-crud-plus'
 // 引入echarts
 import * as echarts from 'echarts'
 
-Vue.prototype.$echarts = echarts
 Vue.prototype.$apis = $apis
+Vue.prototype.$echarts = echarts
+
+// 注册过滤器
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
 
 // #region 引入d2CrudPlus
 Vue.use(d2CrudPlus, {
