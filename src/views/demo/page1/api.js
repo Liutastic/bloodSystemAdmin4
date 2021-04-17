@@ -5,7 +5,7 @@ import request from '@/api/request.mock'
 
 export function GetList (query) {
   return request({
-    url: '/column/page',
+    url: '/api/column/page',
     method: 'get',
     data: query
   })
@@ -13,7 +13,7 @@ export function GetList (query) {
 
 export function AddObj (obj) {
   return request({
-    url: '/column/add',
+    url: '/api/column/add',
     method: 'post',
     data: obj
   })
@@ -21,21 +21,21 @@ export function AddObj (obj) {
 
 export function UpdateObj (obj) {
   return request({
-    url: '/column/update',
+    url: '/api/column/update',
     method: 'post',
     data: obj
   })
 }
 export function DelObj (id) {
   return request({
-    url: '/column/delete',
+    url: '/api/column/delete',
     method: 'post',
     data: { id }
   })
 }
 export function BatchDel (ids) {
   return request({
-    url: '/column/batchDelete',
+    url: '/api/column/batchDelete',
     method: 'post',
     data: { ids }
   })

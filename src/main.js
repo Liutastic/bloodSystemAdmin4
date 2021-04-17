@@ -10,6 +10,7 @@ import {
   // request,
   requestForMock
 } from '@/api/service'
+import $apis from '@/api/'
 
 // 菜单和路由设置
 import router from './router'
@@ -24,6 +25,7 @@ import { d2CrudPlus } from 'd2-crud-plus'
 import * as echarts from 'echarts'
 
 Vue.prototype.$echarts = echarts
+Vue.prototype.$apis = $apis
 
 // #region 引入d2CrudPlus
 Vue.use(d2CrudPlus, {

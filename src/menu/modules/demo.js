@@ -4,18 +4,18 @@ export default {
   icon: 'plug',
   children: [
     {
-      title: '页面',
+      title: 'd2-crud-plus',
       icon: 'folder-o',
       children: [
-        { path: '/demo/page1', title: '页面 1' },
-        { path: '/demo/page3', title: '页面 3' }
+        { path: '/demo/page1', title: 'd2-crud-plus 实例' },
+        { path: '/demo/page3', title: 'DEMO 页面' }
       ]
     },
     {
-      title: '页面2',
+      title: '接口',
       icon: 'folder-o',
       children: [
-        { path: '/demo/page2', title: '页面 2' }
+        { path: '/demo/page2', title: '接口请求实例' }
       ]
     }
   ]
