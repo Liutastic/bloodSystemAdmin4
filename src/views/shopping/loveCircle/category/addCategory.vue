@@ -95,7 +95,7 @@
       </el-form-item>
     </el-form>
     <template slot="footer">
-      <el-button type="success" size="mini">保存</el-button>
+      <el-button type="success" size="mini" @click="submit">保存</el-button>
     </template>
   </d2-container>
 </template>
@@ -176,6 +176,9 @@ export default {
         this.formData.dynamicChildren = this.histroyDynamicChildren
         this.histroyDynamicChildren = []
       }
+    },
+    submit () {
+      console.log(this.formData)
     }
   }
 }
