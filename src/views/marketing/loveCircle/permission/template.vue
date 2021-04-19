@@ -14,10 +14,7 @@
 <script>
 import StatusTag from './components/StatusTag'
 export default {
-  name: 'template',
-  components: {
-    StatusTag
-  },
+  name: 'Template',
   data () {
     return {
       // 表头配置
