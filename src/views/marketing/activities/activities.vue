@@ -1,7 +1,7 @@
 <template>
   <d2-container>
-    <template slot="header">d1</template>
-    发布人设置
+    <template slot="header">hello world</template>
+    所有活动
   </d2-container>
 </template>
 
