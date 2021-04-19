@@ -63,11 +63,13 @@ Vue.use(D2pFileUploader, {
     domain: 'https://image.v1.vodeshop.com'
   }
 })
-// Vue.use(D2pUploader)
+
+Vue.use(D2pUploader, d2pUploaderConfig)
 
 Vue.use(D2pFullEditor, {
   ueditor: {
-    serverUrl: 'https://upload-z2.qiniup.com'
+
+    // serverUrl: 'https://test.api.vodeshop.com/ueditor/server'
   }
 })
 Vue.use(D2pIconSelector)
@@ -75,7 +77,6 @@ Vue.use(D2pIconSelector)
 Vue.prototype.$echarts = echarts
 
 // Vue.use(D2pDemoExtend)
-Vue.use(D2pUploader, d2pUploaderConfig)
 // #region 引入d2CrudPlus
 Vue.use(d2CrudPlus, {
   starTip: false,

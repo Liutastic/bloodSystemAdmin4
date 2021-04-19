@@ -3,6 +3,9 @@ import request from '@/api/request.mock'
 // import { requestForMock } from '@/api/service'
 // console.log("requestForMock: " , requestForMock);
 // const request = requestForMock
+import UEditorConfig from '@/api/UEditor-config'
+
+console.log('UEditorConfig: ', UEditorConfig)
 
 export const crudOptions = function (vm) {
   return {
@@ -145,7 +148,6 @@ export const crudOptions = function (vm) {
         search: { key: 'time', disabled: false },
         width: 160,
         showOverflowTooltip: true
-
       },
       {
         title: '级联式',
@@ -202,34 +204,195 @@ export const crudOptions = function (vm) {
               suffix: '', // url后缀，用于图片样式处理，需要到对象存储平台配置样式
               type: 'qiniu', // 当前使用哪种存储后端【cos/qiniu/alioss】
               custom: {}, // 自定义参数，可以在获取token、sts时传入不同的参数给后端
-              elProps: { // 与el-uploader配置一致
+              elProps: {
+                // 与el-uploader配置一致
                 limit: 1 // 限制上传文件数量
               }
             }
           }
         }
       },
-      // {
-      //   title: '内容',
-      //   key: 'content_ueditor',
-      //   sortable: true,
-      //   width: 300,
-      //   type: 'editor-ueditor', // 富文本图片上传依赖file-uploader，请先配置好file-uploader
-      //   disabled: true, // 设置true可以在行展示中隐藏
-      //   form: {
-      //     component: {
-      //       disabled: () => {
-      //         return vm.getEditForm().disable
-      //       },
-      //       props: {
-      //         config: {
-      //           // serverUrl: 'https://test.api.vodeshop.com/ueditor/server?action=config'
-      //           imageActionName: 'upload-image', imageFieldName: 'upfile', imageMaxSize: 2097152, imageAllowFiles: ['.png', '.jpg', '.jpeg', '.gif', '.bmp'], imageCompressEnable: true, imageCompressBorder: 1600, imageInsertAlign: 'none', imageUrlPrefix: '', imagePathFormat: '\/uploads\/image\/{yyyy}\/{mm}\/{dd}\/', scrawlActionName: 'upload-scrawl', scrawlFieldName: 'upfile', scrawlPathFormat: '\/uploads\/image\/{yyyy}\/{mm}\/{dd}\/', scrawlMaxSize: 2048000, scrawlUrlPrefix: '', scrawlInsertAlign: 'none', snapscreenActionName: 'upload-image', snapscreenPathFormat: '\/uploads\/image\/{yyyy}\/{mm}\/{dd}\/', snapscreenUrlPrefix: '', snapscreenInsertAlign: 'none', catcherLocalDomain: ['127.0.0.1', 'localhost', 'img.baidu.com'], catcherActionName: 'catch-image', catcherFieldName: 'source', catcherPathFormat: '\/uploads\/image\/{yyyy}\/{mm}\/{dd}\/', catcherUrlPrefix: '', catcherMaxSize: 2048000, catcherAllowFiles: ['.png', '.jpg', '.jpeg', '.gif', '.bmp'], videoActionName: 'upload-video', videoFieldName: 'upfile', videoPathFormat: '\/uploads\/video\/{yyyy}\/{mm}\/{dd}\/', videoUrlPrefix: '', videoMaxSize: 102400000, videoAllowFiles: ['.flv', '.swf', '.mkv', '.avi', '.rm', '.rmvb', '.mpeg', '.mpg', '.ogg', '.ogv', '.mov', '.wmv', '.mp4', '.webm', '.mp3', '.wav', '.mid'], fileActionName: 'upload-file', fileFieldName: 'upfile', filePathFormat: '\/uploads\/file\/{yyyy}\/{mm}\/{dd}\/', fileUrlPrefix: '', fileMaxSize: 51200000, fileAllowFiles: ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.flv', '.swf', '.mkv', '.avi', '.rm', '.rmvb', '.mpeg', '.mpg', '.ogg', '.ogv', '.mov', '.wmv', '.mp4', '.webm', '.mp3', '.wav', '.mid', '.rar', '.zip', '.tar', '.gz', '.7z', '.bz2', '.cab', '.iso', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.pdf', '.txt', '.md', '.xml'], imageManagerActionName: 'list-image', imageManagerListPath: '\/uploads\/image\/', imageManagerListSize: 20, imageManagerUrlPrefix: '', imageManagerInsertAlign: 'none', imageManagerAllowFiles: ['.png', '.jpg', '.jpeg', '.gif', '.bmp'], fileManagerActionName: 'list-file', fileManagerListPath: '\/uploads\/file\/', fileManagerUrlPrefix: '', fileManagerListSize: 20, fileManagerAllowFiles: ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.flv', '.swf', '.mkv', '.avi', '.rm', '.rmvb', '.mpeg', '.mpg', '.ogg', '.ogv', '.mov', '.wmv', '.mp4', '.webm', '.mp3', '.wav', '.mid', '.rar', '.zip', '.tar', '.gz', '.7z', '.bz2', '.cab', '.iso', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.pdf', '.txt', '.md', '.xml']
-      //         }
-      //       }
-      //     }
-      //   }
-      // },
+      {
+        title: '内容',
+        key: 'content_ueditor',
+        sortable: true,
+        width: 300,
+        type: 'editor-ueditor', // 富文本图片上传依赖file-uploader，请先配置好file-uploader
+        disabled: true, // 设置true可以在行展示中隐藏
+        form: {
+          component: {
+            disabled: () => {
+              return vm.getEditForm().disable
+            },
+            props: {
+
+              config: UEditorConfig
+
+              // #region
+              // config: {
+              //   // serverUrl: 'https://test.api.vodeshop.com/ueditor/server?action=config'
+              //   // imageUrl: 'http://upload-z2.qiniup.com/',
+              //   imageActionName: 'upload-image',
+              //   imageFieldName: 'upfile',
+              //   imageMaxSize: 2097152,
+              //   imageAllowFiles: ['.png', '.jpg', '.jpeg', '.gif', '.bmp'],
+              //   imageCompressEnable: true,
+              //   imageCompressBorder: 1600,
+              //   imageInsertAlign: 'none',
+              //   imageUrlPrefix: '',
+              //   imagePathFormat: '/uploads/image/{yyyy}/{mm}/{dd}/',
+              //   scrawlActionName: 'upload-scrawl',
+              //   scrawlFieldName: 'upfile',
+              //   scrawlPathFormat: '/uploads/image/{yyyy}/{mm}/{dd}/',
+              //   scrawlMaxSize: 2048000,
+              //   scrawlUrlPrefix: '',
+              //   scrawlInsertAlign: 'none',
+              //   snapscreenActionName: 'upload-image',
+              //   snapscreenPathFormat: '/uploads/image/{yyyy}/{mm}/{dd}/',
+              //   snapscreenUrlPrefix: '',
+              //   snapscreenInsertAlign: 'none',
+              //   catcherLocalDomain: ['127.0.0.1', 'localhost', 'img.baidu.com'],
+              //   catcherActionName: 'catch-image',
+              //   catcherFieldName: 'source',
+              //   catcherPathFormat: '/uploads/image/{yyyy}/{mm}/{dd}/',
+              //   catcherUrlPrefix: '',
+              //   catcherMaxSize: 2048000,
+              //   catcherAllowFiles: ['.png', '.jpg', '.jpeg', '.gif', '.bmp'],
+              //   videoActionName: 'upload-video',
+              //   videoFieldName: 'upfile',
+              //   videoPathFormat: '/uploads/video/{yyyy}/{mm}/{dd}/',
+              //   videoUrlPrefix: '',
+              //   videoMaxSize: 102400000,
+              //   videoAllowFiles: [
+              //     '.flv',
+              //     '.swf',
+              //     '.mkv',
+              //     '.avi',
+              //     '.rm',
+              //     '.rmvb',
+              //     '.mpeg',
+              //     '.mpg',
+              //     '.ogg',
+              //     '.ogv',
+              //     '.mov',
+              //     '.wmv',
+              //     '.mp4',
+              //     '.webm',
+              //     '.mp3',
+              //     '.wav',
+              //     '.mid'
+              //   ],
+              //   fileActionName: 'upload-file',
+              //   fileFieldName: 'upfile',
+              //   filePathFormat: '/uploads/file/{yyyy}/{mm}/{dd}/',
+              //   fileUrlPrefix: '',
+              //   fileMaxSize: 51200000,
+              //   fileAllowFiles: [
+              //     '.png',
+              //     '.jpg',
+              //     '.jpeg',
+              //     '.gif',
+              //     '.bmp',
+              //     '.flv',
+              //     '.swf',
+              //     '.mkv',
+              //     '.avi',
+              //     '.rm',
+              //     '.rmvb',
+              //     '.mpeg',
+              //     '.mpg',
+              //     '.ogg',
+              //     '.ogv',
+              //     '.mov',
+              //     '.wmv',
+              //     '.mp4',
+              //     '.webm',
+              //     '.mp3',
+              //     '.wav',
+              //     '.mid',
+              //     '.rar',
+              //     '.zip',
+              //     '.tar',
+              //     '.gz',
+              //     '.7z',
+              //     '.bz2',
+              //     '.cab',
+              //     '.iso',
+              //     '.doc',
+              //     '.docx',
+              //     '.xls',
+              //     '.xlsx',
+              //     '.ppt',
+              //     '.pptx',
+              //     '.pdf',
+              //     '.txt',
+              //     '.md',
+              //     '.xml'
+              //   ],
+              //   imageManagerActionName: 'list-image',
+              //   imageManagerListPath: '/uploads/image/',
+              //   imageManagerListSize: 20,
+              //   imageManagerUrlPrefix: '',
+              //   imageManagerInsertAlign: 'none',
+              //   imageManagerAllowFiles: [
+              //     '.png',
+              //     '.jpg',
+              //     '.jpeg',
+              //     '.gif',
+              //     '.bmp'
+              //   ],
+              //   fileManagerActionName: 'list-file',
+              //   fileManagerListPath: '/uploads/file/',
+              //   fileManagerUrlPrefix: '',
+              //   fileManagerListSize: 20,
+              //   fileManagerAllowFiles: [
+              //     '.png',
+              //     '.jpg',
+              //     '.jpeg',
+              //     '.gif',
+              //     '.bmp',
+              //     '.flv',
+              //     '.swf',
+              //     '.mkv',
+              //     '.avi',
+              //     '.rm',
+              //     '.rmvb',
+              //     '.mpeg',
+              //     '.mpg',
+              //     '.ogg',
+              //     '.ogv',
+              //     '.mov',
+              //     '.wmv',
+              //     '.mp4',
+              //     '.webm',
+              //     '.mp3',
+              //     '.wav',
+              //     '.mid',
+              //     '.rar',
+              //     '.zip',
+              //     '.tar',
+              //     '.gz',
+              //     '.7z',
+              //     '.bz2',
+              //     '.cab',
+              //     '.iso',
+              //     '.doc',
+              //     '.docx',
+              //     '.xls',
+              //     '.xlsx',
+              //     '.ppt',
+              //     '.pptx',
+              //     '.pdf',
+              //     '.txt',
+              //     '.md',
+              //     '.xml'
+              //   ]
+              // }
+              // #endregion
+            }
+          }
+        }
+      },
       {
         title: '图标选择',
         key: 'iconSelect',
@@ -254,7 +417,6 @@ export const crudOptions = function (vm) {
           }
         }
       }
-
     ]
   }
 }

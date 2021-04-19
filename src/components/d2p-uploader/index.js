@@ -2,13 +2,15 @@ import {
   request
 } from '@/api/service'
 
+import { BASEURL } from '@/api/config'
+
 export default {
   defaultType: 'qiniu', // 默认类型为腾讯云上传，可选值：【cos、qiniu、alioss】
   qiniu: {
     bucket: 'd2p-demo',
     getToken (custom) {
       return request({
-        url: this.$apis.MBASEURL + '/api/qiniu-uptoken',
+        url: BASEURL + '/api/qiniu-uptoken',
         method: 'get'
       }).then(ret => {
         console.log('ret: ', ret)
