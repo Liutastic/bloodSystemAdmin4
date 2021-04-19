@@ -68,7 +68,7 @@
               <div class="flex-sub">
                 <el-input class="input-width-100" size="mini" v-model="materialName" />
               </div>
-              <div class="btn ml-5">选择商品</div>
+              <div class="btn ml-5 cursor" @click="choosePro">选择商品</div>
             </div>
             <div class="color-333 font-size-8 mb-9">已绑商品: 我是商品，我是商品我是商品</div>
             <div class="flex align-center mb-9">
@@ -95,7 +95,7 @@
               <div class="flex-sub">
                 <el-input class="input-width-100" size="mini" v-model="relatePro" />
               </div>
-              <div class="btn ml-5">选择商品</div>
+              <div class="btn ml-5 cursor" @click="choosePro">选择商品</div>
             </div>
             <div class="color-333 font-size-8 mb-9">关联商品: 我是商品，我是商品我是商品</div>
           </div>
@@ -106,7 +106,7 @@
       </el-col>
     </el-row>
     <!-- 选择商品弹窗 -->
-    <SelProDialog :selProDialogShow="selProDialogShow"></SelProDialog>
+    <SelProDialog :selProDialogShow="selProDialogShow" @closeSelProDialog="closeSelProDialog"></SelProDialog>
   </d2-container>
 </template>
 
@@ -220,6 +220,16 @@ export default {
     },
     uploadProImgPropress (val) {
       console.log(val)
+    },
+    // 选择商品
+    choosePro () {
+      console.log('选择', this.selProDialogShow)
+      this.selProDialogShow = true
+    },
+    // 关闭选择商品弹窗
+    closeSelProDialog () {
+      console.log('关闭', this.selProDialogShow)
+      this.selProDialogShow = false
     }
   }
 }
@@ -267,6 +277,9 @@ export default {
     margin-top:20px;
     text-align: center;
   }
+}
+.cursor{
+  cursor: pointer;
 }
 .text-center{
   text-align: center;

@@ -4,5 +4,44 @@ export default ({ request }) => ({
       url: `/api/personal-center-function?version=${data.version}&type=${data.type}`,
       method: 'get'
     })
+  },
+  // 权限模板
+  // 获取权限模板列表
+  GetPermissionList (data) {
+    return request({
+      url: '/admin/v1/template/list',
+      method: 'get'
+    })
+  },
+  // 获取某个权限详情
+  GetPermissionDetail (data) {
+    return request({
+      url: `/admin/v1/template/show-data?id=${data.id}`,
+      method: 'get'
+    })
+  },
+  // 新增或者编辑权限
+  AddAndEditPermission (data) {
+    return request({
+      url: '/admin/v1/template/store',
+      method: 'post',
+      data
+    })
+  },
+  // 修改权限状态
+  EditPermissionStatus (data) {
+    return request({
+      url: '/admin/v1/template/status',
+      method: 'post',
+      data
+    })
+  },
+  // 删除权限模板
+  DeletePermission (data) {
+    return request({
+      url: '/admin/v1/template/delete',
+      method: 'post',
+      data
+    })
   }
 })

@@ -1,6 +1,6 @@
 <template>
   <div style="cursor: pointer">
-    <el-tag :type="type" @click.native="handleClick">{{ text }}</el-tag>
+    <el-tag :type="type" @click.native="editPermissionStatus">{{ text }}</el-tag>
   </div>
 </template>
 
@@ -21,8 +21,12 @@ export default {
     }
   },
   methods: {
-    handleClick () {
+    async editPermissionStatus () {
       console.log(this.value)
+      // const { code, msg, data } = await this.$apis.EditPermissionStatus(data)
+      // console.log(code, msg, data)
+      // if (code === 0) {
+      // }
       this.$emit('input', !this.value)
     }
   }

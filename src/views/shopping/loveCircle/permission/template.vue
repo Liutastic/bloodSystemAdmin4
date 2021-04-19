@@ -3,7 +3,7 @@
     <template slot="header">权限模块</template>
     <d2-crud-x
       :columns="columns"
-      :data="data"
+      :data="permissionData"
       :rowHandle="rowHandle"
       :options="options"
       @row-remove="deleteRow"
@@ -30,7 +30,7 @@ export default {
         },
         {
           title: '模板名称',
-          key: 'name',
+          key: 'title',
           align: 'center'
         },
         {
@@ -43,33 +43,7 @@ export default {
         }
       ],
       // 权限列表数据
-      data: [
-        {
-          id: '1',
-          name: '所有用户可查看',
-          status: true
-        },
-        {
-          id: '2',
-          name: '普通用户不可查看',
-          status: false
-        },
-        {
-          id: '3',
-          name: '所有用户可查看',
-          status: true
-        },
-        {
-          id: '4',
-          name: '所有用户可查看',
-          status: true
-        },
-        {
-          id: '5',
-          name: '所有用户可查看',
-          status: true
-        }
-      ],
+      permissionData: [],
       // 固定表头
       options: {
         height: '100%'
@@ -96,24 +70,42 @@ export default {
     }
   },
   mounted () {
-
+    this.getPermissionList()
   },
   methods: {
+    // 获取权限列表
+    async getPermissionList () {
+      const { code, msg, data } = await this.$apis.GetPermissionList()
+      console.log(code, msg, data)
+      if (code === 0) {
+        this.permissionData = data.data
+        console.log('this.permissionData', this.permissionData)
+      }
+    },
     // 删除
-    deleteRow ({ index, row }, done) {
-      setTimeout(() => {
-        console.log(index)
-        console.log(row)
+    async deleteRow ({ index, row }, done) {
+      const { code, msg, data } = await this.$apis.DeletePermission({ id: row.id })
+      console.log(code, msg, data)
+      if (code === 0) {
         this.$message({
           message: '删除成功',
           type: 'success'
         })
         done()
-      }, 300)
+      } else {
+        this.$message({
+          message: msg,
+          type: 'warning'
+        })
+      }
     },
     // 去编辑页面
     goEdit ({ index, row }) {
       console.log(index, row)
+      this.$router.push({
+        path: '/shopping/loveCircle/permission/addTemplate',
+        query: { id: row.id }
+      })
     }
   }
 }
