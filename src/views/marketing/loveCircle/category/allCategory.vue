@@ -46,7 +46,6 @@ export default {
     pageRequest (query) {
       this.$apis.GetCategoryList(query).then(res => { console.log(res) })
       return this.$apis.GetCategoryList(query)
-
     },
     addRequest (data) {
       return this.$apis.CreateCategory(data)
@@ -58,7 +57,7 @@ export default {
       return this.$apis.DeleteCategory(row.id)
     },
     jumpAdd () {
-      this.$router.push('/shopping/loveCircle/category/addCategory')
+      this.$router.push('/marketing/loveCircle/category/addCategory')
     }
   }
 }

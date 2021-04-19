@@ -103,7 +103,7 @@ export default {
     goEdit ({ index, row }) {
       console.log(index, row)
       this.$router.push({
-        path: '/shopping/loveCircle/permission/addTemplate',
+        path: '/marketing/loveCircle/permission/addTemplate',
         query: { id: row.id }
       })
     }

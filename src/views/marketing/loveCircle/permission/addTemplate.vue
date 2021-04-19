@@ -142,7 +142,7 @@ export default {
         })
         setTimeout(() => {
           this.$router.push({
-            path: '/shopping/loveCircle/permission/template'
+            path: '/marketing/loveCircle/permission/template'
           })
         }, 2000)
       }

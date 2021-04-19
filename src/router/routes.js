@@ -1,5 +1,5 @@
 import demo from './modules/demo'
-import shopping from './modules/shopping'
+import marketing from './modules/marketing'
 
 import layoutHeaderAside from '@/layout/header-aside'
 
@@ -53,7 +53,7 @@ const frameIn = [
     ]
   },
   demo,
-  shopping
+  marketing
 ]
 
 /**

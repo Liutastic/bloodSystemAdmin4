@@ -6,10 +6,10 @@ const _import = require('@/libs/util.import.' + process.env.NODE_ENV)
 const meta = { auth: true }
 
 export default {
-  path: '/shopping',
-  name: 'shopping',
+  path: '/marketing',
+  name: 'marketing',
   meta,
-  redirect: { name: 'shopping' },
+  redirect: { name: 'marketing' },
   component: layoutHeaderAside,
   children: [
     {
@@ -19,7 +19,7 @@ export default {
         title: '运营状态',
         auth: true
       },
-      component: _import('shopping/loveCircle/operation')
+      component: _import('marketing/loveCircle/operation')
     },
     {
       path: 'loveCircle/permission/template',
@@ -28,7 +28,7 @@ export default {
         title: '权限模板',
         auth: true
       },
-      component: _import('shopping/loveCircle/permission/template')
+      component: _import('marketing/loveCircle/permission/template')
     },
     {
       path: 'loveCircle/permission/addTemplate',
@@ -37,7 +37,7 @@ export default {
         title: '新增权限模板',
         auth: true
       },
-      component: _import('shopping/loveCircle/permission/addTemplate')
+      component: _import('marketing/loveCircle/permission/addTemplate')
     },
     {
       path: 'loveCircle/category/allCategory',
@@ -46,7 +46,7 @@ export default {
         title: '所有分类',
         auth: true
       },
-      component: _import('shopping/loveCircle/category/allCategory')
+      component: _import('marketing/loveCircle/category/allCategory')
     },
     {
       path: 'loveCircle/category/addCategory',
@@ -55,7 +55,7 @@ export default {
         title: '新增/编辑分类',
         auth: true
       },
-      component: _import('shopping/loveCircle/category/addCategory')
+      component: _import('marketing/loveCircle/category/addCategory')
     },
     {
       path: 'loveCircle/allMaterial',
@@ -64,7 +64,7 @@ export default {
         title: '所有素材',
         auth: true
       },
-      component: _import('shopping/loveCircle/allMaterial')
+      component: _import('marketing/loveCircle/allMaterial')
     },
     {
       path: 'loveCircle/material/issuerSetting',
@@ -73,7 +73,7 @@ export default {
         title: '发布人身份设置',
         auth: true
       },
-      component: _import('shopping/loveCircle/material/issuerSetting')
+      component: _import('marketing/loveCircle/material/issuerSetting')
     },
     {
       path: 'loveCircle/material/imageMaterial',
@@ -82,7 +82,7 @@ export default {
         title: '图文素材',
         auth: true
       },
-      component: _import('shopping/loveCircle/material/imageMaterial')
+      component: _import('marketing/loveCircle/material/imageMaterial')
     },
     {
       path: 'loveCircle/material/videoMaterial',
@@ -91,7 +91,7 @@ export default {
         title: '视频素材',
         auth: true
       },
-      component: _import('shopping/loveCircle/material/videoMaterial')
+      component: _import('marketing/loveCircle/material/videoMaterial')
     }
   ]
 }
