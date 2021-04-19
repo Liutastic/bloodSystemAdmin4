@@ -1,12 +1,6 @@
 <template>
   <d2-container :class="{'page-compact':crud.pageOptions.compact}">
-    <template slot="header">
-      <!-- 特殊列 -->
-      <!-- <example-helper title="帮助"  >
-        <h4>请点击右下角查看本页源码</h4>
-      </example-helper> -->
-
-    </template>
+    <template slot="header">D2-Crud-Plus</template>
     <d2-crud-x
         ref="d2Crud"
         v-bind="_crudProps"
@@ -38,20 +32,14 @@
 import { AddObj, GetList, UpdateObj, DelObj, BatchDel } from './api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
-import helper from './helper'
 export default {
   name: 'page1',
   components: {},
   mixins: [d2CrudPlus.crud],
   data () {
     return {
-      helper: helper,
       multipleSelection: undefined
     }
-  },
-  computed: {
-  },
-  async mounted () {
   },
   methods: {
     getCrudOptions () {

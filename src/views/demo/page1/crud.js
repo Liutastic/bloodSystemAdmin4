@@ -189,6 +189,27 @@ export const crudOptions = function (vm) {
         }
       },
       {
+        title: '图片',
+        key: 'image',
+        type: 'image-uploader',
+        width: 200,
+        form: {
+          component: {
+            props: {
+              btnSize: 'small', // type=file-uploader时按钮的大小
+              btnName: '选择文件', // type=file-uploader时按钮文字
+              accept: '.png', // 接受的文件后缀类型
+              suffix: '', // url后缀，用于图片样式处理，需要到对象存储平台配置样式
+              type: 'qiniu', // 当前使用哪种存储后端【cos/qiniu/alioss】
+              custom: {}, // 自定义参数，可以在获取token、sts时传入不同的参数给后端
+              elProps: { // 与el-uploader配置一致
+                limit: 1 // 限制上传文件数量
+              }
+            }
+          }
+        }
+      },
+      {
         title: '切换编辑器',
         key: 'change',
         sortable: false,
@@ -210,7 +231,7 @@ export const crudOptions = function (vm) {
             },
             props: {
               uploader: {
-                type: 'form' // 上传后端类型【cos,aliyun,oss,form】
+                type: 'qiniu' // 上传后端类型【cos,aliyun,oss,form】
               }
             },
             events: {
@@ -238,7 +259,8 @@ export const crudOptions = function (vm) {
             },
             props: {
               config: {
-                serverUrl: '/api/ueditor/'
+                // serverUrl: 'https://test.api.vodeshop.com/ueditor/server?action=config'
+                imageActionName: 'upload-image', imageFieldName: 'upfile', imageMaxSize: 2097152, imageAllowFiles: ['.png', '.jpg', '.jpeg', '.gif', '.bmp'], imageCompressEnable: true, imageCompressBorder: 1600, imageInsertAlign: 'none', imageUrlPrefix: '', imagePathFormat: '\/uploads\/image\/{yyyy}\/{mm}\/{dd}\/', scrawlActionName: 'upload-scrawl', scrawlFieldName: 'upfile', scrawlPathFormat: '\/uploads\/image\/{yyyy}\/{mm}\/{dd}\/', scrawlMaxSize: 2048000, scrawlUrlPrefix: '', scrawlInsertAlign: 'none', snapscreenActionName: 'upload-image', snapscreenPathFormat: '\/uploads\/image\/{yyyy}\/{mm}\/{dd}\/', snapscreenUrlPrefix: '', snapscreenInsertAlign: 'none', catcherLocalDomain: ['127.0.0.1', 'localhost', 'img.baidu.com'], catcherActionName: 'catch-image', catcherFieldName: 'source', catcherPathFormat: '\/uploads\/image\/{yyyy}\/{mm}\/{dd}\/', catcherUrlPrefix: '', catcherMaxSize: 2048000, catcherAllowFiles: ['.png', '.jpg', '.jpeg', '.gif', '.bmp'], videoActionName: 'upload-video', videoFieldName: 'upfile', videoPathFormat: '\/uploads\/video\/{yyyy}\/{mm}\/{dd}\/', videoUrlPrefix: '', videoMaxSize: 102400000, videoAllowFiles: ['.flv', '.swf', '.mkv', '.avi', '.rm', '.rmvb', '.mpeg', '.mpg', '.ogg', '.ogv', '.mov', '.wmv', '.mp4', '.webm', '.mp3', '.wav', '.mid'], fileActionName: 'upload-file', fileFieldName: 'upfile', filePathFormat: '\/uploads\/file\/{yyyy}\/{mm}\/{dd}\/', fileUrlPrefix: '', fileMaxSize: 51200000, fileAllowFiles: ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.flv', '.swf', '.mkv', '.avi', '.rm', '.rmvb', '.mpeg', '.mpg', '.ogg', '.ogv', '.mov', '.wmv', '.mp4', '.webm', '.mp3', '.wav', '.mid', '.rar', '.zip', '.tar', '.gz', '.7z', '.bz2', '.cab', '.iso', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.pdf', '.txt', '.md', '.xml'], imageManagerActionName: 'list-image', imageManagerListPath: '\/uploads\/image\/', imageManagerListSize: 20, imageManagerUrlPrefix: '', imageManagerInsertAlign: 'none', imageManagerAllowFiles: ['.png', '.jpg', '.jpeg', '.gif', '.bmp'], fileManagerActionName: 'list-file', fileManagerListPath: '\/uploads\/file\/', fileManagerUrlPrefix: '', fileManagerListSize: 20, fileManagerAllowFiles: ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.flv', '.swf', '.mkv', '.avi', '.rm', '.rmvb', '.mpeg', '.mpg', '.ogg', '.ogv', '.mov', '.wmv', '.mp4', '.webm', '.mp3', '.wav', '.mid', '.rar', '.zip', '.tar', '.gz', '.7z', '.bz2', '.cab', '.iso', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.pdf', '.txt', '.md', '.xml']
               }
             },
             show (context) {

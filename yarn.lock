@@ -4265,8 +4265,8 @@ ecc-jsbn@~0.1.1:
 
 echarts@^5.1.0:
   version "5.1.0"
-  resolved "https://registry.yarnpkg.com/echarts/-/echarts-5.1.0.tgz#768cc585aa092560f48f01b2d52de493aeecd2b0"
-  integrity sha512-/X2nnN5BXW2tuA/Hv9YY279rDfwcXaBAjK9Azi//llshbKyUXXxBknsug21GJRpwTmLZbE8rjjbhchdm01bZtw==
+  resolved "https://registry.npm.taobao.org/echarts/download/echarts-5.1.0.tgz#768cc585aa092560f48f01b2d52de493aeecd2b0"
+  integrity sha1-dozFhaoJJWD0jwGy1S3kk67s0rA=
   dependencies:
     tslib "2.0.3"
     zrender "5.1.0"
@@ -10703,8 +10703,8 @@ tsconfig@^7.0.0:
 
 tslib@2.0.3:
   version "2.0.3"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.0.3.tgz#8e0741ac45fc0c226e58a17bfc3e64b9bc6ca61c"
-  integrity sha512-uZtkfKblCEQtZKBF6EBXVZeQNl82yqtDQdv+eck8u7tdPxjLu2/lp5/uPW+um2tpuxINHWy3GhiccY7QgEaVHQ==
+  resolved "https://registry.npm.taobao.org/tslib/download/tslib-2.0.3.tgz?cache=0&sync_timestamp=1617647074515&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftslib%2Fdownload%2Ftslib-2.0.3.tgz#8e0741ac45fc0c226e58a17bfc3e64b9bc6ca61c"
+  integrity sha1-jgdBrEX8DCJuWKF7/D5kubxsphw=
 
 tslib@^1.9.0:
   version "1.14.1"
@@ -10800,7 +10800,7 @@ unicode-match-property-ecmascript@^1.0.4:
   version "1.0.4"
   resolved "https://registry.npm.taobao.org/unicode-match-property-ecmascript/download/unicode-match-property-ecmascript-1.0.4.tgz#8ed2a32569961bce9227d09cd3ffbb8fed5f020c"
   integrity sha1-jtKjJWmWG86SJ9Cc0/+7j+1fAgw=
-  dependencies:
+  dependencies:<
     unicode-canonical-property-names-ecmascript "^1.0.4"
     unicode-property-aliases-ecmascript "^1.0.4"
 
@@ -11653,7 +11653,7 @@ yorkie@^2.0.0:
 
 zrender@5.1.0:
   version "5.1.0"
-  resolved "https://registry.yarnpkg.com/zrender/-/zrender-5.1.0.tgz#b6a84c3aa7ccc6642ee0519901ca4c0835c4d85e"
-  integrity sha512-c+8VRx52ycbmqwHeHLlo/BAfIHBl/JZNLM6cfDQFgzIH05yb+f5J9F/fbRsP+zGc8dW9XHuhdt8/iqukgMZSeg==
+  resolved "https://registry.npm.taobao.org/zrender/download/zrender-5.1.0.tgz?cache=0&sync_timestamp=1618215776804&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fzrender%2Fdownload%2Fzrender-5.1.0.tgz#b6a84c3aa7ccc6642ee0519901ca4c0835c4d85e"
+  integrity sha1-tqhMOqfMxmQu4FGZAcpMCDXE2F4=
   dependencies:
     tslib "2.0.3"
