@@ -2,6 +2,7 @@ import axios from 'axios'
 import Adapter from 'axios-mock-adapter'
 import { get } from 'lodash'
 import util from '@/libs/util'
+import { BASEURL } from './config'
 import { errorLog, errorCreate } from './tools'
 
 /**
@@ -84,7 +85,7 @@ function createRequestFunction (service) {
         'Content-Type': get(config, 'headers.Content-Type', 'application/json')
       },
       timeout: 5000,
-      baseURL: process.env.VUE_APP_API,
+      baseURL: BASEURL,
       data: {}
     }
     return service(Object.assign(configDefault, config))
