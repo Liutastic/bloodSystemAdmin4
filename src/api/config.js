@@ -15,8 +15,8 @@ if (process.env.NODE_ENV === 'development') {
 export const BASEURL = MBASEURL
 export const SOCKETURL = MSOCKETURL
 export const WEb_BASEURL = MWEb_BASEURL
-export const qiniuUrl = 'https://upload-z2.qiniup.com'
-export const imgBaseUrl = 'https://image.v1.vodeshop.com/' // 七牛域名
+export const QINIUURL = 'https://upload-z2.qiniup.com'
+export const IMGBASEURL = 'https://image.v1.vodeshop.com/' // 七牛域名
 export const GD_FE_KEY = 'ba6d7bcba1c0f4f8b5dfb704d553ccf0' // 高德web端key
 export const GD_S_KEY = 'f0d91cd10e926499e9e466e541afc203' // 高德web端服务key
 export const GD_WX_KEY = 'ca06b283654e96768fcfb0f66ad982c2' // 高德微信小程序key
