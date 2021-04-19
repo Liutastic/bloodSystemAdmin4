@@ -17,24 +17,71 @@
       </el-form-item>
       <el-form-item prop="avatar" label="头像">
         <el-upload
+          class="avatar-uploader"
           :action="QINIUURL"
-          :multiple="false"
           :data="dataToken"
+          :show-file-list="false"
           :on-remove="handleRemove"
           :on-success="handleSuccess"
           :before-upload="beforeUpload"
           list-type="picture-card"
-          ><i class="el-icon-plus"></i>
+        >
+          <img
+            v-if="formData.avatar"
+            :src="formData.avatar | qiniu"
+            class="avatar"
+          />
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </el-form-item>
       <el-form-item prop="is_enable" label="启用状态">
-        <el-switch
-          v-model="formData.is_enable"
-          active-color="#13ce66"
-        ></el-switch>
+        <el-switch v-model="status" active-color="#13ce66"></el-switch>
       </el-form-item>
       <el-button type="success" size="mini" @click="submit">保存</el-button>
     </el-form>
+    <div class="title">发布人列表</div>
+    <div>
+      <el-table :data="issuerList" style="width: 60%">
+        <el-table-column prop="id" label="ID"></el-table-column>
+        <el-table-column prop="name" label="发布人名称"></el-table-column>
+        <el-table-column prop="created_at" label="日期"></el-table-column>
+        <el-table-column prop="is_enable" label="状态">
+          <template slot-scope="scope">
+            <el-tag
+              v-if="scope.row.is_enable === 1"
+              type="success"
+              @click="changeIssuerStatus(scope.row)"
+              >启用</el-tag
+            >
+            <el-tag
+              v-else-if="scope.row.is_enable === 0"
+              @click="changeIssuerStatus(scope.row)"
+              type="danger"
+              style="color: #fff"
+            >
+              禁用</el-tag
+            >
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button
+              type="danger"
+              size="mini"
+              @click="removeIssuer(scope.row)"
+              >删除</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        :current-page.sync="params.page"
+        :page-size="params.per_page"
+        layout="prev, pager, next, jumper"
+        :total="total"
+      >
+      </el-pagination>
+    </div>
   </d2-container>
 </template>
 
@@ -44,11 +91,20 @@ export default {
   name: 'loveCircle',
   data () {
     return {
+      status: true,
+      // 分页参数
+      params: {
+        page: 1,
+        per_page: 15
+      },
+      total: 0,
+      // 表单提交数据
       formData: {
         name: '',
-        is_enable: false,
-        avatar: ''
+        is_enable: true,
+        avatar: null
       },
+      // 表单校验规则
       formRules: {
         name: [
           { required: true, message: '请输入发布人名称', trigger: 'blur' },
@@ -58,16 +114,22 @@ export default {
           { required: true, message: '请上传头像', trigger: 'blur' }
         ]
       },
+      // 七牛token
       QINIUURL,
-      dataToken: { token: '' } // 上传的token
+      dataToken: { token: '' }, // 上传的token
+      // 发布人列表
+      issuerList: []
     }
   },
+  async mounted () {
+    await this.getIssuerList(this.params)
+  },
   methods: {
-    handleSuccess (file) {
-      console.log('handleSuccess', file)
+    handleSuccess (res, file) {
+      console.log(res)
+      this.formData.avatar = res.hash
     },
     handleRemove (file) {
-      console.log('handleRemove', file)
     },
     async beforeUpload () {
       this.$loading()
@@ -75,17 +137,81 @@ export default {
       this.dataToken.token = uptoken
       this.$loading().close()
     },
-    submit () {
+    // 获取发布人分页
+    async getIssuerList (params) {
+      const { data, code, msg } = await this.$apis.GetIssuerList(params)
+      if (code === 0) {
+        this.issuerList = data.data
+        this.total = data.total
+      } else {
+        this.$message(msg)
+      }
+    },
+    // 更改发布人状态
+    async changeIssuerStatus (row) {
+      let data = {}
+      if (row.is_enable === 1) {
+        data = { id: row.id, is_enable: 0 }
+      } else {
+        data = { id: row.id, is_enable: 1 }
+      }
+      const { code, msg } = await this.$apis.UpdateIssuerStatus(data)
+      if (code === 0) {
+        this.$message('更改发布人状态成功')
+      } else {
+        this.$message(msg)
+      }
+    },
+    // 删除一个发布人
+    async removeIssuer (row) {
+      this.$confirm('此操作将永久删除该发布人, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        const { code, msg } = await this.$apis.DeleteIssuer(row.id)
+        if (code === 0) {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        } else {
+          this.$message(msg)
+        }
+      })
+    },
+    async submit () {
       console.log('formData', this.formData)
+      if (this.status) {
+        this.formData.is_enable = 1
+      } else {
+        this.formData.is_enable = 0
+      }
+      this.$refs.issuerForm.validate(async valid => {
+        if (valid) {
+          const { code, msg } = await this.$apis.AddIssuer(this.formData)
+          if (code === 0) {
+            // 成功后处理
+          } else {
+            this.$message(msg)
+          }
+        }
+      })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.avatar-content {
-  height: 100px;
-  width: 100px;
-  border-radius: 50%;
+.avatar {
+  width: 145px;
+  height: 145px;
+  display: block;
+}
+
+.title {
+  margin-top: 20px;
+  font-weight: 500;
+  font-size: 16px;
 }
 </style>

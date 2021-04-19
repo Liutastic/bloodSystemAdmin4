@@ -84,6 +84,14 @@ export default ({ request }) => ({
       params
     })
   },
+  // 添加一个发布人
+  AddIssuer (data) {
+    return request({
+      url: '/admin/v1/pink-circle-user/create',
+      method: 'post',
+      data
+    })
+  },
   // 查看权限模板列表
   GetAuthTemplateList (params) {
     return request({
@@ -105,6 +113,30 @@ export default ({ request }) => ({
     return request({
       url: '/admin/v1/pink-circle-user/user',
       method: 'get',
+      params
+    })
+  },
+  // 获取发布人列表（分页）
+  GetIssuerList (params) {
+    return request({
+      url: '/admin/v1/pink-circle-user/index',
+      method: 'get',
+      params
+    })
+  },
+  // 修改发布人状态
+  UpdateIssuerStatus (data) {
+    return request({
+      url: '/admin/v1/pink-circle-user/enable',
+      method: 'put',
+      data
+    })
+  },
+  // 删除一个发布人
+  DeleteIssuer (params) {
+    return request({
+      url: '/admin/v1/pink-circle-user/delete',
+      method: 'delete',
       params
     })
   }
