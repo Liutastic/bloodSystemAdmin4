@@ -71,6 +71,17 @@ export default {
           ]
         }
       ]
+    },
+    {
+      title: '报名活动',
+      icon: 'home',
+      children: [
+        {
+          title: '所有活动',
+          icon: 'home',
+          path: '/marketing/activities/activities'
+        }
+      ]
     }
   ]
 }
