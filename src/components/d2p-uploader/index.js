@@ -8,16 +8,16 @@ export default {
     bucket: 'd2p-demo',
     getToken (custom) {
       return request({
-        url: this.$apis.BASEURL + '/api/qiniu-uptoken22',
+        url: this.$apis.BASEURL + '/api/qiniu-uptoken',
         method: 'get'
       }).then(ret => {
-        console.log('ret: ', ret)
-
-        return ret.data // {token:xxx,expires:xxx}
+        return {
+          token: ret.uptoken,
+          expires: 100000
+        }
       })
     },
     successHandle (ret) { // 上传完成后可以在此处处理结果，修改url什么的
-      console.log('success handle:', ret)
       return ret
     },
     domain: 'https://image.v1.vodeshop.com'
