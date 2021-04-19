@@ -86,8 +86,24 @@ export default {
       const { code, msg, data } = await this.$apis.GetPermissionDetail({ id: this.id })
       console.log(code, msg, data)
       if (code === 0) {
+        console.log('成功了')
+        this.formData.title = data.title
+        this.mallCheckList = this.handelTagShowList(data.competence.mall, this.mallOption)
+        this.dymCheckList = this.handelTagShowList(data.competence.dym, this.dymOption)
+        this.retailCheckList = this.handelTagShowList(data.competence.retail, this.retailOption)
+        console.log(this.mallCheckList, this.dymCheckList, this.retailCheckList)
       }
     },
+    // 处理编辑回显的所选权限数据
+    handelTagShowList (selList, optionList) {
+      const list = []
+      selList.forEach(val => {
+        const item = optionList.find(item => item.id === Number(val))
+        list.push(item.title)
+      })
+      return list
+    },
+    // 处理保存的时候所选择权限的数据
     handelTagList (selList, optionList, tag) {
       const list = []
       selList.forEach(val => {
@@ -97,6 +113,20 @@ export default {
       return list
     },
     async save () {
+      if (!this.formData.title) {
+        this.$message({
+          message: '权限模板名称不能为空！',
+          type: 'warning'
+        })
+        return
+      }
+      if (!this.mallCheckList.length || !this.dymCheckList.length || !this.retailCheckList.length) {
+        this.$message({
+          message: '请选择权限！',
+          type: 'warning'
+        })
+        return
+      }
       const mallTagList = this.handelTagList(this.mallCheckList, this.mallOption, 'mall_')
       const dymTagList = this.handelTagList(this.dymCheckList, this.dymOption, 'dym_')
       const retailTagList = this.handelTagList(this.retailCheckList, this.retailOption, 'retail_')

@@ -5,14 +5,14 @@
     <!-- 发布者信息模块 -->
     <div class="every-temple-part border-dashed flex align-center justify-between padding-lr-8 padding-tb-10">
       <div class="flex align-center">
-        <el-avatar :size="mini" :src="circleUrl"></el-avatar>
+        <el-avatar size="mini" :src="circleUrl"></el-avatar>
         <div class="flex flex-direction-column ml-9">
           <span class="font-size-9 color-333">可甜</span>
           <span class="font-size-8 color-999 mt-3">16小时前</span>
         </div>
       </div>
       <div class="font-size-8 color-999">
-        <el-image class="transmit-icon" src="" :fit="fit"></el-image>
+        <el-image class="transmit-icon" src="" fit="'fit'"></el-image>
         10.6万
       </div>
       <div class="right-del-btn">
@@ -35,7 +35,7 @@
           <el-image
           class="pro-img"
           src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
-          :fit="contain"></el-image>
+          fit="'contain'"></el-image>
           <i class="el-icon-error del-icon"></i>
         </div>
       </div>
@@ -49,7 +49,7 @@
         <el-image
           class="bottom-pro-img"
           src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
-          :fit="contain"></el-image>
+          fit="'contain'"></el-image>
         <div class="pro-right-info flex justify-between flex-direction-column">
           <div class="color-333 font-size-10 hidden-ellipsis">冰糖橙10斤现摘现发橙子冰糖橙1010斤现摘现发橙子冰糖橙10</div>
           <div class="pro-price-part flex">

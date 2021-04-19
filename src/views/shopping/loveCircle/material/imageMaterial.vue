@@ -82,10 +82,11 @@
               <div class="flex-sub">
                 <el-upload
                   class="upload-btn"
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  :show-file-list="false"
-                  :on-progress="uploadProImgPropress"
-                  :on-success="uploadProImgSuccess">
+                  :action="QINIUURL"
+                  :data="dataToken"
+                  show-file-list="picture-card"
+                  :on-success="uploadProImgSuccess"
+                  :before-upload="beforeUpload">
                   <i class="el-icon-plus"></i>
                 </el-upload>
               </div>
@@ -113,6 +114,7 @@
 <script>
 import PreviewModel from './components/PreviewModel'
 import SelProDialog from './components/SelProDialog'
+import { QINIUURL } from '@/api/config'
 export default {
   name: 'imageMaterial',
   components: {
@@ -121,6 +123,8 @@ export default {
   },
   data () {
     return {
+      QINIUURL,
+      dataToken: { token: '' }, // 上传的token
       // 素材名
       materialName: '',
       // 虚拟转发
@@ -217,6 +221,12 @@ export default {
     },
     uploadProImgSuccess (response, file, fileList) {
       console.log(response, file, fileList)
+    },
+    async beforeUpload () {
+      this.$loading()
+      const { uptoken } = await this.$apis.qiniuToken()
+      this.dataToken.token = uptoken
+      this.$loading().close()
     },
     uploadProImgPropress (val) {
       console.log(val)
