@@ -27,7 +27,7 @@
         </div>
       </div>
       <div>
-        <el-button class="ml-5" @click="save" size="mini" type="primary">查找</el-button>
+        <el-button class="ml-5" @click="search" size="mini" type="primary">查找</el-button>
       </div>
     </div>
     <!-- 商品列表部分 -->
@@ -37,7 +37,7 @@
           <el-image
             class="pro-img"
             src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
-            :fit="contain"></el-image>
+            fit="'contain'"></el-image>
           <div class="pro-left-info color-333 font-size-8  ml-10">
             <div class="mb-5 hidden-ellipsis">冰糖橙10斤现摘现摘现斤现摘现发橙子冰糖冰糖橙现摘现发橙子冰糖冰糖橙现摘现发橙子冰糖冰糖橙</div>
             <div class="mb-5">价格：580元</div>
@@ -46,7 +46,7 @@
           </div>
         </div>
         <div>
-          <el-button class="ml-5" @click="save" size="mini" type="danger">选择</el-button>
+          <el-button class="ml-5" @click="selPro" size="mini" type="danger">选择</el-button>
         </div>
       </div>
     </div>
@@ -114,6 +114,12 @@ export default {
     },
     load () {
       console.log('触底加载')
+    },
+    search () {
+
+    },
+    selPro () {
+
     }
   }
 }
