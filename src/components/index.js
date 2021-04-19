@@ -5,11 +5,8 @@ import d2Container from './d2-container'
 import { d2CrudPlus } from 'd2-crud-plus'
 
 import {
-  request,
   requestForMock
 } from '@/api/service'
-
-import { BASEURL } from '@/api/config'
 
 // 引入echarts
 import * as echarts from 'echarts'
@@ -18,14 +15,14 @@ import {
   D2pAreaSelector,
   D2pFileUploader,
   D2pIconSelector,
-  // D2pTreeSelector,
   D2pFullEditor,
   D2pUploader
   // D2pDemoExtend
 } from 'd2p-extends' // 源码方式引入，上传组件支持懒加载
 import pluginExport from '@d2-projects/vue-table-export'
 import d2pUploaderConfig from './d2p-uploader'
-// import D2CrudX from 'd2-crud-x'
+
+Vue.prototype.$echarts = echarts
 
 // 注意 有些组件使用异步加载会有影响
 Vue.component('d2-container', d2Container)
@@ -40,27 +37,9 @@ Vue.use(pluginExport)
 Vue.use(D2pAreaSelector)
 Vue.use(D2pFileUploader, {
   d2CrudPlus,
-  defaultType: 'qiniu', // 默认类型为腾讯云上传，可选值：【cos、qiniu、alioss】
-  qiniu: {
-    bucket: 'd2p-demo',
-    getToken (custom) {
-      return request({
-        url: BASEURL + '/api/qiniu-uptoken',
-        method: 'get'
-      }).then(ret => {
-        return {
-          token: ret.uptoken,
-          expires: 100000
-        } // {token:xxx,expires:xxx}
-      })
-    },
-    successHandle (ret) { // 上传完成后可以在此处处理结果，修改url什么的
-      return ret
-    },
-    domain: 'https://image.v1.vodeshop.com'
-  }
+  ...d2pUploaderConfig
 })
-// Vue.use(D2pUploader)
+Vue.use(D2pUploader, d2pUploaderConfig)
 
 Vue.use(D2pFullEditor, {
   ueditor: {
@@ -69,10 +48,7 @@ Vue.use(D2pFullEditor, {
 })
 Vue.use(D2pIconSelector)
 
-Vue.prototype.$echarts = echarts
-
 // Vue.use(D2pDemoExtend)
-Vue.use(D2pUploader, d2pUploaderConfig)
 // #region 引入d2CrudPlus
 Vue.use(d2CrudPlus, {
   starTip: false,

@@ -2,13 +2,18 @@ import {
   request
 } from '@/api/service'
 
+import {
+  BASEURL,
+  QINIUURL
+} from '@/api/config'
+
 export default {
   defaultType: 'qiniu', // 默认类型为腾讯云上传，可选值：【cos、qiniu、alioss】
   qiniu: {
     bucket: 'd2p-demo',
     getToken (custom) {
       return request({
-        url: this.$apis.BASEURL + '/api/qiniu-uptoken',
+        url: BASEURL + '/api/qiniu-uptoken',
         method: 'get'
       }).then(ret => {
         return {
@@ -23,7 +28,7 @@ export default {
     domain: 'https://image.v1.vodeshop.com'
   },
   form: {
-    action: 'https://upload-z2.qiniup.com',
+    action: QINIUURL,
     name: 'file',
     withCredentials: false,
     successHandle (ret) { // 上传完成后的结果处理， 此处后台返回的结果应该为 ret = {data:'fileurl'}
