@@ -30,7 +30,7 @@
             <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8">权限模板：</div>
               <div class="flex-sub">
-                <el-select v-model="permissionValue" class="input-width-100" size="mini">
+                <el-select v-model="formData.pink_circle_competence_id" class="input-width-100" size="mini">
                   <el-option
                     v-for="item in permissionOption"
                     :key="item.id"
@@ -53,12 +53,12 @@
              <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8">发布人：</div>
               <div class="flex-sub">
-                <el-select v-model="publisher" class="input-width-100" size="mini">
+                <el-select v-model="formData.pink_circle_user_id" class="input-width-100" size="mini">
                   <el-option
                     v-for="item in publisherOption"
-                    :key="item.value"
+                    :key="item.id"
                     :label="item.label"
-                    :value="item.value">
+                    :value="item.id">
                   </el-option>
                 </el-select>
               </div>
@@ -101,7 +101,7 @@
             <div class="color-333 font-size-8 mb-9">关联商品: 我是商品，我是商品我是商品</div>
           </div>
           <div class="submit-btn-box">
-            <el-button type="primary" size="mini">上传</el-button>
+            <el-button type="primary" size="mini" @click="save">上传</el-button>
           </div>
         </div>
       </el-col>
@@ -129,16 +129,16 @@ export default {
         // 素材名
         name: '',
         pink_circle_category_id: null,
+        // 权限模板id
         pink_circle_competence_id: null,
         goods_id: null,
         content: '',
         // 虚拟转发
         pink_circle_fictitious_forward: null,
         media: [],
+        // 发布人id
         pink_circle_user_id: null
       },
-      // 权限模板
-      permissionValue: '',
       // 权限模板选项集合
       permissionOption: [
         {
@@ -194,29 +194,16 @@ export default {
           }]
         }
       ],
-      // 发布人
-      publisher: '',
       // 发布人选项合集
       publisherOption: [
         {
-          value: '选项1',
+          id: '1',
           label: '黄金糕'
         }, {
-          value: '选项2',
+          id: '3',
           label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
         }
       ],
-      // 文本内容
-      content: '',
       // 关联商品
       relatePro: null,
       // 选择商品弹窗显示隐藏
@@ -229,6 +216,8 @@ export default {
     this.getAllIssuerList()
   },
   methods: {
+    save () {
+    },
     selMaClassChange (e) {
       console.log(e)
     },
