@@ -4,7 +4,8 @@ export const crudOptions = (vm) => {
       {
         title: 'ID',
         key: 'id',
-        width: '80'
+        width: '80',
+        disabled: true
       },
       {
         title: '分类名称',
