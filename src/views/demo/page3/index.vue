@@ -2,7 +2,7 @@
   <d2-container>
     <template slot="header">Page 3 header</template>
     <el-upload
-      action="https://upload-z2.qiniup.com"
+      :action="QINIUURL"
       :multiple="true"
       :data="dataToken"
       :on-remove="handleRemove"
@@ -16,10 +16,13 @@
 </template>
 
 <script>
+import { QINIUURL } from '@/api/config'
+
 export default {
   name: 'page3',
   data () {
     return {
+      QINIUURL,
       dataToken: { token: '' } // 上传的token
     }
   },
