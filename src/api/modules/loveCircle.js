@@ -91,5 +91,21 @@ export default ({ request }) => ({
       method: 'get',
       params
     })
+  },
+  // 新增图片素材
+  AddImageMaterial (params) {
+    return request({
+      url: '/admin/v1/material/image',
+      method: 'post',
+      params
+    })
+  },
+  // 获取发布人列表(不分页)
+  GetAllIssuerList (params) {
+    return request({
+      url: '/admin/v1/pink-circle-user/user',
+      method: 'get',
+      params
+    })
   }
 })

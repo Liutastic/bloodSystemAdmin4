@@ -13,7 +13,7 @@
             <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8">素材名称：</div>
               <div class="flex-sub">
-                <el-input class="input-width-100" show-word-limit maxlength="10" size="mini" v-model="materialName" />
+                <el-input class="input-width-100" show-word-limit maxlength="10" size="mini" v-model="formData.name" />
               </div>
             </div>
             <div class="flex align-center mb-9">
@@ -33,9 +33,9 @@
                 <el-select v-model="permissionValue" class="input-width-100" size="mini">
                   <el-option
                     v-for="item in permissionOption"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
+                    :key="item.id"
+                    :label="item.title"
+                    :value="item.id">
                   </el-option>
                 </el-select>
               </div>
@@ -43,7 +43,7 @@
             <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8">虚拟转发：</div>
               <div class="flex-sub">
-                <el-input type="number" class="input-width-100" size="mini" v-model="virtualNum" />
+                <el-input type="number" class="input-width-100" size="mini" v-model="formData.pink_circle_fictitious_forward" />
               </div>
             </div>
           </div>
@@ -74,7 +74,7 @@
             <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8">文本内容：</div>
               <div class="flex-sub">
-                <el-input type="textarea" class="input-width-100" size="mini" v-model="content" />
+                <el-input type="textarea" class="input-width-100" size="mini" v-model="formData.content" />
               </div>
             </div>
             <div class="flex align-center mb-9">
@@ -125,10 +125,18 @@ export default {
     return {
       QINIUURL,
       dataToken: { token: '' }, // 上传的token
-      // 素材名
-      materialName: '',
-      // 虚拟转发
-      virtualNum: null,
+      formData: {
+        // 素材名
+        name: '',
+        pink_circle_category_id: null,
+        pink_circle_competence_id: null,
+        goods_id: null,
+        content: '',
+        // 虚拟转发
+        pink_circle_fictitious_forward: null,
+        media: [],
+        pink_circle_user_id: null
+      },
       // 权限模板
       permissionValue: '',
       // 权限模板选项集合
@@ -215,6 +223,11 @@ export default {
       selProDialogShow: false
     }
   },
+  mounted () {
+    this.getCategoryList()
+    this.getPermissionList()
+    this.getAllIssuerList()
+  },
   methods: {
     selMaClassChange (e) {
       console.log(e)
@@ -240,6 +253,30 @@ export default {
     closeSelProDialog () {
       console.log('关闭', this.selProDialogShow)
       this.selProDialogShow = false
+    },
+    // 获取素材分类
+    async getCategoryList () {
+      const { code, msg, data } = await this.$apis.GetCategoryList()
+      console.log('素材分类', code, msg, data)
+      if (code === 0) {
+        // this.materailClassList = data.data
+      }
+    },
+    // 获取权限模板列表
+    async getPermissionList () {
+      const { code, msg, data } = await this.$apis.GetPermissionList()
+      console.log('权限模板', code, msg, data)
+      if (code === 0) {
+        this.permissionOption = data.data
+      }
+    },
+    // 获取发布人列表
+    async getAllIssuerList () {
+      const { code, msg, data } = await this.$apis.GetAllIssuerList()
+      console.log('发布人列表', code, msg, data)
+      if (code === 0) {
+        this.publisherOption = data.data
+      }
     }
   }
 }
