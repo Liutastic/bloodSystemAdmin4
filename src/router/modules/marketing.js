@@ -92,6 +92,15 @@ export default {
         auth: true
       },
       component: _import('marketing/loveCircle/material/videoMaterial')
+    },
+    {
+      path: 'activities/activities',
+      name: 'activities',
+      meta: {
+        title: '所有活动',
+        auth: true
+      },
+      component: _import('marketing/activities/activities')
     }
   ]
 }
