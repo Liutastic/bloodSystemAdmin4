@@ -2,6 +2,7 @@ let MBASEURL, MSOCKETURL, MWEb_BASEURL
 
 if (process.env.NODE_ENV === 'development') {
   // 开发 npm run dev
+  // MBASEURL = 'https://test.api.vodeshop.com'
   MBASEURL = 'http://10.10.10.178:9501'
   MWEb_BASEURL = 'https://test.m.vodeshop.com'
   MSOCKETURL = 'ws://123.207.136.134:9010/ajaxchattest'

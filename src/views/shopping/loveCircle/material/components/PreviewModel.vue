@@ -21,10 +21,9 @@
     </div>
     <!-- 文案模块 -->
     <div class="every-temple-part text-box border-dashed padding-lr-8 padding-tb-10 font-size-9 color-333">
-      开心的一天从此刻开始</br>
-      难道不是吗？</br>
-      嘻嘻</br>
-      你说的对</br>
+      <div>
+        开心的一天从此刻开始
+      </div>
       <div class="right-del-btn">
         <i class="el-icon-circle-close right-del-icon"></i>
       </div>
