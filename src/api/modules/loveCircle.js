@@ -135,9 +135,8 @@ export default ({ request }) => ({
   // 删除一个发布人
   DeleteIssuer (params) {
     return request({
-      url: '/admin/v1/pink-circle-user/delete',
+      url: `/admin/v1/pink-circle-user/delete?id=${params.id}`,
       method: 'delete',
-      params
     })
   }
 })

@@ -57,7 +57,6 @@
               v-else-if="scope.row.is_enable === 0"
               @click="changeIssuerStatus(scope.row)"
               type="danger"
-              style="color: #fff"
             >
               禁用</el-tag
             >
@@ -157,24 +156,29 @@ export default {
       }
       const { code, msg } = await this.$apis.UpdateIssuerStatus(data)
       if (code === 0) {
-        this.$message('更改发布人状态成功')
+        this.$message({
+          message: '更改发布人状态成功',
+          type: 'success'
+        })
+        await this.getIssuerList(this.params)
       } else {
         this.$message(msg)
       }
     },
     // 删除一个发布人
-    async removeIssuer (row) {
+    removeIssuer (row) {
       this.$confirm('此操作将永久删除该发布人, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async () => {
-        const { code, msg } = await this.$apis.DeleteIssuer(row.id)
+        const { code, msg } = await this.$apis.DeleteIssuer(row)
         if (code === 0) {
           this.$message({
             type: 'success',
             message: '删除成功!'
           })
+          await this.getIssuerList(this.params)
         } else {
           this.$message(msg)
         }
@@ -191,7 +195,11 @@ export default {
         if (valid) {
           const { code, msg } = await this.$apis.AddIssuer(this.formData)
           if (code === 0) {
-            // 成功后处理
+            this.$message({
+              type: 'success',
+              message: '添加成功'
+            })
+            await this.getIssuerList(this.params)
           } else {
             this.$message(msg)
           }
