@@ -69,6 +69,15 @@ export default {
         auth: true
       },
       component: _import('demo/page3')
+    },
+    {
+      path: 'page4',
+      name: 'page4',
+      meta: {
+        title: 'DEMO 实例',
+        auth: true
+      },
+      component: _import('demo/page4')
     }
   ]
 }

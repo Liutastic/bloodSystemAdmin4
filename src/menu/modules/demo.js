@@ -9,7 +9,8 @@ export default {
       children: [
         { path: '/demo/page1', title: 'd2-crud-plus 实例' },
         { path: '/demo/page2', title: '接口请求 实例' },
-        { path: '/demo/page3', title: '七牛上传 实例' }
+        { path: '/demo/page3', title: '七牛上传 实例' },
+        { path: '/demo/page4', title: 'DEMO 实例' }
       ]
     }
   ]
