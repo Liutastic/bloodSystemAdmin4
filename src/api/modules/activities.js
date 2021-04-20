@@ -24,5 +24,31 @@ export default ({ request }) => ({
       method: 'get',
       params
     })
+  },
+
+  /**
+   * 获取活动分类
+   * http://doc.vodeshop.com/web/#/34?page_id=2637
+   * @param {*} params
+   */
+  getActivityCategory (params) {
+    return request({
+      url: '/admin/v1/activity/category',
+      method: 'get',
+      params
+    })
+  },
+  /**
+   * 创建活动
+   * http://doc.vodeshop.com/web/#/34?page_id=2624
+   * @param {*} data
+   */
+  addActivityStore (data) {
+    return request({
+      url: '/admin/v1/activity/store',
+      method: 'post',
+      data
+    })
   }
+
 })

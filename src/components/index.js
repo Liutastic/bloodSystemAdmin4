@@ -5,8 +5,7 @@ import d2Container from './d2-container'
 import { d2CrudPlus } from 'd2-crud-plus'
 
 import {
-  request,
-  requestForMock
+  request
 } from '@/api/service'
 
 import { BASEURL } from '@/api/config'
@@ -80,17 +79,17 @@ Vue.prototype.$echarts = echarts
 // #region 引入d2CrudPlus
 Vue.use(d2CrudPlus, {
   starTip: false,
-  getRemoteDictFunc (url, dict) {
+  async getRemoteDictFunc (url, dict) {
     // 此处配置你的字典http请求方法
     // 实际使用请改成request
-    console.log('asdasd: ')
-    return requestForMock({
+    const ret = await request({
       url: url,
       data: dict.body,
       method: 'get'
-    }).then(ret => {
-      return ret.data
     })
+    console.log('ret:', ret)
+
+    return ret.data
   },
   commonOption () {
     // 公共配置
