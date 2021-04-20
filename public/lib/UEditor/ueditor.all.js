@@ -23833,15 +23833,45 @@ UE.plugin.register('autoupload', function (){
 
         fd.append(fieldName, file, file.name || ('blob.' + file.type.substr('image/'.length)));
         fd.append('type', 'ajax');
+         // 直传七牛获取token(拖拽上传)
+        //  UE.ajax({
+        //     dataType: 'json',
+        //     async: false,
+        //     url: 'https://api.vodeshop.com/api/qiniu-uptoken',
+        //     success: function (res) {
+        //       console.log('拖拽上传: ', res)
+        //       fd.append("token",res.uptoken);
+        //     }
+        //   })
+
+          var getToken =new XMLHttpRequest();
+          getToken.open("get", "https://api.vodeshop.com/api/qiniu-uptoken", false);
+          getToken.onreadystatechange = function () {
+              if (getToken.readyState == 4 && getToken.status == 200) {
+
+                console.log('getToken',getToken.responseText);
+                var res = utils.str2json(getToken.responseText)
+                console.log('getToken',res);
+
+                fd.append("token",res.uptoken);
+
+              }
+          };
+          getToken.send(null);
+
+
+
+          
         xhr.open("post", url, true);
         xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
         xhr.addEventListener('load', function (e) {
             try{
                 var json = (new Function("return " + utils.trim(e.target.response)))();
-                if (json.state == 'SUCCESS' && json.url) {
+                if (json.key) {
+                     json.url = json.key
                     successHandler(json);
                 } else {
-                    errorHandler(json.state);
+                    errorHandler(json.error);
                 }
             }catch(er){
                 errorHandler(me.getLang('autoupload.loadError'));

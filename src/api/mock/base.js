@@ -55,6 +55,8 @@ export default {
         handle (req) {
           let data = list
           let size = 20
+          req.body.current = req.body.page
+          req.body.size = req.body.per_page
           let current = 1
           for (const item of list) {
             if (item.children != null && item.children.length === 0) {
@@ -72,6 +74,8 @@ export default {
             const query = { ...req.body }
             delete query.current
             delete query.size
+            delete query.per_page
+            delete query.page
             if (Object.keys(query).length > 0) {
               data = list.filter(item => {
                 let allFound = true // 是否所有条件都符合
@@ -124,7 +128,6 @@ export default {
               })
             }
           }
-
           const start = size * (current - 1)
           let end = size * current
           if (data.length < end) {
@@ -142,10 +145,10 @@ export default {
             code: 0,
             msg: 'success',
             data: {
-              records: records,
+              data: records,
               total: data.length,
-              size: size,
-              current: current
+              per_page: size,
+              current_page: current
             }
           }
         }
