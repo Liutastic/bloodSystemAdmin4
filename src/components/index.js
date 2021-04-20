@@ -96,7 +96,7 @@ Vue.use(d2CrudPlus, {
     // 公共配置
     return {
       format: {
-        page: { // page接口返回的数据结构配置，
+        page: { // page接口返回的数据结构配置
           request: { // 请求参数
             current: 'page', // 当前页码
             size: 'per_page' // 当前每页条数
