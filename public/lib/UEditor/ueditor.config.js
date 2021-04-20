@@ -29,7 +29,10 @@
     UEDITOR_HOME_URL: URL,
 
     // 服务器统一请求接口路径
-    serverUrl: URL + 'jsp/controller.jsp',
+    // serverUrl: '/lib/UEditor/config.json',
+    serverUrl: 'https://api.vodeshop.com/ueditor/server',
+
+    // serverUrl: '/jsp/controller.jsp',
 
     // 工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的重新定义
     toolbars: [[

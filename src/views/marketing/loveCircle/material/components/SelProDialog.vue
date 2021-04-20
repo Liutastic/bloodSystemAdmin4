@@ -22,8 +22,7 @@
             :props="props"
             v-model="categoryValue"
             size="mini"
-            :options="categoryOption"
-            @change="selCategoryChange" />
+            :show-all-levels="false" />
           </div>
         </div>
       </div>
@@ -136,9 +135,10 @@ export default {
     // 动态加载商品分类
     lazyLoad (node, resolve) {
       setTimeout(() => {
+        console.log('node', node)
         this.getProvence(node, resolve)
       }, 1000)
-    },
+    }
     // getProvence(node, resolve) {
     //   queryAuthorizedUnit({
     //     userId: JSON.parse(sessionStorage.userInfoLogin).yhid,
@@ -147,7 +147,7 @@ export default {
     //   }).then((json) => {
     //     if (Array.isArray(json.data.value)) {
     //       const nodes = json.data.value.map(item => ({
-    //         value: item.concatdw, // 
+    //         value: item.concatdw, //
     //         // value: item.dwdm,
     //         label: item.dwmc,
     //         leaf: node.level >= 5 // 5层级

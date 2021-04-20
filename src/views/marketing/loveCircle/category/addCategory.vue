@@ -144,8 +144,7 @@ export default {
         this.authList = data.data
         console.log(this.authList)
       } else {
-        // 提示错误信息 
-        // this.$message(msg)
+        this.$message(msg)
       }
     },
     addChild () {
