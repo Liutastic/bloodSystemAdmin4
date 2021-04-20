@@ -2,6 +2,7 @@
 build/
 tests/
 node_modules/
+pubilc/lib/UEditor
 
 # D2CRUD 演示
 src/views/demo/d2-crud/
@@ -12,3 +13,4 @@ coverage/
 # 忽略文件
 **/*-min.js
 **/*.min.js
+**/*.all.js

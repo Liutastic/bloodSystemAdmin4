@@ -8029,6 +8029,11 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
                 imageUrl = this.getOpt('imageUrl'),
                 serverUrl = this.getOpt('serverUrl');
 
+            if (action == "upload-image") {
+                    console.log('upload-image')
+                    return imageUrl;
+            }
+
             if(!serverUrl && imageUrl) {
                 serverUrl = imageUrl.replace(/^(.*[\/]).+([\.].+)$/, '$1controller$2');
             }
@@ -10172,7 +10177,6 @@ UE.plugins['defaultfilter'] = function () {
                                 '_href': ''
                             })
                         }
-                        break;
                         break;
                     case 'span':
                         val = node.getAttr('id');

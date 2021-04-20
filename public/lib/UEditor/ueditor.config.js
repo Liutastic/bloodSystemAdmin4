@@ -30,7 +30,7 @@
 
     // 服务器统一请求接口路径
     // serverUrl: '/lib/UEditor/config.json',
-    serverUrl: 'https://api.vodeshop.com/ueditor/server',
+    serverUrl: 'https://test.api.vodeshop.com/ueditor/server',
 
     // serverUrl: '/jsp/controller.jsp',
 
