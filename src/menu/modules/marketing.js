@@ -80,6 +80,11 @@ export default {
           title: '所有活动',
           icon: 'home',
           path: '/marketing/activities/activities'
+        },
+        {
+          title: '参与人记录',
+          icon: 'home',
+          path: '/marketing/activities/participant'
         }
       ]
     }
