@@ -35,7 +35,12 @@
             >删除</el-button
           >
 
-          <el-button icon="el-icon-refresh" :disabled="loading">刷新</el-button>
+          <el-button
+            icon="el-icon-refresh"
+            :disabled="loading"
+            @click.stop="getCategoryList"
+            >刷新</el-button
+          >
         </el-button-group>
       </el-form-item>
       <el-form-item label="过滤">
@@ -97,7 +102,7 @@
               <el-button
                 type="text"
                 size="mini"
-                @click.stop="deleteCategory(data.id)"
+                @click.stop="deleteACategory(data.id)"
               >
                 删除
               </el-button>
@@ -395,39 +400,68 @@ export default {
       })
       this.formLoading = false
     },
-    // 删除分类
-    deleteCategory (id) {
-      this.loading = true
-      console.log(this.selectedList)
-      if (this.selectedList.length === 0 || !id) {
-        this.$message({
-          type: 'warning',
-          message: '请先选择要操作的分类'
-        })
-        this.loading = false
-        return
-      }
-      this.$confirm('确认删除该分类, 包括其子类(如果存在)吗?', '提示', {
+    // 删除一个分类
+    deleteACategory (id) {
+      console.log(id)
+      this.$confirm('确认删除该分类吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async () => {
         // let params = JSON.parse(this.deleteList)
-        const { code, msg } = await this.$apis.DeleteCategory({ id: this.selectedList || id })
+        const { code } = await this.$apis.DeleteCategory({ id })
         if (code === 0) {
           this.$message({
             type: 'success',
             message: '删除成功'
           })
           this.getCategoryList()
-        } else {
+        } else if (code === 2000) {
           this.$message({
             type: 'error',
-            message: msg
+            message: '删除失败，该分类下还有子分类'
           })
         }
       })
+    },
+    // 删除多个分类
+    deleteCategory () {
+      this.loading = true
+      console.log(this.selectedList)
+      if (this.selectedList.length !== 0) {
+        this.$confirm('确认删除该分类吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+          // let params = JSON.parse(this.deleteList)
+          const { code, msg } = await this.$apis.DeleteCategory({ id: this.selectedList })
+          if (code === 0) {
+            this.$message({
+              type: 'success',
+              message: '删除成功'
+            })
+            this.getCategoryList()
+          } else {
+            this.$message({
+              type: 'error',
+              message: msg
+            })
+          }
+        })
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '请先选择要操作的分类'
+        })
+      }
       this.loading = false
+      this.loading = false
+    }
+  },
+  watch: {
+    filterText (val) {
+      this.$refs.tree.filter(val)
     }
   }
 }
