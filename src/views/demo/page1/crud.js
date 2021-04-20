@@ -226,6 +226,7 @@ export const crudOptions = function (vm) {
             },
             props: {
               config: UEditorConfig
+            }
           }
         }
       },
