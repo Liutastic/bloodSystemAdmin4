@@ -14,21 +14,26 @@
           <el-button
             icon="el-icon-check"
             :disabled="loading"
-            @click="setStatusList(1)"
+            @click="changeCategoryStatus(1)"
             >启用</el-button
           >
 
           <el-button
             icon="el-icon-close"
             :disabled="loading"
-            @click="setStatusList(0)"
+            @click="changeCategoryStatus(0)"
             >禁用</el-button
           >
         </el-button-group>
       </el-form-item>
       <el-form-item>
         <el-button-group>
-          <el-button icon="el-icon-delete" :disabled="loading">删除</el-button>
+          <el-button
+            icon="el-icon-delete"
+            :disabled="loading"
+            @click="deleteCategory"
+            >删除</el-button
+          >
 
           <el-button icon="el-icon-refresh" :disabled="loading">刷新</el-button>
         </el-button-group>
@@ -73,13 +78,27 @@
             >
             <span class="active">
               <span> {{ data.pink_circle_competence.title }} </span>
-              <el-button type="text" size="mini"> 新增 </el-button>
+              <el-button type="text" size="mini" @click.stop="handleAdd(data)">
+                新增
+              </el-button>
 
-              <el-button type="text" size="mini">
+              <el-button
+                type="text"
+                size="mini"
+                @click.stop="
+                  data.is_enable
+                    ? changeCategoryStatus(0)
+                    : changeCategoryStatus(1)
+                "
+              >
                 {{ data.is_enable ? "禁用" : "启用" }}
               </el-button>
 
-              <el-button type="text" size="mini" @click="deleteCategory">
+              <el-button
+                type="text"
+                size="mini"
+                @click.stop="deleteCategory(data.id)"
+              >
                 删除
               </el-button>
             </span>
@@ -184,7 +203,8 @@ export default {
         parent_id: 0,
         name: '',
         is_enable: 1,
-        sort: 0
+        sort: 0,
+        id: 1
       },
       formRules: {
         pink_circle_competence_id: [
@@ -200,8 +220,8 @@ export default {
         ]
       },
       formStatus: 'create',
-      // 要删除的分类id数组
-      deleteList: []
+      // 树中选中的节点
+      selectedList: []
     }
   },
   async mounted () {
@@ -215,9 +235,6 @@ export default {
       } else if (params === 'update') {
         this.formStatus = 'update'
       }
-    },
-    setStatusList (params) {
-
     },
     // 过滤分类
     filterNode (value, data) {
@@ -255,7 +272,7 @@ export default {
       const { data, msg, code } = await this.$apis.GetCategoryList()
       if (code === 0) {
         this.treeData = util.formatDataToTree(data, 'id')
-        // console.log(this.treeData)
+        // console.log('this.treeData', this.treeData)
       } else {
         this.$message({
           type: 'error',
@@ -278,10 +295,7 @@ export default {
     },
     // 复选树节点
     handleNodeCheck (data, node) {
-      // console.log(this.$refs.tree.getCurrentNode())
-
-      console.log(data)
-      console.log(node)
+      this.selectedList = node.checkedKeys
     },
     handleSwitchStatus () {
       if (this.switchStatus) {
@@ -289,6 +303,47 @@ export default {
       } else {
         this.formData.is_enable = 0
       }
+    },
+    // 改变分类状态
+    async changeCategoryStatus (is_enable) {
+      this.loading = true
+      if (this.selectedList.length === 0) {
+        this.$message({
+          type: 'warning',
+          message: '请先选择要操作的分类'
+        })
+        this.loading = false
+        return
+      }
+      const obj = {
+        id: this.selectedList,
+        is_enable
+      }
+      if (this.selectedList.length !== 0) {
+        const { msg, code } = await this.$apis.UpdateCategoryStatus(obj)
+        if (code === 0) {
+          this.$message({
+            type: 'success',
+            message: is_enable === 1 ? '启用成功' : '禁用成功'
+          })
+          this.selectedList = []
+          this.$refs.tree.setCheckedNodes([])
+          await this.getCategoryList()
+        } else {
+          this.$message({
+            type: 'error',
+            message: msg
+          })
+        }
+      }
+      this.loading = false
+    },
+    // 树节点新建btn
+    handleAdd (data) {
+      console.log(data)
+      this.formStatus = 'create'
+      this.$refs.tree.setCurrentKey(data.id)
+      // this.formData.id = key
     },
     // 提交新建
     submitAdd () {
@@ -341,28 +396,38 @@ export default {
       this.formLoading = false
     },
     // 删除分类
-    deleteCategory () {
-      if (this.deleteList.length === 1) {
-        this.$confirm('确认删除该分类, 包括其子类(如果存在)吗?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(async () => {
-          const { code, msg } = await this.$apis.DeleteCategory({ id: this.deleteList[0] })
-          if (code === 0) {
-            this.$message({
-              type: 'success',
-              message: '删除成功'
-            })
-            this.getCategoryList()
-          } else {
-            this.$message({
-              type: 'error',
-              message: msg
-            })
-          }
+    deleteCategory (id) {
+      this.loading = true
+      console.log(this.selectedList)
+      if (this.selectedList.length === 0 || !id) {
+        this.$message({
+          type: 'warning',
+          message: '请先选择要操作的分类'
         })
+        this.loading = false
+        return
       }
+      this.$confirm('确认删除该分类, 包括其子类(如果存在)吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        // let params = JSON.parse(this.deleteList)
+        const { code, msg } = await this.$apis.DeleteCategory({ id: this.selectedList || id })
+        if (code === 0) {
+          this.$message({
+            type: 'success',
+            message: '删除成功'
+          })
+          this.getCategoryList()
+        } else {
+          this.$message({
+            type: 'error',
+            message: msg
+          })
+        }
+      })
+      this.loading = false
     }
   }
 }

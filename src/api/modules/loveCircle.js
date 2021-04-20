@@ -76,7 +76,7 @@ export default ({ request }) => ({
       data
     })
   },
-  // 删除一个分类
+  // 删除分类
   DeleteCategory (params) {
     return request({
       url: '/admin/v1/pink-circle-category/delete',
