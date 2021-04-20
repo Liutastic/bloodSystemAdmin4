@@ -2,7 +2,16 @@
   <d2-container>
     <el-row>
       <el-col class="flex justify-center" :span="10">
-        <preview-model></preview-model>
+        <preview-model
+        @delProImg="delProImg"
+        @delPublisherPart="delPublisherPart"
+        @delContentPart="delContentPart"
+        @delProImgPart="delProImgPart"
+        :virtualNum="formData.pink_circle_fictitious_forward"
+        :issuerInfo="issuerInfo"
+        :proImgList="formData.media"
+        :content="formData.content"
+        :showProInfo="showProInfo"></preview-model>
       </el-col>
       <el-col class="flex justify-center" :span="10">
         <div class="publish-box">
@@ -53,11 +62,11 @@
              <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8">发布人：</div>
               <div class="flex-sub">
-                <el-select v-model="formData.pink_circle_user_id" class="input-width-100" size="mini">
+                <el-select @change="publisherChange" v-model="formData.pink_circle_user_id" class="input-width-100" size="mini">
                   <el-option
                     v-for="item in publisherOption"
                     :key="item.id"
-                    :label="item.label"
+                    :label="item.name"
                     :value="item.id">
                   </el-option>
                 </el-select>
@@ -66,7 +75,7 @@
             <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8">展示商品：</div>
               <div class="flex-sub">
-                <el-input class="input-width-100" size="mini" v-model="materialName" />
+                <el-input class="input-width-100" size="mini" />
               </div>
               <div class="btn ml-5 cursor" @click="choosePro">选择商品</div>
             </div>
@@ -84,7 +93,7 @@
                   class="upload-btn"
                   :action="QINIUURL"
                   :data="dataToken"
-                  show-file-list="picture-card"
+                  :show-file-list="false"
                   :on-success="uploadProImgSuccess"
                   :before-upload="beforeUpload">
                   <i class="el-icon-plus"></i>
@@ -135,7 +144,7 @@ export default {
         content: '',
         // 虚拟转发
         pink_circle_fictitious_forward: null,
-        media: [],
+        media: [{ goods_id: 33889, url: 'FgxbSPy-x-rCSOt-lz1L17gQneRj' }],
         // 发布人id
         pink_circle_user_id: null
       },
@@ -194,6 +203,10 @@ export default {
           }]
         }
       ],
+      // 发布人相关信息
+      issuerInfo: {},
+      // 展示商品的信息
+      showProInfo: {},
       // 发布人选项合集
       publisherOption: [
         {
@@ -216,13 +229,47 @@ export default {
     this.getAllIssuerList()
   },
   methods: {
-    save () {
+    // 上传
+    async save () {
+      const { code, msg, data } = await this.$apis.AddImageMaterial(this.formData)
+      console.log(code, msg, data)
+    },
+    // 预览页面删除发布人模块
+    delPublisherPart () {
+      this.issuerInfo = {}
+      this.formData.pink_circle_fictitious_forward = null
+      this.formData.pink_circle_user_id = null
+    },
+    // 预览页删除文案模块
+    delContentPart () {
+      this.formData.content = ''
+    },
+    // 删除商品图片模块
+    delProImgPart () {
+      this.formData.media = []
+    },
+    // 删除商品展示模块
+    delShowProPart () {
+      this.showProInfo = {}
+    },
+    // 删除商品图片
+    delProImg (index) {
+      console.log(this.formData.media)
+      this.formData.media.splice(index, 1)
+      console.log(this.formData.media)
+    },
+    // 选择发布人
+    publisherChange (e) {
+      console.log('改变发布人', e)
+      this.issuerInfo = this.publisherOption.find(val => val.id === e)
+      console.log('this.issuerInfo', this.issuerInfo)
     },
     selMaClassChange (e) {
       console.log(e)
     },
-    uploadProImgSuccess (response, file, fileList) {
-      console.log(response, file, fileList)
+    uploadProImgSuccess (res) {
+      console.log(res)
+      this.formData.media.push({ url: res.hash, goods_id: '' })
     },
     async beforeUpload () {
       this.$loading()
@@ -248,7 +295,7 @@ export default {
       const { code, msg, data } = await this.$apis.GetCategoryList()
       console.log('素材分类', code, msg, data)
       if (code === 0) {
-        // this.materailClassList = data.data
+        this.materailClassList = data.data
       }
     },
     // 获取权限模板列表
@@ -264,7 +311,7 @@ export default {
       const { code, msg, data } = await this.$apis.GetAllIssuerList()
       console.log('发布人列表', code, msg, data)
       if (code === 0) {
-        this.publisherOption = data.data
+        this.publisherOption = data
       }
     }
   }

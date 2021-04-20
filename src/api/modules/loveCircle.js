@@ -107,5 +107,12 @@ export default ({ request }) => ({
       method: 'get',
       params
     })
+  },
+  // 获取商品列表
+  GetProList (data) {
+    return request({
+      url: `/admin/v1/goods/search?keyword${data.keyword}&${data.category_id}`,
+      method: 'get'
+    })
   }
 })

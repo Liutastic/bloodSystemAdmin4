@@ -3,48 +3,48 @@
     <!-- 页面标题 -->
     <div class="title color-333 border-dashed font-bold">爱粉圈素材预览发布</div>
     <!-- 发布者信息模块 -->
-    <div class="every-temple-part border-dashed flex align-center justify-between padding-lr-8 padding-tb-10">
+    <div v-show="isShowOnePart" class="every-temple-part border-dashed flex align-center justify-between padding-lr-8 padding-tb-10">
       <div class="flex align-center">
-        <el-avatar size="mini" :src="circleUrl"></el-avatar>
+        <el-avatar size="mini" :src="issuerInfo.avatar | qiniu"></el-avatar>
         <div class="flex flex-direction-column ml-9">
-          <span class="font-size-9 color-333">可甜</span>
-          <span class="font-size-8 color-999 mt-3">16小时前</span>
+          <span class="font-size-9 color-333">{{issuerInfo.name}}</span>
+          <span class="font-size-8 color-999 mt-3">刚刚</span>
         </div>
       </div>
       <div class="font-size-8 color-999">
         <el-image class="transmit-icon" src="" fit="'fit'"></el-image>
-        10.6万
+        {{showVirtualNum}}
       </div>
-      <div class="right-del-btn">
+      <div class="right-del-btn" @click="delTemplate(1)">
         <i class="el-icon-circle-close right-del-icon"></i>
       </div>
     </div>
     <!-- 文案模块 -->
-    <div class="every-temple-part text-box border-dashed padding-lr-8 padding-tb-10 font-size-9 color-333">
+    <div v-show="content" class="every-temple-part text-box border-dashed padding-lr-8 padding-tb-10 font-size-9 color-333">
       <div>
-        开心的一天从此刻开始
+        {{content}}
       </div>
-      <div class="right-del-btn">
+      <div class="right-del-btn" @click="delTemplate(2)">
         <i class="el-icon-circle-close right-del-icon"></i>
       </div>
     </div>
     <!-- 图片链接九宫格模块 -->
-    <div class="every-temple-part border-dashed padding-lr-8 padding-tb-10">
+    <div v-show="proImgList.length" class="every-temple-part border-dashed padding-lr-8 padding-tb-10">
       <div class="flex flex-wrap" :class="{'nine-img-box': proImgList.length !== 4}">
         <div class="pro-img-box" v-for="(item, index) in proImgList" :key="index">
           <el-image
           class="pro-img"
-          src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+          :src="item.url | qiniu"
           fit="'contain'"></el-image>
-          <i class="el-icon-error del-icon"></i>
+          <i class="el-icon-error del-icon cursor" @click="delProImg(index)"></i>
         </div>
       </div>
-      <div class="right-del-btn">
+      <div class="right-del-btn" @click="delTemplate(3)">
         <i class="el-icon-circle-close right-del-icon"></i>
       </div>
     </div>
     <!-- 商品详细部分 -->
-    <div class="every-temple-part border-dashed padding-lr-8 padding-tb-10">
+    <div v-show="isShowFourPart" class="every-temple-part border-dashed padding-lr-8 padding-tb-10">
       <div class="flex">
         <el-image
           class="bottom-pro-img"
@@ -70,7 +70,7 @@
           </div>
         </div>
       </div>
-      <div class="right-del-btn">
+      <div class="right-del-btn" @click="delTemplate(4)">
         <i class="el-icon-circle-close right-del-icon"></i>
       </div>
     </div>
@@ -80,10 +80,65 @@
 <script>
 export default {
   name: 'PreviewModel',
+  props: {
+    issuerInfo: {
+      type: Object,
+      default: () => {}
+    },
+    proImgList: {
+      type: Array,
+      default: () => []
+    },
+    showProInfo: {
+      type: Object,
+      default: () => {}
+    },
+    virtualNum: {
+      type: String,
+      default: '0'
+    },
+    content: {
+      type: String,
+      default: ''
+    }
+  },
+  computed: {
+    showVirtualNum () {
+      return this.virtualNum > 10000 ? this.virtualNum / 10000 + '万' : this.virtualNum
+    },
+    // 判断是否展示发布人信息模块
+    isShowOnePart () {
+      return this.virtualNum || JSON.stringify(this.issuerInfo) !== '{}'
+    },
+    // 判断是否展示展示商品模块
+    isShowFourPart () {
+      return JSON.stringify(this.showProInfo) !== '{}'
+    }
+  },
   data () {
     return {
-      circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
-      proImgList: [1, 2, 3, 4]
+    }
+  },
+  methods: {
+    delProImg (index) {
+      this.$emit('delProImg', index)
+    },
+    // 删除版块 1=发布人 2=文案 3=商品图片 4=展示商品
+    delTemplate (type) {
+      switch (type) {
+        case 1:
+          this.$emit('delPublisherPart')
+          break
+        case 2:
+          this.$emit('delContentPart')
+          break
+        case 3:
+          this.$emit('delProImgPart')
+          break
+        case 4:
+          this.$emit('delShowProPart')
+          break
+      }
     }
   }
 }
@@ -261,5 +316,8 @@ export default {
 }
 .mt-40{
   margin-top:40px;
+}
+.cursor{
+  cursor: pointer;
 }
 </style>

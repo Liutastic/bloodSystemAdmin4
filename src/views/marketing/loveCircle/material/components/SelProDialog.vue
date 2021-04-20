@@ -11,7 +11,7 @@
         <div class="flex align-center mb-9">
           <div class="label color-333 font-size-8">查找商品：</div>
           <div class="flex-sub">
-            <el-input class="input-width-100" size="mini" v-model="keyWord" />
+            <el-input class="input-width-100" size="mini" v-model="formData.keyWord" />
           </div>
         </div>
         <div class="flex align-center mb-9">
@@ -19,10 +19,11 @@
           <div class="flex-sub">
             <el-cascader
             style="width:100%;"
-            v-model="classValue"
+            :props="props"
+            v-model="categoryValue"
             size="mini"
-            :options="classOption"
-            @change="selclassChange" />
+            :options="categoryOption"
+            @change="selCategoryChange" />
           </div>
         </div>
       </div>
@@ -65,11 +66,14 @@ export default {
   },
   data () {
     return {
-      keyWord: '',
+      formData: {
+        keyWord: '',
+        category_id: null
+      },
       // 素材分类
-      classValue: [],
+      categoryValue: [],
       // 素材分类选项集合
-      classOption: [
+      categoryOption: [
         {
           value: 'zhinan',
           label: '指南',
@@ -101,7 +105,11 @@ export default {
             }]
           }]
         }
-      ]
+      ],
+      props: {
+        lazy: true,
+        lazyLoad: this.lazyLoad
+      }
     }
   },
   methods: {
@@ -109,7 +117,7 @@ export default {
     close () {
       this.$emit('closeSelProDialog')
     },
-    selclassChange (e) {
+    selCategoryChange (e) {
       console.log(e)
     },
     load () {
@@ -120,7 +128,40 @@ export default {
     },
     selPro () {
 
-    }
+    },
+    async getProList () {
+      const { code, msg, data } = await this.$apis.GetProList(this.formData)
+      console.log(code, msg, data)
+    },
+    // 动态加载商品分类
+    lazyLoad (node, resolve) {
+      setTimeout(() => {
+        this.getProvence(node, resolve)
+      }, 1000)
+    },
+    // getProvence(node, resolve) {
+    //   queryAuthorizedUnit({
+    //     userId: JSON.parse(sessionStorage.userInfoLogin).yhid,
+    //     unitCodeId: node.data ? node.data.value.split('/')[0] : '',
+    //     startDate: '2019-9-12'
+    //   }).then((json) => {
+    //     if (Array.isArray(json.data.value)) {
+    //       const nodes = json.data.value.map(item => ({
+    //         value: item.concatdw, // 
+    //         // value: item.dwdm,
+    //         label: item.dwmc,
+    //         leaf: node.level >= 5 // 5层级
+    //       }))
+    //       resolve(nodes)
+    //     } else {
+    //       this.$message.error(json.data.value || json.data.error)
+    //     }
+    //   }).catch(error => this.$message.error(error))
+    // }
+  },
+  mounted () {
+    console.log('商品列表执行')
+    this.getProList()
   }
 }
 </script>
