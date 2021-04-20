@@ -3,6 +3,9 @@ import request from '@/api/request.mock'
 // import { requestForMock } from '@/api/service'
 // console.log("requestForMock: " , requestForMock);
 // const request = requestForMock
+import UEditorConfig from '@/api/UEditor-config'
+
+console.log('UEditorConfig: ', UEditorConfig)
 
 export const crudOptions = function (vm) {
   return {
@@ -145,7 +148,6 @@ export const crudOptions = function (vm) {
         search: { key: 'time', disabled: false },
         width: 160,
         showOverflowTooltip: true
-
       },
       {
         title: '级联式',
@@ -203,45 +205,10 @@ export const crudOptions = function (vm) {
               suffix: '', // url后缀，用于图片样式处理，需要到对象存储平台配置样式
               type: 'qiniu', // 当前使用哪种存储后端【cos/qiniu/alioss】
               custom: {}, // 自定义参数，可以在获取token、sts时传入不同的参数给后端
-              elProps: { // 与el-uploader配置一致
+              elProps: {
+                // 与el-uploader配置一致
                 limit: 1 // 限制上传文件数量
               }
-            }
-          }
-        }
-      },
-      {
-        title: '切换编辑器',
-        key: 'change',
-        sortable: false,
-        type: 'radio',
-        disabled: true,
-        dict: { data: [{ value: 'quill', label: 'Quill' }, { value: 'ueditor', label: 'UEditor' }, { value: 'wang', label: 'WangEditor' }] }
-      },
-      {
-        title: '内容',
-        key: 'content',
-        sortable: true,
-        width: 300,
-        type: 'editor-quill', // 富文本图片上传依赖file-uploader，请先配置好file-uploader
-        disabled: true, // 设置true可以在行展示中隐藏
-        form: {
-          component: {
-            disabled: () => {
-              return vm.getEditForm().disable
-            },
-            props: {
-              uploader: {
-                type: 'qiniu' // 上传后端类型【cos,aliyun,oss,form】
-              }
-            },
-            events: {
-              'text-change': (event) => {
-                console.log('text-change:', event)
-              }
-            },
-            show (context) {
-              return context.form.change === 'quill'
             }
           }
         }
@@ -318,7 +285,6 @@ export const crudOptions = function (vm) {
           }
         }
       }
-
     ]
   }
 }
