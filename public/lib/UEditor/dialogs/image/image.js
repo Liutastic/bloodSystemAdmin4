@@ -799,14 +799,13 @@
       uploader.on('uploadBeforeSend', function (file, data, header) {
         // 这里可以通过data对象添加POST参数
         header.X_Requested_With = 'XMLHttpRequest'
-        // HaoChuan9421
-
+        // 直传七牛获取token(多图上传)
         $.ajax({
           dataType: 'json',
           async: false,
-          url: 'https://test.api.vodeshop.com/api/qiniu-uptoken',
+          url: 'https://api.vodeshop.com/api/qiniu-uptoken',
           success: function (res) {
-            console.log('uploadBeforeSend res: ', res)
+            console.log('多图上传uploadBeforeSend res: ', res)
             data.token = res.uptoken
           }
         })
@@ -836,7 +835,7 @@
         try {
           var responseText = ret._raw || ret
           var json = utils.str2json(responseText)
-          console.log('json: ', json)
+          // console.log('json: ', json)
           if (json.key) {
             json.url = json.key
             _this.imageList.push(json)
@@ -844,7 +843,7 @@
           } else {
             $file
               .find('.error')
-              .text(json.state)
+              .text(json.error)
               .show()
           }
         } catch (e) {
