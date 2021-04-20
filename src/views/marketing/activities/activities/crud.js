@@ -1,4 +1,5 @@
 import StringUtils from 'd2-crud-plus/src/lib/utils/util.string'
+import { BASEURL } from '@/api/config'
 
 export const crudOptions = (vm) => {
   return {
@@ -7,26 +8,37 @@ export const crudOptions = (vm) => {
         title: 'ID',
         key: 'id',
         width: '80',
+
+        search: {
+          key: 'id',
+          title: '用户ID',
+          placeHolder: '请输入用户ID',
+          component: {
+            disabled: false
+          }
+        },
         form: {
           component: {
+            show: true,
             disabled: true
           }
         },
         addForm: {
           component: {
-            show: false
+            show: false,
+            disabled: true
           }
-        },
-        search: {
-          key: 'id',
-          title: '用户ID',
-          placeHolder: '请输入用户ID',
-          disabled: false
         }
       },
       {
         title: '活动名称',
         key: 'title',
+        search: {
+          key: 'title',
+          title: '活动名称',
+          placeHolder: '请输入活动名称'
+
+        },
         form: {
           rules: [
             { required: true, message: '请输入活动名称' }
@@ -38,11 +50,12 @@ export const crudOptions = (vm) => {
         key: 'release_type',
         type: 'select',
         dict: {
-          data: [ // 本地数据字典，若data为null，则通过http请求获取远程数据字典
-            { value: 'sz', label: '商城&美肌' },
-            { value: 'gz', label: '名媛' },
-            { value: 'wh', label: '共享新零售' }
-          ]
+          url: `${BASEURL}/admin/v1/activity/release-type`
+          // data: [ // 本地数据字典，若data为null，则通过http请求获取远程数据字典
+          //   { value: 'sz', label: '商城&美肌' },
+          //   { value: 'gz', label: '名媛' },
+          //   { value: 'wh', label: '共享新零售' }
+          // ]
         },
         form: {
           rules: [
@@ -117,8 +130,8 @@ export const crudOptions = (vm) => {
         type: 'switch',
         dict: {
           data: [
-            { value: false, label: '禁用' },
-            { value: true, label: '启用' }
+            { value: 0, label: '禁用' },
+            { value: 1, label: '启用' }
           ]
         },
         value: 'value', // 数据字典中value字段的属性名
@@ -128,15 +141,22 @@ export const crudOptions = (vm) => {
             { required: true, message: '请选择启用状态' }
           ],
 
-          valueBuilder (row, key) {
-            console.log('row.:', row.is_enable)
-          },
-          valueChange (key, value, form) {
-            form[key] = value ? 0 : 1
+          valueResolve (row, key) {
+            row[key] = row[key] ? 1 : 0
           }
+          // valueChange (key, value, form) {
+          //   form[key] = value ? 0 : 1
+          // }
         },
+
         component: {
-          name: ''
+          name: '',
+          valueBinding: 'is_enable',
+
+          props: {
+            type: 'primary'
+          }
+
         }
 
       }

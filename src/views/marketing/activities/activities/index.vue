@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { getActivityList } from '@/api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 export default {
@@ -41,7 +42,7 @@ export default {
     addRequest (data) {
       console.log('data:', data)
 
-      // return this.$apis.CreateCategory(data)
+      return this.$apis.addActivityStore(data)
     }
   }
 }
