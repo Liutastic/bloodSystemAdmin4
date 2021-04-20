@@ -47,22 +47,22 @@ export const crudOptions = (vm) => {
     ],
     format: {
       response (ret) {
-        return ret.data //getlist返回结果获取
+        return ret.data // getlist返回结果获取
       },
       page: { // page接口返回的数据结构配置，
         request: { // 请求参数
-          current: 'page', //当前页码
-          size: 'per_page' //当前每页条数
+          current: 'page', // 当前页码
+          size: 'per_page' // 当前每页条数
           // size(page,size){page[xxx]=size}//你还可以配置为一个方法，自定义操作请求参数
         },
-        response: { //返回结果
+        response: { // 返回结果
           current: 'current_page', // 当前页码 ret.data.current
-          size: 'per_page', // 每页条数，ret.data.size, 
-          //size: (data) => { return data.size }, //你也可以配置一个方法，自定义返回
+          size: 'per_page', // 每页条数，ret.data.size,
+          // size: (data) => { return data.size }, //你也可以配置一个方法，自定义返回
           total: 'total', // 总记录数 ret.data.total
           records: 'data' // 列表数组 ret.data.records
         }
       }
-    },
+    }
   }
 }
