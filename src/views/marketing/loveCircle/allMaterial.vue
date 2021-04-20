@@ -5,6 +5,11 @@
       <el-button type="mini">新增图片素材</el-button>
       <el-button type="mini">新增视频素材</el-button>
     </template>
+    <crud-search
+      ref="search"
+      :options="crud.searchOptions"
+      @submit="handleSearch"
+    />
     <d2-crud-x
       ref="d2Crud"
       v-bind="_crudProps"
