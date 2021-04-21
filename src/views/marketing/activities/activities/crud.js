@@ -5,7 +5,7 @@ import API from './api'
 export const crudOptions = vm => {
   return {
     options: {
-      height: '100%', // 表格高度100%, 使用toolbar必须设置
+      height: '100%', // 表格高度100%,使用toolbar必须设置
       rowKey: 'id',
       stripe: true
     },
@@ -93,13 +93,12 @@ export const crudOptions = vm => {
             console.log('dictChild:', value, dictChild)
             await getComponent('category_id').reloadDict() // 执行city的select组件的reloadDict()方法，触发“city”重新加载字典
             getComponent('category_id').setDictData(dictChild)
-            console.log('key,:', key, value)
 
-            console.log('vm:', vm.getEditFormTemplate('permissions'))
+            // 配置权限字段
             vm.getEditFormTemplate('permissions').title = childArr[0]?.name
-
             await getComponent('permissions').loadDict() // 执行city的select组件的reloadDict()方法，触发“city”重新加载字典
           }
+
           // valueChangeImmediate: true
         }
       },
@@ -109,9 +108,6 @@ export const crudOptions = vm => {
         type: 'select',
         disabled: true,
         dict: {
-          // data: ,
-
-          // url: `${BASEURL}/admin/v1/activity/release-type`,
           value: 'id', // 数据字典中value字段的属性名
           label: 'name', // 数据字典中label字段的属性名
           children: 'child', // children的属性名
@@ -161,7 +157,12 @@ export const crudOptions = vm => {
         title: '参加权限',
         key: 'permissionTitle',
         disabled: true, // 设置true可以在行展示中隐藏
-        form: { slot: true }
+        form: {
+          slot: true,
+          valueBuilder (row, key) {
+            console.log('123:', 123)
+          }
+        }
       },
       {
         title: '',
@@ -176,9 +177,20 @@ export const crudOptions = vm => {
             const ret = await API.getPermissionsTags({ release_type: form.release_type })
             let { data } = ret
             // 转字符串防止checkbox报错
-            data = data.map(item => ({ ...item, id: item.id.toString() }))
+            data = data.map((item, idx) => ({
+              ...item,
+              id: item.id.toString()
+            }))
 
             return data
+          },
+
+          onReady (data, dict, { component }) {
+            console.log('data, dict, { component }:', data, dict, component)
+
+            // 远程数据字典加载完成事件，每个引用该字典的组件都会触发一次
+            // console.log('context22:', vm.getEditFormTemplate('permissions'))
+            // console.log(vm.getEditFormTemplate('permissions').component)
           }
         }
 
@@ -320,8 +332,8 @@ export const crudOptions = vm => {
         title: '顶栏活动标题图',
         key: 'header_image',
         type: 'image-uploader',
-        // disabled: true, // 设置true可以在行展示中隐藏
-
+        disabled: true, // 设置true可以在行展示中隐藏
+        width: 200,
         form: {
           component: {
             props: {
