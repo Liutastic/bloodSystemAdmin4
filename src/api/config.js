@@ -4,7 +4,7 @@ if (process.env.NODE_ENV === 'development') {
   // 开发 npm run dev
   // MBASEURL = 'https://test.api.vodeshop.com'
   MBASEURL = 'http://10.10.10.165:9501'
-  MBASEURL = 'https://test.api.vodeshop.com/svc/marketing-svc/'
+  MBASEURL = 'https://test.api.vodeshop.com'
 
   MWEb_BASEURL = 'https://test.m.vodeshop.com'
   MSOCKETURL = 'ws://123.207.136.134:9010/ajaxchattest'

@@ -1,5 +1,5 @@
 import StringUtils from 'd2-crud-plus/src/lib/utils/util.string'
-import { BASEURL } from '@/api/config'
+import { BASEURL, IMGBASEURL } from '@/api/config'
 import { DICT_STATUS, DICT_STATIS_TYPE, DICT_YES_NO } from './dict.js'
 import API from './api'
 export const crudOptions = vm => {
@@ -293,6 +293,7 @@ export const crudOptions = vm => {
         title: '收费金额',
         key: 'toll_amount',
         show: false,
+        type: 'number',
         form: {
           component: {
             show (cmp) {
@@ -319,15 +320,23 @@ export const crudOptions = vm => {
         title: '顶栏活动标题图',
         key: 'header_image',
         type: 'image-uploader',
-        disabled: true, // 设置true可以在行展示中隐藏
-        component: {
-          props: {
-            btnSize: 'small', // type=file-uploader时按钮的大小
-            type: 'qiniu', // 当前使用哪种存储后端【cos/qiniu/alioss】
-            custom: {}, // 自定义参数，可以在获取token、sts时传入不同的参数给后端
-            elProps: {
-              // 与el-uploader配置一致
-              limit: 1 // 限制上传文件数量
+        // disabled: true, // 设置true可以在行展示中隐藏
+
+        form: {
+          component: {
+            props: {
+              btnSize: 'small', // type=file-uploader时按钮的大小
+              type: 'qiniu', // 当前使用哪种存储后端【cos/qiniu/alioss】
+              custom: {}, // 自定义参数，可以在获取token、sts时传入不同的参数给后端
+              elProps: {
+                // 与el-uploader配置一致
+                limit: 1 // 限制上传文件数量
+              },
+              returnType: 'key', // 添加和编辑上传提交的值不要url，而只要key
+              buildUrl (value, item) {
+                // 私有下载链接，在后端构建cos签名后的url，然后redirect到该地址进行下载
+                return IMGBASEURL + value
+              }
             }
           }
         }
