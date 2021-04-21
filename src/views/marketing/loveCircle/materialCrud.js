@@ -118,7 +118,7 @@ export const crudOptions = function (vm) {
           }
         },
         dict: {
-          url: '/admin/v1/template/list',
+          url: '/svc/marketing-svc/admin/v1/template/list',
           value: 'id',
           label: 'title'
         }

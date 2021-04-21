@@ -5,7 +5,7 @@ import request from '@/api/request.mock'
 // const request = requestForMock
 import UEditorConfig from '@/api/UEditor-config'
 
-console.log('UEditorConfig: ', UEditorConfig)
+// console.log('UEditorConfig: ', UEditorConfig)
 
 export const crudOptions = function (vm) {
   return {

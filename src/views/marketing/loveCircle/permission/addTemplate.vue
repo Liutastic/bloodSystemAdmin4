@@ -140,8 +140,13 @@ export default {
           message: '操作成功！',
           type: 'success'
         })
+        // setTimeout(() => {
+        //   this.$router.back(-1)
+        // }, 2000)
         setTimeout(() => {
-          this.$router.back(-1)
+          this.$router.push({
+            path: '/marketing/loveCircle/permission/template'
+          })
         }, 2000)
       }
       // const tagList = [...this.mallCheckList, ...this.dymCheckList, ...this.retailCheckList]

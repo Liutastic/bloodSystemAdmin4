@@ -7,6 +7,7 @@
         @delPublisherPart="delPublisherPart"
         @delContentPart="delContentPart"
         @delProImgPart="delProImgPart"
+        @delShowProPart="delShowProPart"
         :type="'image'"
         :virtualNum="formData.pink_circle_fictitious_forward"
         :issuerInfo="issuerInfo"
@@ -75,7 +76,7 @@
             <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8">展示商品：</div>
               <div class="flex-sub">
-                <el-input class="input-width-100" size="mini" @change="inputShowProId" v-model="formData.goods_id"/>
+                <el-input class="input-width-100" placeholder="输入商品id" size="mini" @change="inputShowProId" v-model="formData.goods_id"/>
               </div>
               <div class="btn ml-5 cursor" @click="choosePro('show')">选择商品</div>
             </div>
@@ -90,6 +91,7 @@
               <div class="label color-333 font-size-8">上传图片：</div>
               <div class="flex-sub">
                 <el-upload
+                  v-if="show2"
                   class="upload-btn"
                   :action="QINIUURL"
                   :data="dataToken"
@@ -98,12 +100,18 @@
                   :before-upload="beforeUpload">
                   <i class="el-icon-plus"></i>
                 </el-upload>
+                <div class="upload-btn cursor" @click="controlUploadProRelate" v-if="show1">
+                  <i class="el-icon-plus"></i>
+                </div>
+                <div class="upload-btn cursor" @click="controlUploadProNum9" v-if="show3">
+                  <i class="el-icon-plus"></i>
+                </div>
               </div>
             </div>
             <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8">关联商品：</div>
               <div class="flex-sub">
-                <el-input class="input-width-100" @chang="inputRelateProId" size="mini" v-model="relateProId" />
+                <el-input class="input-width-100" placeholder="输入商品id" @change="inputRelateProId" size="mini" v-model="relateProId" />
               </div>
               <div class="btn ml-5 cursor" @click="choosePro('href')">选择商品</div>
             </div>
@@ -145,7 +153,8 @@ export default {
         content: '',
         // 虚拟转发
         pink_circle_fictitious_forward: null,
-        media: [{ goods_id: 33889, url: 'FgxbSPy-x-rCSOt-lz1L17gQneRj' }],
+        // media: [{ goods_id: 33889, url: 'FgxbSPy-x-rCSOt-lz1L17gQneRj' }],
+        media: [],
         // 发布人id
         pink_circle_user_id: null,
         // 素材分类子id
@@ -177,6 +186,17 @@ export default {
       materialDetail: {}
     }
   },
+  computed: {
+    show1 () {
+      return this.formData.media.length && this.formData.media.length < 9 && this.formData.media[this.formData.media.length - 1] && !this.formData.media[this.formData.media.length - 1].goods_id
+    },
+    show2 () {
+      return !this.formData.media.length || (this.formData.media.length && this.formData.media.length < 9 && this.formData.media[this.formData.media.length - 1] && this.formData.media[this.formData.media.length - 1].goods_id)
+    },
+    show3 () {
+      return this.formData.media.length === 9
+    }
+  },
   async mounted () {
     this.id = this.$route.query.id ? this.$route.query.id : null
     if (this.id) {
@@ -200,7 +220,9 @@ export default {
         this.formData.media = arr
         this.formData.pink_circle_user_id = data.user.id
         this.issuerInfo = data.user
-        this.showProInfo = this.getProDetail(data.goods.id)
+        const res = await this.$apis.GetProDetail(data.goods.id)
+        this.showProInfo = res.data
+        console.log('this.showProInfo', this.showProInfo)
         this.materailClassValue = [data.category.id, data.category_child_id]
         this.getCategoryList()
         this.getPermissionList()
@@ -216,23 +238,26 @@ export default {
     this.getAllIssuerList()
   },
   methods: {
-    // 获取商品详情
-    async getProDetail (id) {
-      const { code, msg, data } = await this.$apis.GetProDetail(id)
-      console.log('获取商品详情', code, msg, data)
-      if (code === 0) {
-        return data.data
-      }
-    },
     // 输入的展示商品id后调用
     async inputShowProId (e) {
       console.log('获取输入的展示商品id', e)
-      this.showProInfo = this.getProDetail(e)
+      const { data } = await this.$apis.GetProDetail(e)
+      this.showProInfo = data
+      this.formData.goods_id = data.id
     },
     // 输入的图片链接商品id后调用
     async inputRelateProId (e) {
       console.log('获取输入的展示商品id', e)
-      this.relatePro = this.getProDetail(e)
+      const { data } = await this.$apis.GetProDetail(e)
+      console.log('商品详情', data)
+      this.relatePro = data
+      this.relateProId = data.id
+      if (this.formData.media.length && this.formData.media[this.formData.media.length - 1].url && !this.formData.media[this.formData.media.length - 1].goods_id) {
+        this.formData.media[this.formData.media.length - 1].goods_id = data.id
+      }
+      if (!this.formData.media.length || (this.formData.media[this.formData.media.length - 1].url && this.formData.media[this.formData.media.length - 1].goods_id)) {
+        this.formData.media.push({ goods_id: e, url: '' })
+      }
     },
     // 选择图片链接的商品
     selHrefPro (item) {
@@ -360,6 +385,7 @@ export default {
     },
     // 删除商品展示模块
     delShowProPart () {
+      console.log('删除展示商品模块')
       this.showProInfo = {}
       this.formData.goods_id = null
     },
@@ -376,10 +402,23 @@ export default {
       console.log('this.issuerInfo', this.issuerInfo)
     },
     uploadProImgSuccess (res) {
-      console.log(res)
       this.formData.media.push({ url: res.hash, goods_id: '' })
+      console.log('this.formData.media', this.formData.media)
       this.relatePro = {}
       this.relateProId = null
+    },
+    // 提醒并且控制上传图片后一定要先上传关联商品才可以上传下一张
+    controlUploadProRelate () {
+      this.$message({
+        message: '请先关联上一张图片的产品，再上传下一张喔~',
+        type: 'warning'
+      })
+    },
+    controlUploadProNum9 () {
+      this.$message({
+        message: '限制最多上传9张图片喔~',
+        type: 'warning'
+      })
     },
     async beforeUpload () {
       this.$loading()
@@ -430,7 +469,7 @@ export default {
     },
     // 获取权限模板列表
     async getPermissionList () {
-      const { code, msg, data } = await this.$apis.GetAuthTemplateList({})
+      const { code, msg, data } = await this.$apis.GetPermissionList({ page: 1, per_page: 1000 })
       console.log('权限模板', code, msg, data)
       if (code === 0) {
         this.permissionOption = data.data

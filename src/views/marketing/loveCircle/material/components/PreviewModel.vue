@@ -56,13 +56,13 @@
     </div>
     <!-- 商品详细部分 -->
     <div v-show="isShowFourPart" class="every-temple-part border-dashed padding-lr-8 padding-tb-10">
-      <div class="flex">
+      <div class="show-pro-box flex">
         <el-image
           class="bottom-pro-img"
           :src="showProInfo.image | qiniu"
           fit="contain"></el-image>
         <div class="pro-right-info flex justify-between flex-direction-column">
-          <div class="color-333 font-size-10 hidden-ellipsis">{{showProInfo.name}}</div>
+          <div class="color-333 font-size-10 hidden-ellipsis mb-5">{{showProInfo.name}}</div>
           <div class="pro-price-part flex">
             <div class="flex align-center justify-center flex-direction-column padding-lr-6">
               <div class="font-size-15 color-red font-bold">¥{{showProInfo.vip_price}}</div>
@@ -74,7 +74,7 @@
                 <div class="font-size-10 color-999">零售价</div>
               </div>
               <div class="btn-box flex align-center justify-center flex-direction-column">
-                <div class="font-size-10 color-999">会员立省300元</div>
+                <div class="font-size-10 color-999">{{showProInfo.text + showProInfo.less_price}}元</div>
                 <div class="look-detail-btn mt-3">查看详情</div>
               </div>
             </div>
@@ -202,6 +202,11 @@ export default {
       margin-right:0;
     }
   }
+  .show-pro-box{
+    background: #FFFFFF;
+    border-radius: 3px;
+    padding:5px;
+  }
   .pro-img-box{
     position:relative;
     margin-right:3px;
@@ -227,6 +232,7 @@ export default {
     height:70px;
     display:block;
     margin-right:8px;
+    background:#ffffff;
   }
   .pro-price-part{
     background: #F2CF7F;
@@ -248,7 +254,7 @@ export default {
       font-size:8px;
     }
     .btn-box{
-      padding-left:10px;
+      padding-left:3px;
       border-left: 1px solid #F5F5F5;
     }
   }
@@ -345,6 +351,9 @@ export default {
 }
 .mb-25{
   margin-bottom:25px;
+}
+.mb-5{
+  margin-bottom:5px;
 }
 .ml-9{
   margin-left:9px;
