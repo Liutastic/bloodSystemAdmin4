@@ -3,6 +3,7 @@ import Vue from 'vue'
 import D2CrudX from 'd2-crud-x'
 import d2Container from './d2-container'
 import { d2CrudPlus } from 'd2-crud-plus'
+import util from '@/libs/util'
 
 import {
   request
@@ -87,9 +88,14 @@ Vue.use(d2CrudPlus, {
       data: dict.body,
       method: 'get'
     })
-    console.log('ret:', ret)
 
-    return ret.data
+    let { data } = ret
+    // 如果是json，转数组
+    if (Object.prototype.toString.call(data).toLowerCase() === '[object object]') {
+      data = util.jsonToDict(data)
+    }
+
+    return data
   },
   commonOption () {
     // 公共配置

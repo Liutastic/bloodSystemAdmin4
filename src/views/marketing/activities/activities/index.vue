@@ -19,9 +19,10 @@
 </template>
 
 <script>
-import { getActivityList } from '@/api'
+// import { getActivityList } from '@/api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
+import api from './api'
 export default {
   mixins: [d2CrudPlus.crud],
   methods: {
@@ -33,7 +34,7 @@ export default {
      * 请求数据
      */
     pageRequest (query) {
-      return this.$apis.getActivityList(query)
+      return api.getActivityList(query)
     },
 
     /**
@@ -42,7 +43,7 @@ export default {
     addRequest (data) {
       console.log('data:', data)
 
-      return this.$apis.addActivityStore(data)
+      return api.addActivityStore(data)
     }
   }
 }

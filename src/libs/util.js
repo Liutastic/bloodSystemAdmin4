@@ -85,4 +85,20 @@ util.formatDataToTree = (data, key = 'menu_id', pid = 'parent_id', parent = {}) 
 
   return tree
 }
+
+/**
+ * json转字典
+ * @param {*} json
+ * @returns
+ */
+util.jsonToDict = (json) => {
+  const arr = []
+  for (const i in json) {
+    arr.push({
+      key: i,
+      value: json[i]
+    })
+  }
+  return arr
+}
 export default util
