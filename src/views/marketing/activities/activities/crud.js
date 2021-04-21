@@ -1,6 +1,6 @@
 import StringUtils from 'd2-crud-plus/src/lib/utils/util.string'
 import { BASEURL, IMGBASEURL } from '@/api/config'
-import { DICT_STATUS, DICT_STATIS_TYPE, DICT_YES_NO } from './dict.js'
+import { DICT_STATUS, DICT_STATIS_TYPE, DICT_YES_NO, ShortCUTS } from './dict.js'
 import API from './api'
 export const crudOptions = vm => {
   return {
@@ -116,7 +116,6 @@ export const crudOptions = vm => {
             const { data } = await API.getActivityReleaseType()
             const distData = []
             data.filter(item => {
-              console.log('item: ', item)
               if (item.id === form.release_type) return distData.push(...item.child)
             })
             return distData
@@ -217,7 +216,7 @@ export const crudOptions = vm => {
         form: {
           title: '报名时间',
           component: {
-            span: 18
+            span: 24
           }
         },
 
@@ -230,7 +229,14 @@ export const crudOptions = vm => {
         key: 'activityDate',
         type: 'datetimerange',
         form: {
-          title: '活动时间'
+          title: '活动时间',
+          component: {
+            props: {
+              'time-arrow-control': true,
+              'default-time': ['12:00:00', '12:00:00'],
+              'picker-options': { shortcuts: ShortCUTS }
+            }
+          }
         },
         formatter (row) {
           return row.activity_end_at
