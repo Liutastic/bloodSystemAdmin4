@@ -108,6 +108,14 @@ export default ({ request }) => ({
       params
     })
   },
+  // 新增视频素材
+  AddVideoMaterial (params) {
+    return request({
+      url: '/svc/marketing-svc/admin/v1/material/video',
+      method: 'post',
+      params
+    })
+  },
   // 新增图片素材
   AddImageMaterial (params) {
     return request({

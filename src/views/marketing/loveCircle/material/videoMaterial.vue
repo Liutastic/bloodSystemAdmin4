@@ -302,7 +302,7 @@ export default {
         return
       }
       // 新增
-      const { code, msg, data } = await this.$apis.AddImageMaterial(this.formData)
+      const { code, msg, data } = await this.$apis.AddVideoMaterial(this.formData)
       console.log(code, msg, data)
       if (code === 0) {
         this.$loading().close()

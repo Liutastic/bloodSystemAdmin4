@@ -15,10 +15,11 @@
 </template>
 
 <script>
-import StatusTag from './components/StatusTag'
+import StatusTag from '@/components/status-tag/status-tag'
 export default {
   name: 'Template',
   data () {
+    const that = this
     return {
       // 表头配置
       columns: [
@@ -38,7 +39,17 @@ export default {
           key: 'status',
           align: 'center',
           component: {
-            name: StatusTag
+            name: StatusTag,
+            on: {
+              async input (e) {
+                const { code } = await that.$apis.EditPermissionStatus({ id: e.props.scope.row.id, status: e.props.scope.row.status === 1 ? 0 : 1 })
+                if (code === 0) {
+                  const arr = JSON.parse(JSON.stringify(that.permissionData))
+                  arr[e.props.scope.index].status = arr[e.props.scope.index].status === 0 ? 1 : 0
+                  that.permissionData = arr
+                }
+              }
+            }
           }
         }
       ],
@@ -86,15 +97,16 @@ export default {
       console.log(code, msg, data)
       if (code === 0) {
         this.$loading().close()
-        this.permissionData = data.data.map(item => {
-          return {
-            ...item,
-            status: {
-              id: item.id,
-              status: item.status
-            }
-          }
-        })
+        // this.permissionData = data.data.map(item => {
+        //   return {
+        //     ...item,
+        //     status: {
+        //       id: item.id,
+        //       status: item.status
+        //     }
+        //   }
+        // })
+        this.permissionData = data.data
         this.pagination.total = data.total
         console.log('this.permissionData', this.permissionData)
         this.loading = false
