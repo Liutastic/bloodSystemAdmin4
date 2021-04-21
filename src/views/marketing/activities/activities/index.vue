@@ -14,7 +14,7 @@
       <crud-toolbar v-bind="_crudToolbarProps" v-on="_crudToolbarListeners" />
     </div>
     <d2-crud-x ref="d2Crud" v-bind="_crudProps" v-on="_crudListeners">
-      <template slot="permissionFormSlot" slot-scope="scope">
+      <template slot="permissionTitleFormSlot" slot-scope="scope">
         <el-button type="success" size="small">全选权限</el-button>
         <el-button type="danger" size="small">清空权限</el-button>
       </template>
