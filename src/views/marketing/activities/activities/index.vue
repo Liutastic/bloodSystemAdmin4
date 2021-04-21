@@ -45,7 +45,42 @@ export default {
      */
     addRequest (data) {
       console.log('新增数据data: ', data)
-      return api.addActivityStore(data)
+      const {
+        title,
+        release_type,
+        category_id,
+        statistics_type,
+        sign_start_at,
+        sign_end_at,
+        activity_start_at,
+        activity_end_at,
+        is_enable,
+        is_toll,
+        toll_amount,
+        is_public,
+        header_image,
+        share_image,
+        permissions,
+        content
+      } = data
+      return api.addActivityStore({
+        title,
+        release_type,
+        category_id,
+        statistics_type,
+        sign_start_at,
+        sign_end_at,
+        activity_start_at,
+        activity_end_at,
+        is_enable,
+        is_toll,
+        toll_amount,
+        is_public,
+        header_image,
+        share_image,
+        permissions,
+        content
+      })
     },
     /**
      * 删除数据
