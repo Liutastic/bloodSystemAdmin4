@@ -42,12 +42,12 @@ export default {
     },
     handleClick ($event) {
       // 带参数传值，从行内获得值
-      let type = $event.row.type,
-        id = $event.row.id
+      const type = $event.row.type
+      const id = $event.row.id
       if (type === 1) {
         // 图文素材
         this.$router.push({
-          path: `/marketing/loveCircle/material/imageMaterial`,
+          path: '/marketing/loveCircle/material/imageMaterial',
           query: {
             id
           }
@@ -55,13 +55,12 @@ export default {
       } else if (type === 2) {
         // 视频素材
         this.$router.push({
-          path: `/marketing/loveCircle/material/videoMaterial`,
+          path: '/marketing/loveCircle/material/videoMaterial',
           query: {
             id
           }
         })
       }
-
     }
   }
 }
