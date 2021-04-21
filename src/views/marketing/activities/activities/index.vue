@@ -44,6 +44,7 @@ export default {
      * 新增数据
      */
     addRequest (data) {
+      console.log('新增数据data: ', data)
       return api.addActivityStore(data)
     },
     /**
