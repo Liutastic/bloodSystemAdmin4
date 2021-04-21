@@ -1,5 +1,5 @@
 import StringUtils from 'd2-crud-plus/src/lib/utils/util.string'
-
+// import UpdateMaterialStatus from '@/api/modules/loveCircle'
 function toNooning (date) {
   if (date == null) {
     date = new Date()
@@ -76,7 +76,7 @@ const shortcuts = [
   }
 ]
 
-export const crudOptions = function (vm) {
+export const crudOptions = (StatusTag, that) => {
   return {
     columns: [
       {
@@ -187,7 +187,23 @@ export const crudOptions = function (vm) {
         title: '状态',
         key: 'is_enable',
         component: {
-          name: 'el-tag'
+          name: StatusTag,
+          on: {
+            input: async (e) => {
+              const { code } = await that.$apis.UpdateMaterialStatus({ id: e.props.scope.row.id, is_enable: e.props.scope.row.is_enable === 1 ? 0 : 1 })
+              if (code === 0) {
+                that.pageRequest()
+              }
+            }
+            // input (e) {
+            //   UpdateMaterialStatus({
+            //     id: e.props.scope.row.id,
+            //     is_enable: e.props.scope.row.is_enable === 1 ? 0 : 1
+            //   }).then(res => {
+            //     console.log(res)
+            //   })
+            // }
+          }
         }
       }
     ],

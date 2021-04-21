@@ -32,6 +32,7 @@
 <script>
 import { crudOptions } from './materialCrud'
 import { d2CrudPlus } from 'd2-crud-plus'
+import StatusTag from '@/components/status-tag/status-tag'
 import util from '@/libs/util'
 export default {
   name: 'allMaterial',
@@ -76,15 +77,13 @@ export default {
       for (let i = 0; i < formatArr.length; i++) {
         formatArr[i] = util.formatDate(formatArr[i])
       }
-      console.log(arr)
-      console.log(util.dateDiff(formatArr[1], formatArr[0]))
       return {
         start_at: formatArr[0],
         end_at: formatArr[1]
       }
     },
     getCrudOptions () {
-      return crudOptions(this)
+      return crudOptions(StatusTag, this)
     },
     async pageRequest (query) {
       const { data, code, msg } = await this.$apis.GetMaterialList(query)
