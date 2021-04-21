@@ -1,8 +1,84 @@
 import StringUtils from 'd2-crud-plus/src/lib/utils/util.string'
 import { BASEURL, IMGBASEURL } from '@/api/config'
-import { DICT_STATUS, DICT_STATIS_TYPE, DICT_YES_NO, ShortCUTS } from './dict.js'
+import { DICT_STATUS, DICT_STATIS_TYPE, DICT_YES_NO } from './dict.js'
 import API from './api'
 import util from '@/libs/util'
+
+function toNooning (date) {
+  if (date == null) {
+    date = new Date()
+  }
+  date.setHours(12)
+  date.setMinutes(0)
+  date.setSeconds(0)
+  return date
+}
+function addDays (date, days) {
+  date.setTime(date.getTime() + 3600 * 1000 * 24 * days)
+}
+const ShortCUTS = [
+  {
+    text: '今天一晚',
+    onClick (picker) {
+      const start = new Date()
+      const end = toNooning()
+      addDays(end, 1)
+      picker.$emit('pick', [start, end])
+    }
+  }, {
+    text: '今天两晚',
+    onClick (picker) {
+      const start = new Date()
+      const end = toNooning()
+      addDays(end, 2)
+      picker.$emit('pick', [start, end])
+    }
+  }, {
+    text: '今天三晚',
+    onClick (picker) {
+      const start = new Date()
+      const end = toNooning()
+      addDays(end, 3)
+      picker.$emit('pick', [start, end])
+    }
+  }, {
+    text: '今天四晚',
+    onClick (picker) {
+      const start = new Date()
+      const end = toNooning()
+      addDays(end, 4)
+      picker.$emit('pick', [start, end])
+    }
+  }, {
+    text: '明天一晚',
+    onClick (picker) {
+      const start = toNooning()
+      const end = toNooning()
+      addDays(start, 1)
+      addDays(end, 2)
+      picker.$emit('pick', [start, end])
+    }
+  }, {
+    text: '明天两晚',
+    onClick (picker) {
+      const start = new Date()
+      const end = new Date()
+      addDays(start, 1)
+      addDays(end, 3)
+      picker.$emit('pick', [start, end])
+    }
+  }, {
+    text: '明天三晚',
+    onClick (picker) {
+      const start = new Date()
+      const end = new Date()
+      addDays(start, 1)
+      addDays(end, 3)
+      picker.$emit('pick', [start, end])
+    }
+  }
+]
+
 export const crudOptions = vm => {
   return {
     options: {
@@ -217,7 +293,11 @@ export const crudOptions = vm => {
         form: {
           title: '报名时间',
           component: {
-            span: 24
+            props: {
+              'time-arrow-control': true,
+              'default-time': ['00:00:00', '00:00:00'],
+              'picker-options': { shortcuts: ShortCUTS }
+            }
           }
         },
         valueBuilder (row, key) {
@@ -251,7 +331,7 @@ export const crudOptions = vm => {
           component: {
             props: {
               'time-arrow-control': true,
-              'default-time': ['12:00:00', '12:00:00'],
+              'default-time': ['00:00:00', '00:00:00'],
               'picker-options': { shortcuts: ShortCUTS }
             }
           }
