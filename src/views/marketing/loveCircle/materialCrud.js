@@ -1,3 +1,81 @@
+import StringUtils from 'd2-crud-plus/src/lib/utils/util.string'
+
+function toNooning (date) {
+  if (date == null) {
+    date = new Date()
+  }
+  date.setHours(12)
+  date.setMinutes(0)
+  date.setSeconds(0)
+  return date
+}
+function addDays (date, days) {
+  date.setTime(date.getTime() + 3600 * 1000 * 24 * days)
+}
+
+const shortcuts = [
+  {
+    text: '今天一晚',
+    onClick (picker) {
+      const start = new Date()
+      const end = toNooning()
+      addDays(end, 1)
+      picker.$emit('pick', [start, end])
+    }
+  }, {
+    text: '今天两晚',
+    onClick (picker) {
+      const start = new Date()
+      const end = toNooning()
+      addDays(end, 2)
+      picker.$emit('pick', [start, end])
+    }
+  }, {
+    text: '今天三晚',
+    onClick (picker) {
+      const start = new Date()
+      const end = toNooning()
+      addDays(end, 3)
+      picker.$emit('pick', [start, end])
+    }
+  }, {
+    text: '今天四晚',
+    onClick (picker) {
+      const start = new Date()
+      const end = toNooning()
+      addDays(end, 4)
+      picker.$emit('pick', [start, end])
+    }
+  }, {
+    text: '明天一晚',
+    onClick (picker) {
+      const start = toNooning()
+      const end = toNooning()
+      addDays(start, 1)
+      addDays(end, 2)
+      picker.$emit('pick', [start, end])
+    }
+  }, {
+    text: '明天两晚',
+    onClick (picker) {
+      const start = new Date()
+      const end = new Date()
+      addDays(start, 1)
+      addDays(end, 3)
+      picker.$emit('pick', [start, end])
+    }
+  }, {
+    text: '明天三晚',
+    onClick (picker) {
+      const start = new Date()
+      const end = new Date()
+      addDays(start, 1)
+      addDays(end, 3)
+      picker.$emit('pick', [start, end])
+    }
+  }
+]
+
 export const crudOptions = function (vm) {
   return {
     columns: [
@@ -32,7 +110,13 @@ export const crudOptions = function (vm) {
         title: '权限模板',
         key: 'competence_name',
         type: 'select',
-        search: { key: 'competence_id', disabled: false },
+        search: {
+          key: 'competence_id',
+          disabled: false,
+          component: {
+            name: 'dict-select'
+          }
+        },
         dict: {
           url: '/svc/marketing-svc/admin/v1/template/list',
           value: 'id',
@@ -61,7 +145,36 @@ export const crudOptions = function (vm) {
       },
       {
         title: '创建日期',
-        key: 'created_at'
+        key: 'created_at',
+        type: 'datetimerange',
+        width: 300,
+        search: {
+          disabled: false,
+          width: 350
+        },
+        form: {
+          component: {
+            props: {
+              'time-arrow-control': true,
+              'default-time': ['12:00:00', '12:00:00'],
+              'picker-options': { shortcuts: shortcuts }
+            }
+          }
+        },
+        valueBuilder (row, key) {
+          if (!StringUtils.hasEmpty(row.datetimerangeStart, row.datetimerangeEnd)) {
+            row.datetimerange = [new Date(row.datetimerangeStart), new Date(row.datetimerangeEnd)]
+          }
+        },
+        valueResolve (row, key) {
+          if (row.datetimerange != null && !StringUtils.hasEmpty(row.datetimerange)) {
+            row.datetimerangeStart = row.datetimerange[0].getTime()
+            row.datetimerangeEnd = row.datetimerange[1].getTime()
+          } else {
+            row.datetimerangeStart = null
+            row.datetimerangeEnd = null
+          }
+        }
       },
       {
         // 在.vue引入组件，然后在这里使用on属性配置

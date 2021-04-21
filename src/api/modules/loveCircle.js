@@ -116,6 +116,13 @@ export default ({ request }) => ({
       params
     })
   },
+  // 删除一个素材
+  DeleteMaterial (id) {
+    return request({
+      url: `/admin/v1/material/delete?id=${id}`,
+      method: 'delete'
+    })
+  },
   // 获取发布人列表(不分页)
   GetAllIssuerList (params) {
     return request({
@@ -136,6 +143,14 @@ export default ({ request }) => ({
     return request({
       url: '',
       method: 'put'
+    })
+  },
+  // 筛选素材
+  filterMaterial (params) {
+    return request({
+      url: '/admin/v1/material/search',
+      method: 'get',
+      params
     })
   },
   // 获取商品列表
