@@ -2,8 +2,29 @@ import StringUtils from 'd2-crud-plus/src/lib/utils/util.string'
 import { BASEURL } from '@/api/config'
 import { DICT_STATUS, DICT_STATIS_TYPE, DICT_YES_NO } from './dict.js'
 
-export const crudOptions = (vm) => {
+export const crudOptions = vm => {
   return {
+    options: {
+      height: '100%', // 表格高度100%, 使用toolbar必须设置
+      rowKey: 'id',
+      stripe: true
+    },
+    formOptions: {
+      // 编辑对话框及el-form的配置
+      type: 'drawer', // 默认对话框模式，drawer 抽屉模式
+      size: '60%', // 抽屉模式的宽度
+      fullscreen: true, // 全屏按钮，传null则隐藏全屏按钮，抽屉模式请隐藏
+      draggable: true, // 是否支持表单对话框拖拽，抽屉模式请关闭
+      saveRemind: true, // 有修改时是否需要保存提醒，也可以传入一个方法，自定义确认对话框，()=> return vm.$confirm({})
+      labelWidth: '100px',
+      labelPosition: 'left',
+      saveLoading: false,
+      gutter: 20,
+      saveButtonType: 'primary',
+      maxHeight: true, // 对话框内部显示滚动条
+      defaultSpan: 24, // 默认表单字段所占宽度
+      updateTableDataAfterEdit: true // 添加和删除提交后，是否直接更新本地table的数据，默认会自动刷新表格，所以不需要更新本地数据
+    },
     columns: [
       {
         title: 'ID',
@@ -40,15 +61,13 @@ export const crudOptions = (vm) => {
           placeHolder: '请输入活动名称'
         },
         form: {
-          rules: [
-            { required: true, message: '请输入活动名称' }
-          ]
+          rules: [{ required: true, message: '请输入活动名称' }]
         }
       },
       {
         title: '发布平台',
         key: 'release_type',
-        type: 'select',
+        type: 'radio',
         dict: {
           url: `${BASEURL}/admin/v1/activity/release-type`,
 
@@ -56,15 +75,19 @@ export const crudOptions = (vm) => {
           value: 'id', // 数据字典中value字段的属性名
           label: 'name', // 数据字典中label字段的属性名
           children: 'child' // 数据字典中children字段的属性名
-
         },
         form: {
-          rules: [
-            { required: true, message: '请选择发布平台' }
-          ],
+          rules: [{ required: true, message: '请选择发布平台' }],
           // 同步字典
-          async valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
-            const dictChild = component.dict.data.filter(item => item.id === value)[0].child ?? []
+          async valueChange (
+            key,
+            value,
+            form,
+            { getColumn, mode, component, immediate, getComponent }
+          ) {
+            const dictChild =
+              component.dict.data.filter(item => item.id === value)[0].child ??
+              []
             form.category_id = undefined // 将“city”的值置空
             console.log('dictChild:', value, dictChild)
             await getComponent('category_id').reloadDict() // 执行city的select组件的reloadDict()方法，触发“city”重新加载字典
@@ -77,6 +100,7 @@ export const crudOptions = (vm) => {
         title: '活动分类',
         key: 'category_id',
         type: 'select',
+        disabled: true,
         dict: {
           data: [],
           value: 'id', // 数据字典中value字段的属性名
@@ -87,22 +111,42 @@ export const crudOptions = (vm) => {
             show (cmp) {
               return cmp.form.release_type
             }
-
           },
-          rules: [
-            { required: true, message: '请选择活动分类' }
-          ]
+          rules: [{ required: true, message: '请选择活动分类' }]
         }
 
         // valueBuilder (row, col) {
-        //   row.category_id = row.category_name
+        //   row.category_name = row.category_name
+        // }
+      },
+      {
+        title: '活动分类',
+        key: 'category_name',
+        type: 'select',
+
+        form: {
+          component: {
+            show: false
+          },
+          rules: [{ required: true, message: '请选择活动分类' }]
+        }
+
+        // valueBuilder (row, col) {
+        //   row.category_name = row.category_name
         // }
       },
       {
         title: '统计类型',
         key: 'statistics_type',
-        type: 'select',
-        dict: { data: DICT_STATIS_TYPE }
+        type: 'radio',
+        dict: { data: DICT_STATIS_TYPE },
+        form: {
+          value: 1,
+          component: {
+            show: true
+          },
+          rules: [{ required: true, message: '请选择活动分类' }]
+        }
       },
 
       {
@@ -132,7 +176,10 @@ export const crudOptions = (vm) => {
         },
         valueBuilder (row, key) {
           if (!StringUtils.hasEmpty(row.daterangeStart, row.daterangeEnd)) {
-            row.daterange = [new Date(row.daterangeStart), new Date(row.daterangeEnd)]
+            row.daterange = [
+              new Date(row.daterangeStart),
+              new Date(row.daterangeEnd)
+            ]
           }
         },
         valueResolve (row, key) {
@@ -157,16 +204,13 @@ export const crudOptions = (vm) => {
           title: '启用状态'
         },
         form: {
-          rules: [
-            { required: true, message: '请选择启用状态' }
-          ],
+          rules: [{ required: true, message: '请选择启用状态' }],
           value: 1,
           valueResolve (row, key) {
             row[key] = row[key] ? 1 : 0
           },
           component: {
             name: 'dict-switch'
-
           }
         }
       },
@@ -179,16 +223,19 @@ export const crudOptions = (vm) => {
         },
         form: {
           value: 1,
-          rules: [
-            { required: true, message: '请选择活动分类' }
-          ],
+          rules: [{ required: true, message: '请选择活动分类' }],
           component: {
             name: 'dict-switch',
             dict: {
               data: DICT_YES_NO
             }
           },
-          valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
+          valueChange (
+            key,
+            value,
+            form,
+            { getColumn, mode, component, immediate, getComponent }
+          ) {
             getComponent('toll_amount') && getComponent('toll_amount').clear()
           }
         }
@@ -248,14 +295,7 @@ export const crudOptions = (vm) => {
         disabled: true, // 设置true可以在行展示中隐藏
         type: 'editor-ueditor' // 富文本图片上传依赖file-uploader，请先配置好file-uploader
       }
-
-    ],
-    formOptions: {
-      saveButtonType: 'primary',
-      updateTableDataAfterEdit: true,
-      defaultSpan: 18
-      // fullscreen: true // 全屏按钮，传null则隐藏全屏按钮，抽屉模式请隐藏
-    }
+    ]
 
   }
 }
