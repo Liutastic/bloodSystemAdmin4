@@ -1,6 +1,6 @@
 import StringUtils from 'd2-crud-plus/src/lib/utils/util.string'
 import { BASEURL } from '@/api/config'
-import { DICT_STATUS, DICT_STATIS_TYPE, DICT_IS_TOLL } from './dict.js'
+import { DICT_STATUS, DICT_STATIS_TYPE, DICT_YES_NO } from './dict.js'
 
 export const crudOptions = (vm) => {
   return {
@@ -49,22 +49,36 @@ export const crudOptions = (vm) => {
         title: '发布平台',
         key: 'release_type',
         type: 'select',
-        value: 0,
         dict: {
           url: `${BASEURL}/admin/v1/activity/release-type`,
-          cache: true
+
+          cache: true,
+          value: 'id', // 数据字典中value字段的属性名
+          label: 'name', // 数据字典中label字段的属性名
+          children: 'child' // 数据字典中children字段的属性名
+
         },
         form: {
           rules: [
             { required: true, message: '请选择发布平台' }
           ],
-          valueChange (key, value, form) {
-            form.category_id = ''
-            console.log(vm.getEditForm())
-          }
-        },
-        component: {
-          name: ''
+          // 同步字典
+          async valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
+            let dictData = []
+            if (immediate) {
+              if (mode === 'add') return
+              dictData = await vm.getDictData('release_type')
+              const dictChild = dictData.filter(item => item.id === value)[0].child ?? []
+              vm.getEditFormTemplate('category_id').component.props.dict.data = dictChild
+            } else {
+              dictData = component.dict.data
+              const dictChild = dictData.filter(item => item.id === value)[0].child ?? []
+              form.category_id = undefined // 将“city”的值置空
+              await getComponent('category_id').reloadDict() // 执行city的select组件的reloadDict()方法，触发“city”重新加载字典
+              getComponent('category_id').setDictData(dictChild)
+            }
+          },
+          valueChangeImmediate: true
         }
       },
       {
@@ -72,25 +86,33 @@ export const crudOptions = (vm) => {
         key: 'category_id',
         type: 'select',
         dict: {
-          url: `${BASEURL}/admin/v1/activity/category`,
-          cache: true
+          data: [],
+          value: 'id', // 数据字典中value字段的属性名
+          label: 'name' // 数据字典中label字段的属性名
+        },
+        form: {
+          component: {
+            show (cmp) {
+              return cmp.form.release_type
+            }
+
+          },
+          rules: [
+            { required: true, message: '请选择活动分类' }
+          ]
         }
+
+        // valueBuilder (row, col) {
+        //   row.category_id = row.category_name
+        // }
       },
       {
         title: '统计类型',
         key: 'statistics_type',
         type: 'select',
-        dict: { data: DICT_STATIS_TYPE },
-        form: {}
+        dict: { data: DICT_STATIS_TYPE }
       },
-      {
-        title: '是否收费',
-        key: 'is_toll',
-        type: 'select',
-        dict: {
-          data: DICT_IS_TOLL
-        }
-      },
+
       {
         title: '报名结束',
         key: 'signDate',
@@ -104,32 +126,17 @@ export const crudOptions = (vm) => {
 
         formatter (row) {
           return row.sign_end_at
-        },
-        valueBuilder (row, key) {
-          if (!StringUtils.hasEmpty(row.sign_start_at, row.sign_end_at)) {
-            row.signDate = [new Date(row.sign_start_at), new Date(row.sign_end_at)]
-          }
-        },
-        valueResolve (row, key) {
-          if (row.signDate != null && row.signDate.length > 1) {
-            row.sign_start_at = row.signDate[0]
-            row.sign_end_at = row.signDate[1]
-            delete row.signDate
-          } else {
-            row.daterangeStart = null
-            row.daterangeEnd = null
-          }
         }
       },
       {
         title: '活动结束',
-        key: 'activity_end_at',
-        type: 'daterange',
+        key: 'activityDate',
+        type: 'datetimerange',
         form: {
-          title: '活动时间',
-          component: {
-            span: 18
-          }
+          title: '活动时间'
+        },
+        formatter (row) {
+          return row.activity_end_at
         },
         valueBuilder (row, key) {
           if (!StringUtils.hasEmpty(row.daterangeStart, row.daterangeEnd)) {
@@ -164,29 +171,97 @@ export const crudOptions = (vm) => {
           value: 1,
           valueResolve (row, key) {
             row[key] = row[key] ? 1 : 0
+          },
+          component: {
+            name: 'dict-switch'
+
           }
         }
-        // component: {
-        //   valueBinding: 'is_enable',
-        //   on: {
-        //     click (form) {
-        //       console.log('vm:', form.scope.row)
-        //       // console.log('api:', api)
-
-        //       // console.log('vm:', vm.$refs)
-
-        //       // vm.doRefresh()
-        //     }
-        //   }
-        // }
-
+      },
+      {
+        title: '是否收费',
+        key: 'is_toll',
+        type: 'select',
+        dict: {
+          data: DICT_YES_NO
+        },
+        form: {
+          value: 1,
+          rules: [
+            { required: true, message: '请选择活动分类' }
+          ],
+          component: {
+            name: 'dict-switch',
+            dict: {
+              data: DICT_YES_NO
+            }
+          },
+          valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
+            getComponent('toll_amount') && getComponent('toll_amount').clear()
+          }
+        }
+      },
+      {
+        title: '收费金额',
+        key: 'toll_amount',
+        show: false,
+        form: {
+          component: {
+            show (cmp) {
+              return cmp.form.is_toll
+            }
+          }
+        }
+      },
+      {
+        title: '活动结束是否公开',
+        key: 'is_public',
+        type: 'switch',
+        show: false,
+        form: {
+          component: {
+            name: 'dict-switch',
+            dict: {
+              data: DICT_YES_NO
+            }
+          }
+        }
+      },
+      {
+        title: '顶栏活动标题图',
+        key: 'header_image',
+        type: 'image-uploader',
+        disabled: true, // 设置true可以在行展示中隐藏
+        component: {
+          props: {
+            btnSize: 'small', // type=file-uploader时按钮的大小
+            type: 'qiniu', // 当前使用哪种存储后端【cos/qiniu/alioss】
+            custom: {}, // 自定义参数，可以在获取token、sts时传入不同的参数给后端
+            elProps: {
+              // 与el-uploader配置一致
+              limit: 1 // 限制上传文件数量
+            }
+          }
+        }
+      },
+      {
+        title: '参加权限',
+        key: 'permission',
+        disabled: true, // 设置true可以在行展示中隐藏
+        form: { slot: true }
+      },
+      {
+        title: '活动内容',
+        key: 'content',
+        disabled: true, // 设置true可以在行展示中隐藏
+        type: 'editor-ueditor' // 富文本图片上传依赖file-uploader，请先配置好file-uploader
       }
 
     ],
     formOptions: {
-      size: '75%',
       saveButtonType: 'primary',
-      updateTableDataAfterEdit: true
+      updateTableDataAfterEdit: true,
+      defaultSpan: 18
       // fullscreen: true // 全屏按钮，传null则隐藏全屏按钮，抽屉模式请隐藏
     }
 
