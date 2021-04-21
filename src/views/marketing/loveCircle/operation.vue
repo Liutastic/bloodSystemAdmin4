@@ -51,8 +51,8 @@ export default {
       this.$loading()
       const { code, msg, data } = await this.$apis.GetRunStatusData(params)
       console.log(code, msg, data)
-      data.series[0].data[0] = 500
-      data.series[0].data[3] = 100000
+      // data.series[0].data[0] = 500
+      // data.series[0].data[3] = 100000
       if (code === 0) {
         this.$loading().close()
         this.$nextTick(() => {
