@@ -1,7 +1,7 @@
 import StringUtils from 'd2-crud-plus/src/lib/utils/util.string'
 import { BASEURL } from '@/api/config'
-import { DICT_STATUS, DICT_STATIS_TYPE, DICT_YES_NO } from './dict.js'
-
+import { DICT_STATUS, DICT_STATIS_TYPE, DICT_YES_NO, aa } from './dict.js'
+import API from './api'
 export const crudOptions = vm => {
   return {
     options: {
@@ -102,9 +102,23 @@ export const crudOptions = vm => {
         type: 'select',
         disabled: true,
         dict: {
-          data: [],
+          // data: ,
+
+          // url: `${BASEURL}/admin/v1/activity/release-type`,
           value: 'id', // 数据字典中value字段的属性名
-          label: 'name' // 数据字典中label字段的属性名
+          label: 'name', // 数据字典中label字段的属性名
+          children: 'child', // children的属性名
+          //  覆盖全局getRemoteDictData方法,返回 Promise<[dictData]>
+          getData: async (url, dict, { form, component }) => {
+            const { data } = await API.getActivityReleaseType()
+            const distData = []
+            data.filter(item => {
+              console.log('item: ', item)
+              if (item.id === form.release_type) return distData.push(...item.child)
+            })
+            return distData
+          }
+
         },
         form: {
           component: {
