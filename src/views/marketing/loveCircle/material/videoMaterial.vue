@@ -165,6 +165,7 @@ export default {
     }
   },
   async mounted () {
+    this.id = this.$route.query.id ? this.$route.query.id : null
     if (this.id) {
       this.$loading()
       const { code, msg, data } = await this.$apis.GetMaterialDetail({ id: this.id })
@@ -295,6 +296,9 @@ export default {
             message: '操作成功！',
             type: 'success'
           })
+          setTimeout(() => {
+            this.$router.back(-1)
+          }, 2000)
         } else {
           this.$loading().close()
           this.$message.error(msg)

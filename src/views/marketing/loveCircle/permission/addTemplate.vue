@@ -141,9 +141,7 @@ export default {
           type: 'success'
         })
         setTimeout(() => {
-          this.$router.push({
-            path: '/marketing/loveCircle/permission/template'
-          })
+          this.$router.back(-1)
         }, 2000)
       }
       // const tagList = [...this.mallCheckList, ...this.dymCheckList, ...this.retailCheckList]

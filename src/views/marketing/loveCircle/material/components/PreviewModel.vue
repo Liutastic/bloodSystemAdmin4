@@ -12,7 +12,8 @@
         </div>
       </div>
       <div class="font-size-8 color-999">
-        <el-image class="transmit-icon" src="" fit="'fit'"></el-image>
+        <!-- <el-image class="transmit-icon" src="" fit="fit"></el-image> -->
+        <i class="el-icon-share" style="font-size:16px;"></i>
         {{showVirtualNum}}
       </div>
       <div class="right-del-btn" @click="delTemplate(1)">
@@ -21,9 +22,7 @@
     </div>
     <!-- 文案模块 -->
     <div v-show="content" class="every-temple-part text-box border-dashed padding-lr-8 padding-tb-10 font-size-9 color-333">
-      <div>
-        {{content}}
-      </div>
+      <div v-html="showText"></div>
       <div class="right-del-btn" @click="delTemplate(2)">
         <i class="el-icon-circle-close right-del-icon"></i>
       </div>
@@ -134,6 +133,13 @@ export default {
     // 判断是否展示空白提示
     isShowEmptyTip () {
       return JSON.stringify(this.issuerInfo) === '{}' && JSON.stringify(this.showProInfo) === '{}' && !this.proImgList.length && !this.content && !this.virtualNum
+    },
+    // 处理文本换行显示
+    showText () {
+      const arr = []
+      this.content.split('\n').forEach(item => arr.push(`<p style="margin:0;">${item.trim()}</p>`))
+      console.log(arr)
+      return arr.join('')
     }
   },
   data () {

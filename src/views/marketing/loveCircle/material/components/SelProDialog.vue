@@ -31,25 +31,28 @@
       </div>
     </div>
     <!-- 商品列表部分 -->
-    <div class="pro-list-box" v-infinite-scroll="load">
-      <div class="pro-item mb-9 flex justify-between align-center" v-for="(item, index) in proList" :key="index">
-        <div class="pro-left-part flex align-center flex-sub">
-          <el-image
-            class="pro-img"
-            :src="item.image | qiniu"
-            fit="contain"></el-image>
-          <div class="pro-left-info color-333 font-size-8  ml-10">
-            <div class="mb-5 hidden-ellipsis">{{item.name}}</div>
-            <div class="mb-5">价格：{{item.price}}元</div>
-            <div class="mb-5">会员价：{{item.vip_price}}元</div>
-            <div>{{item.updated_at}}</div>
+    <div class="pro-list-box">
+      <div class="scroll-box" v-infinite-scroll="load" infinite-scroll-disabled="busy" infinite-scroll-immediate="false">
+        <div class="pro-item mb-9 flex justify-between align-center" v-for="(item, index) in proList" :key="index">
+          <div class="pro-left-part flex align-center flex-sub">
+            <el-image
+              class="pro-img"
+              :src="item.image | qiniu"
+              fit="contain"></el-image>
+            <div class="pro-left-info color-333 font-size-8  ml-10">
+              <div class="mb-5 hidden-ellipsis">{{item.name}}</div>
+              <div class="mb-5">价格：{{item.price}}元</div>
+              <div class="mb-5">会员价：{{item.vip_price}}元</div>
+              <div>{{item.updated_at}}</div>
+            </div>
+          </div>
+          <div>
+            <el-button class="ml-5" @click="selPro(item)" size="mini" type="danger">选择</el-button>
           </div>
         </div>
-        <div>
-          <el-button class="ml-5" @click="selPro(item)" size="mini" type="danger">选择</el-button>
-        </div>
+        <div v-if="proList.length && isFinished" class="mt-10 color-333 font-size-9 text-center">已经没有更多啦~</div>
+        <div v-if="proList.length && isLoading" class="mt-10 color-333 font-size-9 text-center"><i class="el-icon-loading"></i>加载中~</div>
       </div>
-      <div v-if="proList.length && isFinished" class="mt-10 color-333 font-size-9 text-center">已经没有更多啦~</div>
       <div v-if="!proList.length && firstLoad" class="empty-tip color-333 font-size-9">请输入搜索条件进行检索~</div>
       <div v-if="!proList.length && !firstLoad" class="empty-tip color-333 font-size-9">暂无相关商品~</div>
     </div>
@@ -69,6 +72,8 @@ export default {
   data () {
     const _self = this
     return {
+      // 控制导致的多次触底
+      busy: false,
       // 判断商品列表是否已经全部加载完成
       isFinished: false,
       // 判断获取商品是否加载完成
@@ -120,6 +125,7 @@ export default {
       console.log('触底加载')
     },
     search () {
+      this.busy = true
       this.proList = []
       console.log(this.categoryValue, this.keyWord)
       this.getProList()
@@ -145,6 +151,7 @@ export default {
       const { code, msg, data } = await this.$apis.GetProList(params)
       console.log('获取商品列表', code, msg, data)
       if (code === 0) {
+        this.busy = false
         this.firstLoad = false
         this.proList.push(...data.data)
         if (!data.data.length) {
@@ -165,11 +172,14 @@ export default {
   padding:0 20px;
 }
 .pro-list-box{
-  margin-top:10px;
   height:300px;
   width:100%;
+  overflow:auto;
   // padding-right:15px;
-  overflow-y:auto;
+  // overflow-y:auto;
+  .scroll-box{
+    width:97%;
+  }
   .pro-left-part{
     overflow: hidden;
   }
