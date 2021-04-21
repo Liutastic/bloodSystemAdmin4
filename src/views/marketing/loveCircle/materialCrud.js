@@ -78,6 +78,9 @@ const shortcuts = [
 
 export const crudOptions = (StatusTag, that) => {
   return {
+    options: {
+      height: '100%'
+    },
     columns: [
       {
         title: 'ID',

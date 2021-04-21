@@ -111,7 +111,7 @@ export default ({ request }) => ({
   // 改变素材状态
   UpdateMaterialStatus (data) {
     return request({
-      url: '/svc/marketing-svc/admin/v1/material/update',
+      url: '/svc/marketing-svc/admin/v1/material/is-enable',
       method: 'put',
       data
     })
@@ -152,13 +152,6 @@ export default ({ request }) => ({
     return request({
       url: '/svc/marketing-svc/admin/v1/pink-circle-category/all-category',
       method: 'get'
-    })
-  },
-  // 修改素材状态
-  EditMaterialStatus () {
-    return request({
-      url: '',
-      method: 'put'
     })
   },
   // 筛选素材
