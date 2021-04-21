@@ -20,8 +20,8 @@ import {
   D2pIconSelector,
   // D2pTreeSelector,
   D2pFullEditor,
-  D2pUploader
-  // D2pDemoExtend
+  D2pUploader,
+  D2pDemoExtend
 } from 'd2p-extends' // 源码方式引入，上传组件支持懒加载
 import pluginExport from '@d2-projects/vue-table-export'
 import d2pUploaderConfig from './d2p-uploader'
@@ -76,7 +76,7 @@ Vue.use(D2pIconSelector)
 
 Vue.prototype.$echarts = echarts
 
-// Vue.use(D2pDemoExtend)
+Vue.use(D2pDemoExtend)
 // #region 引入d2CrudPlus
 Vue.use(d2CrudPlus, {
   starTip: false,

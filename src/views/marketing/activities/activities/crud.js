@@ -1,11 +1,12 @@
 import StringUtils from 'd2-crud-plus/src/lib/utils/util.string'
-import { BASEURL } from '@/api/config'
-import { DICT_STATUS, DICT_STATIS_TYPE, DICT_YES_NO } from './dict.js'
+import { BASEURL, IMGBASEURL } from '@/api/config'
+import { DICT_STATUS, DICT_STATIS_TYPE, DICT_YES_NO, ShortCUTS } from './dict.js'
 import API from './api'
+import util from '@/libs/util'
 export const crudOptions = vm => {
   return {
     options: {
-      height: '100%', // 表格高度100%, 使用toolbar必须设置
+      height: '100%', // 表格高度100%,使用toolbar必须设置
       rowKey: 'id',
       stripe: true
     },
@@ -93,13 +94,12 @@ export const crudOptions = vm => {
             console.log('dictChild:', value, dictChild)
             await getComponent('category_id').reloadDict() // 执行city的select组件的reloadDict()方法，触发“city”重新加载字典
             getComponent('category_id').setDictData(dictChild)
-            console.log('key,:', key, value)
 
-            console.log('vm:', vm.getEditFormTemplate('permissions'))
+            // 配置权限字段
             vm.getEditFormTemplate('permissions').title = childArr[0]?.name
-
             await getComponent('permissions').loadDict() // 执行city的select组件的reloadDict()方法，触发“city”重新加载字典
           }
+
           // valueChangeImmediate: true
         }
       },
@@ -109,9 +109,6 @@ export const crudOptions = vm => {
         type: 'select',
         disabled: true,
         dict: {
-          // data: ,
-
-          // url: `${BASEURL}/admin/v1/activity/release-type`,
           value: 'id', // 数据字典中value字段的属性名
           label: 'name', // 数据字典中label字段的属性名
           children: 'child', // children的属性名
@@ -120,7 +117,6 @@ export const crudOptions = vm => {
             const { data } = await API.getActivityReleaseType()
             const distData = []
             data.filter(item => {
-              console.log('item: ', item)
               if (item.id === form.release_type) return distData.push(...item.child)
             })
             return distData
@@ -161,7 +157,12 @@ export const crudOptions = vm => {
         title: '参加权限',
         key: 'permissionTitle',
         disabled: true, // 设置true可以在行展示中隐藏
-        form: { slot: true }
+        form: {
+          slot: true,
+          valueBuilder (row, key) {
+            console.log('123:', 123)
+          }
+        }
       },
       {
         title: '',
@@ -169,16 +170,27 @@ export const crudOptions = vm => {
         type: 'checkbox',
         disabled: true, // 设置true可以在行展示中隐藏
         dict: {
-          value: 'id', // 数据字典中value字段的属性名
+          value: 'value', // 数据字典中value字段的属性名
           label: 'name', // 数据字典中label字段的属性名
           getData: async (url, dict, { form, component }) => {
             // 配置此参数会覆盖全局的getRemoteDictFunc
             const ret = await API.getPermissionsTags({ release_type: form.release_type })
             let { data } = ret
             // 转字符串防止checkbox报错
-            data = data.map(item => ({ ...item, id: item.id.toString() }))
+            data = data.map((item, idx) => ({
+              ...item,
+              id: item.id.toString()
+            }))
 
             return data
+          },
+
+          onReady (data, dict, { component }) {
+            console.log('data, dict, { component }:', data, dict, component)
+
+            // 远程数据字典加载完成事件，每个引用该字典的组件都会触发一次
+            // console.log('context22:', vm.getEditFormTemplate('permissions'))
+            // console.log(vm.getEditFormTemplate('permissions').component)
           }
         }
 
@@ -205,7 +217,24 @@ export const crudOptions = vm => {
         form: {
           title: '报名时间',
           component: {
-            span: 18
+            span: 24
+          }
+        },
+        valueBuilder (row, key) {
+          if (!StringUtils.hasEmpty(row.sign_start_at, row.sign_end_at)) {
+            row.signDate = [
+              new Date(row.sign_start_at),
+              new Date(row.sign_end_at)
+            ]
+          }
+        },
+        valueResolve (row, key) {
+          if (row.signDate?.length > 1) {
+            row.sign_start_at = util.formatDate(row.signDate[0])
+            row.sign_end_at = util.formatDate(row.signDate[1])
+          } else {
+            row.sign_start_at = null
+            row.sign_end_at = null
           }
         },
 
@@ -218,26 +247,34 @@ export const crudOptions = vm => {
         key: 'activityDate',
         type: 'datetimerange',
         form: {
-          title: '活动时间'
+          title: '活动时间',
+          component: {
+            props: {
+              'time-arrow-control': true,
+              'default-time': ['12:00:00', '12:00:00'],
+              'picker-options': { shortcuts: ShortCUTS }
+            }
+          }
         },
+        rules: [{ required: true, message: '请选择活动时间' }],
         formatter (row) {
           return row.activity_end_at
         },
         valueBuilder (row, key) {
-          if (!StringUtils.hasEmpty(row.daterangeStart, row.daterangeEnd)) {
-            row.daterange = [
-              new Date(row.daterangeStart),
-              new Date(row.daterangeEnd)
+          if (!StringUtils.hasEmpty(row.activity_start_at, row.activity_end_at)) {
+            row.activityDate = [
+              new Date(row.activity_start_at),
+              new Date(row.activity_end_at)
             ]
           }
         },
         valueResolve (row, key) {
-          if (row.daterange != null && row.daterange.length > 1) {
-            row.daterangeStart = row.daterange[0].getTime()
-            row.daterangeEnd = row.daterange[1].getTime()
+          if (row.activityDate?.length > 1) {
+            row.activity_start_at = util.formatDate(row.activityDate[0])
+            row.activity_end_at = util.formatDate(row.activityDate[1])
           } else {
-            row.daterangeStart = null
-            row.daterangeEnd = null
+            row.activity_start_at = null
+            row.activity_end_at = null
           }
         }
       },
@@ -293,6 +330,7 @@ export const crudOptions = vm => {
         title: '收费金额',
         key: 'toll_amount',
         show: false,
+        type: 'number',
         form: {
           component: {
             show (cmp) {
@@ -307,6 +345,7 @@ export const crudOptions = vm => {
         type: 'switch',
         show: false,
         form: {
+          value: 1,
           component: {
             name: 'dict-switch',
             dict: {
@@ -320,29 +359,56 @@ export const crudOptions = vm => {
         key: 'header_image',
         type: 'image-uploader',
         disabled: true, // 设置true可以在行展示中隐藏
-        component: {
-          props: {
-            btnSize: 'small', // type=file-uploader时按钮的大小
-            type: 'qiniu', // 当前使用哪种存储后端【cos/qiniu/alioss】
-            custom: {}, // 自定义参数，可以在获取token、sts时传入不同的参数给后端
-            elProps: {
-              // 与el-uploader配置一致
-              limit: 1 // 限制上传文件数量
+        width: 200,
+        form: {
+          component: {
+            props: {
+              btnSize: 'small', // type=file-uploader时按钮的大小
+              type: 'qiniu', // 当前使用哪种存储后端【cos/qiniu/alioss】
+              custom: {}, // 自定义参数，可以在获取token、sts时传入不同的参数给后端
+              elProps: {
+                // 与el-uploader配置一致
+                limit: 1 // 限制上传文件数量
+              },
+              returnType: 'key', // 添加和编辑上传提交的值不要url，而只要key
+              buildUrl (value, item) {
+                // 私有下载链接，在后端构建cos签名后的url，然后redirect到该地址进行下载
+                return IMGBASEURL + value
+              }
             }
           }
         }
-      },
-      {
-        title: '参加权限',
-        key: 'permission',
-        disabled: true, // 设置true可以在行展示中隐藏
-        form: { slot: true }
       },
       {
         title: '活动内容',
         key: 'content',
         disabled: true, // 设置true可以在行展示中隐藏
         type: 'editor-ueditor' // 富文本图片上传依赖file-uploader，请先配置好file-uploader
+      },
+      {
+        title: '活动分享图',
+        key: 'share_image',
+        type: 'image-uploader',
+        disabled: true, // 设置true可以在行展示中隐藏
+        width: 200,
+        form: {
+          component: {
+            props: {
+              btnSize: 'small', // type=file-uploader时按钮的大小
+              type: 'qiniu', // 当前使用哪种存储后端【cos/qiniu/alioss】
+              custom: {}, // 自定义参数，可以在获取token、sts时传入不同的参数给后端
+              elProps: {
+                // 与el-uploader配置一致
+                limit: 1 // 限制上传文件数量
+              },
+              returnType: 'key', // 添加和编辑上传提交的值不要url，而只要key
+              buildUrl (value, item) {
+                // 私有下载链接，在后端构建cos签名后的url，然后redirect到该地址进行下载
+                return IMGBASEURL + value
+              }
+            }
+          }
+        }
       }
     ]
 
