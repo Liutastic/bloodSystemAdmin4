@@ -64,21 +64,13 @@ export const crudOptions = (vm) => {
           ],
           // 同步字典
           async valueChange (key, value, form, { getColumn, mode, component, immediate, getComponent }) {
-            let dictData = []
-            if (immediate) {
-              if (mode === 'add') return
-              dictData = await vm.getDictData('release_type')
-              const dictChild = dictData.filter(item => item.id === value)[0].child ?? []
-              vm.getEditFormTemplate('category_id').component.props.dict.data = dictChild
-            } else {
-              dictData = component.dict.data
-              const dictChild = dictData.filter(item => item.id === value)[0].child ?? []
-              form.category_id = undefined // 将“city”的值置空
-              await getComponent('category_id').reloadDict() // 执行city的select组件的reloadDict()方法，触发“city”重新加载字典
-              getComponent('category_id').setDictData(dictChild)
-            }
-          },
-          valueChangeImmediate: true
+            const dictChild = component.dict.data.filter(item => item.id === value)[0].child ?? []
+            form.category_id = undefined // 将“city”的值置空
+            console.log('dictChild:', value, dictChild)
+            await getComponent('category_id').reloadDict() // 执行city的select组件的reloadDict()方法，触发“city”重新加载字典
+            getComponent('category_id').setDictData(dictChild)
+          }
+          // valueChangeImmediate: true
         }
       },
       {
