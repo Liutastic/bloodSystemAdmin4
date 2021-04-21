@@ -162,7 +162,7 @@
                   :key="item.id"
                   :label="item.title"
                   :value="item.id"
-                  :disabled="item.is_enable"
+                  :disabled="!item.is_enable"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -264,6 +264,7 @@ export default {
             })
           }
         })
+        console.log(list)
         this.templateList = list
       } else {
         this.$message({
