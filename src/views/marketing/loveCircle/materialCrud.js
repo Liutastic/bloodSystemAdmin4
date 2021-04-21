@@ -133,15 +133,21 @@ export const crudOptions = function (vm) {
       {
         // 1是图文 2是视频
         title: '素材类型',
-        key: 'type'
-        // formatter: (row, column, cellValue, index) => {
-        //   console.log(row, column, cellValue, index)
-        //   if (cellValue === 1) {
-        //     cellValue = '图文'
-        //   } else if (cellValue === 2) {
-        //     cellValue = '视频'
-        //   }
-        // }
+        key: 'type',
+        type: 'select',
+        search: {
+          key: 'type',
+          disabled: false,
+          component: {
+            name: 'dict-select'
+          }
+        },
+        dict: {
+          data: [
+            { value: 1, label: '图文' },
+            { value: 2, label: '视频' }
+          ]
+        }
       },
       {
         title: '创建日期',

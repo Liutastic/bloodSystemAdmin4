@@ -148,7 +148,7 @@ export default ({ request }) => ({
   // 筛选素材
   filterMaterial (params) {
     return request({
-      url: '/admin/v1/material/search',
+      url: '/svc/marketing-svc/admin/v1/material/search',
       method: 'get',
       params
     })

@@ -19,6 +19,7 @@
       @submit="handleSearch"
     />
     <d2-crud-x
+      :data="filterData"
       ref="d2Crud"
       v-bind="_crudProps"
       v-on="_crudListeners"
@@ -35,25 +36,30 @@ import util from '@/libs/util'
 export default {
   name: 'allMaterial',
   mixins: [d2CrudPlus.crud],
+  data () {
+    return {
+      filterData: []
+    }
+  },
   methods: {
     // 自定义搜索方法
     async handleSearch (e) {
       const dateObj = this.formatDate(e.created_at)
       delete e.created_at
-      if (util.dateDiff(dateObj.end_at, dateObj.start_at).days > 30) {
+      if (dateObj && util.dateDiff(dateObj.end_at, dateObj.start_at).days > 30) {
         this.$message({
           type: 'warning',
           message: '选择的日期不可以大于30天'
         })
         return
       }
-      const { code, msg } = await this.$apis.filterMaterial({
+      const { data, msg, code } = await this.$apis.filterMaterial({
         ...e,
-        start_at: dateObj.start_at,
-        end_at: dateObj.end_at
+        start_at: dateObj?.start_at,
+        end_at: dateObj?.end_at
       })
       if (code === 0) {
-
+        this.filterData = data
       } else {
         this.$message({
           type: 'error',
@@ -80,8 +86,19 @@ export default {
     getCrudOptions () {
       return crudOptions(this)
     },
-    pageRequest (query) {
-      return this.$apis.GetMaterialList(query)
+    async pageRequest (query) {
+      const { data, code, msg } = await this.$apis.GetMaterialList(query)
+      if (code === 0) {
+        this.filterData = data.data
+      } else {
+        this.$message({
+          type: 'error',
+          message: msg
+        })
+      }
+      return {
+        data
+      }
     },
     delRequest (row) {
       return this.$apis.DeleteMaterial(row.id)
