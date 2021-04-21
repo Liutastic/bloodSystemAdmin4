@@ -2,6 +2,7 @@ import StringUtils from 'd2-crud-plus/src/lib/utils/util.string'
 import { BASEURL, IMGBASEURL } from '@/api/config'
 import { DICT_STATUS, DICT_STATIS_TYPE, DICT_YES_NO } from './dict.js'
 import API from './api'
+import util from '@/libs/util'
 export const crudOptions = vm => {
   return {
     options: {
@@ -170,7 +171,7 @@ export const crudOptions = vm => {
         type: 'checkbox',
         disabled: true, // 设置true可以在行展示中隐藏
         dict: {
-          value: 'id', // 数据字典中value字段的属性名
+          value: 'value', // 数据字典中value字段的属性名
           label: 'name', // 数据字典中label字段的属性名
           getData: async (url, dict, { form, component }) => {
             // 配置此参数会覆盖全局的getRemoteDictFunc
@@ -220,6 +221,23 @@ export const crudOptions = vm => {
             span: 18
           }
         },
+        valueBuilder (row, key) {
+          if (!StringUtils.hasEmpty(row.sign_start_at, row.sign_end_at)) {
+            row.signDate = [
+              new Date(row.sign_start_at),
+              new Date(row.sign_end_at)
+            ]
+          }
+        },
+        valueResolve (row, key) {
+          if (row.signDate?.length > 1) {
+            row.sign_start_at = util.formatDate(row.signDate[0])
+            row.sign_end_at = util.formatDate(row.signDate[1])
+          } else {
+            row.sign_start_at = null
+            row.sign_end_at = null
+          }
+        },
 
         formatter (row) {
           return row.sign_end_at
@@ -232,24 +250,25 @@ export const crudOptions = vm => {
         form: {
           title: '活动时间'
         },
+        rules: [{ required: true, message: '请选择活动时间' }],
         formatter (row) {
           return row.activity_end_at
         },
         valueBuilder (row, key) {
-          if (!StringUtils.hasEmpty(row.daterangeStart, row.daterangeEnd)) {
-            row.daterange = [
-              new Date(row.daterangeStart),
-              new Date(row.daterangeEnd)
+          if (!StringUtils.hasEmpty(row.activity_start_at, row.activity_end_at)) {
+            row.activityDate = [
+              new Date(row.activity_start_at),
+              new Date(row.activity_end_at)
             ]
           }
         },
         valueResolve (row, key) {
-          if (row.daterange != null && row.daterange.length > 1) {
-            row.daterangeStart = row.daterange[0].getTime()
-            row.daterangeEnd = row.daterange[1].getTime()
+          if (row.activityDate?.length > 1) {
+            row.activity_start_at = util.formatDate(row.activityDate[0])
+            row.activity_end_at = util.formatDate(row.activityDate[1])
           } else {
-            row.daterangeStart = null
-            row.daterangeEnd = null
+            row.activity_start_at = null
+            row.activity_end_at = null
           }
         }
       },
@@ -320,6 +339,7 @@ export const crudOptions = vm => {
         type: 'switch',
         show: false,
         form: {
+          value: 1,
           component: {
             name: 'dict-switch',
             dict: {
@@ -354,16 +374,35 @@ export const crudOptions = vm => {
         }
       },
       {
-        title: '参加权限',
-        key: 'permission',
-        disabled: true, // 设置true可以在行展示中隐藏
-        form: { slot: true }
-      },
-      {
         title: '活动内容',
         key: 'content',
         disabled: true, // 设置true可以在行展示中隐藏
         type: 'editor-ueditor' // 富文本图片上传依赖file-uploader，请先配置好file-uploader
+      },
+      {
+        title: '活动分享图',
+        key: 'share_image',
+        type: 'image-uploader',
+        disabled: true, // 设置true可以在行展示中隐藏
+        width: 200,
+        form: {
+          component: {
+            props: {
+              btnSize: 'small', // type=file-uploader时按钮的大小
+              type: 'qiniu', // 当前使用哪种存储后端【cos/qiniu/alioss】
+              custom: {}, // 自定义参数，可以在获取token、sts时传入不同的参数给后端
+              elProps: {
+                // 与el-uploader配置一致
+                limit: 1 // 限制上传文件数量
+              },
+              returnType: 'key', // 添加和编辑上传提交的值不要url，而只要key
+              buildUrl (value, item) {
+                // 私有下载链接，在后端构建cos签名后的url，然后redirect到该地址进行下载
+                return IMGBASEURL + value
+              }
+            }
+          }
+        }
       }
     ]
 
