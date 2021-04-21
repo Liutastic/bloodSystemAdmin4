@@ -7,6 +7,7 @@
         @delPublisherPart="delPublisherPart"
         @delContentPart="delContentPart"
         @delProImgPart="delProImgPart"
+        @delShowProPart="delShowProPart"
         :type="'video'"
         :virtualNum="formData.pink_circle_fictitious_forward"
         :issuerInfo="issuerInfo"
@@ -75,7 +76,7 @@
             <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8">展示商品：</div>
               <div class="flex-sub">
-                <el-input class="input-width-100" size="mini" @change="inputShowProId" v-model="formData.goods_id"/>
+                <el-input class="input-width-100" placeholder="输入商品id" size="mini" @change="inputShowProId" v-model="formData.goods_id"/>
               </div>
               <div class="btn ml-5 cursor" @click="choosePro()">选择商品</div>
             </div>
@@ -187,7 +188,8 @@ export default {
         this.formData.media = arr
         this.formData.pink_circle_user_id = data.user.id
         this.issuerInfo = data.user
-        this.showProInfo = this.getProDetail(data.goods.id)
+        const res = await this.$apis.GetProDetail(data.goods.id)
+        this.showProInfo = res.data
         this.materailClassValue = [data.category.id, data.category_child_id]
         this.getCategoryList()
         this.getPermissionList()
@@ -203,18 +205,12 @@ export default {
     this.getAllIssuerList()
   },
   methods: {
-    // 获取商品详情
-    async getProDetail (id) {
-      const { code, msg, data } = await this.$apis.GetProDetail(id)
-      console.log('获取商品详情', code, msg, data)
-      if (code === 0) {
-        return data.data
-      }
-    },
     // 输入的展示商品id后调用
     async inputShowProId (e) {
       console.log('获取输入的展示商品id', e)
-      this.showProInfo = this.getProDetail(e)
+      const { data } = await this.$apis.GetProDetail(e)
+      this.showProInfo = data
+      this.formData.goods_id = data.id
     },
     // 选择图片链接的商品
     selHrefPro (item) {
@@ -403,7 +399,7 @@ export default {
     },
     // 获取权限模板列表
     async getPermissionList () {
-      const { code, msg, data } = await this.$apis.GetAuthTemplateList({})
+      const { code, msg, data } = await this.$apis.GetPermissionList({ page: 1, per_page: 1000 })
       console.log('权限模板', code, msg, data)
       if (code === 0) {
         this.permissionOption = data.data

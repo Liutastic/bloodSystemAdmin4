@@ -34,7 +34,7 @@ export const crudOptions = function (vm) {
         type: 'select',
         search: { key: 'competence_id', disabled: false },
         dict: {
-          url: '/admin/v1/template/list',
+          url: '/svc/marketing-svc/admin/v1/template/list',
           value: 'id',
           label: 'title'
         }

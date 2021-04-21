@@ -7,7 +7,7 @@ export default ({ request }) => ({
    */
   getActivityList (params) {
     return request({
-      url: '/admin/v1/activity/index',
+      url: '/svc/marketing-svc/admin/v1/activity/index',
       method: 'get',
       params
     })
@@ -20,7 +20,7 @@ export default ({ request }) => ({
    */
   getActivityReleaseType (params) {
     return request({
-      url: '/admin/v1/activity/release-type',
+      url: '/svc/marketing-svc/admin/v1/activity/release-type',
       method: 'get',
       params
     })
@@ -33,7 +33,7 @@ export default ({ request }) => ({
    */
   getActivityCategory (params) {
     return request({
-      url: '/admin/v1/activity/category',
+      url: '/svc/marketing-svc/admin/v1/activity/category',
       method: 'get',
       params
     })
@@ -45,7 +45,7 @@ export default ({ request }) => ({
    */
   addActivityStore (data) {
     return request({
-      url: '/admin/v1/activity/store',
+      url: '/svc/marketing-svc/admin/v1/activity/store',
       method: 'post',
       data
     })
