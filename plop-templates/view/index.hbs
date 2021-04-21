@@ -1,0 +1,26 @@
+{{#if template}}
+<template>
+  <d2-container>
+    <template slot="header">{{ properCase name }}</template>
+  </d2-container>
+</template>
+{{/if}}
+
+{{#if script}}
+<script>
+export default {
+  name: '{{ properCase name }}',
+  data () {
+    return {}
+  },
+  mounted () {},
+  methods: {}
+}
+</script>
+{{/if}}
+
+{{#if style}}
+<style lang="scss" scoped>
+
+</style>
+{{/if}}

@@ -30,7 +30,7 @@
 
     // 服务器统一请求接口路径
     // serverUrl: '/lib/UEditor/config.json',
-    serverUrl: 'https://api.vodeshop.com/ueditor/server',
+    serverUrl: 'https://test.api.vodeshop.com/ueditor/server',
 
     // serverUrl: '/jsp/controller.jsp',
 
@@ -43,7 +43,7 @@
       'directionalityltr', 'directionalityrtl', 'indent', '|',
       'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
       'link', 'unlink', 'anchor', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
-      'simpleupload', 'insertimage', 'emotion', 'scrawl', 'insertvideo', 'music', 'attachment', 'map', 'gmap', 'insertframe', 'insertcode', 'webapp', 'pagebreak', 'template', 'background', '|',
+      'insertimage', 'emotion', 'scrawl', 'insertvideo', 'music', 'attachment', 'map', 'gmap', 'insertframe', 'insertcode', 'webapp', 'pagebreak', 'template', 'background', '|',
       'horizontal', 'date', 'time', 'spechars', 'snapscreen', 'wordimage', '|',
       'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
       'print', 'preview', 'searchreplace', 'drafts', 'help'

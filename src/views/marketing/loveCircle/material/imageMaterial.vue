@@ -199,7 +199,7 @@ export default {
         this.formData.media = arr
         this.formData.pink_circle_user_id = data.user.id
         this.issuerInfo = data.user
-        // this.showProInfo = this.getProDetail(data.goods.id)
+        this.showProInfo = this.getProDetail(data.goods.id)
         this.materailClassValue = [data.category.id, data.category_child_id]
         this.getCategoryList()
         this.getPermissionList()
@@ -226,12 +226,12 @@ export default {
     // 输入的展示商品id后调用
     async inputShowProId (e) {
       console.log('获取输入的展示商品id', e)
-      // this.showProInfo = this.getProDetail(e)
+      this.showProInfo = this.getProDetail(e)
     },
     // 输入的图片链接商品id后调用
     async inputRelateProId (e) {
       console.log('获取输入的展示商品id', e)
-      // this.relatePro = this.getProDetail(e)
+      this.relatePro = this.getProDetail(e)
     },
     // 选择图片链接的商品
     selHrefPro (item) {
@@ -424,7 +424,7 @@ export default {
     },
     // 获取权限模板列表
     async getPermissionList () {
-      const { code, msg, data } = await this.$apis.GetPermissionList()
+      const { code, msg, data } = await this.$apis.GetAuthTemplateList({})
       console.log('权限模板', code, msg, data)
       if (code === 0) {
         this.permissionOption = data.data

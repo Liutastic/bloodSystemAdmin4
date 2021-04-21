@@ -156,15 +156,6 @@ export default {
     removeChild (item, index) {
       this.formData.dynamicChildren.splice(index, 1)
     },
-    // addItem () {
-    //   this.formData.dynamicItem.push({
-    //     name: '',
-    //     phone: ''
-    //   })
-    // },
-    // deleteItem (item, index) {
-    //   this.formData.dynamicItem.splice(index, 1)
-    // },
     removeAllChildren () {
       // switch === false
       if (!this.formData.isChildCategory) {

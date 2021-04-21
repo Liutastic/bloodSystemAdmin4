@@ -37,11 +37,11 @@
           <el-image
             class="pro-img"
             :src="item.image | qiniu"
-            fit="'contain'"></el-image>
+            fit="contain"></el-image>
           <div class="pro-left-info color-333 font-size-8  ml-10">
             <div class="mb-5 hidden-ellipsis">{{item.name}}</div>
             <div class="mb-5">价格：{{item.price}}元</div>
-            <div class="mb-5">会员价：280元</div>
+            <div class="mb-5">会员价：{{item.vip_price}}元</div>
             <div>{{item.updated_at}}</div>
           </div>
         </div>
@@ -49,7 +49,7 @@
           <el-button class="ml-5" @click="selPro(item)" size="mini" type="danger">选择</el-button>
         </div>
       </div>
-      <div v-if="proList.length && isFinished" class="mt-10 color-333 font-size-9">已经没有更多啦~</div>
+      <div v-if="proList.length && isFinished" class="mt-10 color-333 font-size-9 text-center">已经没有更多啦~</div>
       <div v-if="!proList.length && firstLoad" class="empty-tip color-333 font-size-9">请输入搜索条件进行检索~</div>
       <div v-if="!proList.length && !firstLoad" class="empty-tip color-333 font-size-9">暂无相关商品~</div>
     </div>
@@ -167,6 +167,7 @@ export default {
 .pro-list-box{
   margin-top:10px;
   height:300px;
+  width:100%;
   // padding-right:15px;
   overflow-y:auto;
   .pro-left-part{
@@ -180,6 +181,7 @@ export default {
   .pro-img{
     width: 65px;
     height: 65px;
+    background:#ffffff;
   }
   .pro-left-info{
     width:75%;
@@ -191,6 +193,9 @@ export default {
     left:50%;
     transform: translate(-50%, -50%);
   }
+}
+.text-center{
+  text-align: center;
 }
 .input-width-100{
   width:100% !important;

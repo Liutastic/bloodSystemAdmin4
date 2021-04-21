@@ -5,7 +5,7 @@
     <!-- 发布者信息模块 -->
     <div v-show="isShowOnePart" class="every-temple-part border-dashed flex align-center justify-between padding-lr-8 padding-tb-10">
       <div class="flex align-center">
-        <el-avatar size="'mini'" :src="issuerInfo.avatar | qiniu"></el-avatar>
+        <el-avatar size="medium" :src="issuerInfo.avatar | qiniu"></el-avatar>
         <div class="flex flex-direction-column ml-9">
           <span class="font-size-9 color-333">{{issuerInfo.name}}</span>
           <span class="font-size-8 color-999 mt-3">刚刚</span>
@@ -35,7 +35,7 @@
           <el-image
           class="pro-img"
           :src="item.url | qiniu"
-          fit="'contain'"></el-image>
+          fit="contain"></el-image>
           <i class="el-icon-error del-icon cursor" @click="delProImg(index)"></i>
         </div>
       </div>
@@ -61,7 +61,7 @@
         <el-image
           class="bottom-pro-img"
           :src="showProInfo.image | qiniu"
-          fit="'contain'"></el-image>
+          fit="contain"></el-image>
         <div class="pro-right-info flex justify-between flex-direction-column">
           <div class="color-333 font-size-10 hidden-ellipsis">{{showProInfo.name}}</div>
           <div class="pro-price-part flex">
@@ -137,8 +137,7 @@ export default {
     }
   },
   data () {
-    return {
-    }
+    return {}
   },
   methods: {
     delProImg (index) {
@@ -211,6 +210,7 @@ export default {
       width: 92px;
       height: 92px;
       display:block;
+      background:#ffffff;
     }
   }
   .pro-right-info{

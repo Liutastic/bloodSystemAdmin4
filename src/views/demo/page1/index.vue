@@ -1,29 +1,36 @@
 <template>
-  <d2-container :class="{'page-compact':crud.pageOptions.compact}">
+  <d2-container :class="{ 'page-compact': crud.pageOptions.compact }">
     <template slot="header">D2-Crud-Plus</template>
     <d2-crud-x
-        ref="d2Crud"
-        v-bind="_crudProps"
-        v-on="_crudListeners"
-        @customHandleBtn="customHandleBtnHandle"
+      ref="d2Crud"
+      v-bind="_crudProps"
+      v-on="_crudListeners"
+      @customHandleBtn="customHandleBtnHandle"
     >
-
       <div slot="header">
-        <crud-search ref="search" :options="crud.searchOptions" @submit="handleSearch"  />
+        <crud-search
+          ref="search"
+          :options="crud.searchOptions"
+          @submit="handleSearch"
+        />
 
-        <el-button-group >
-          <el-button   size="small" type="primary" @click="addRow"><i class="el-icon-plus"></i> 新增</el-button>
-          <el-button   size="small" type="danger" @click="batchDelete"><i class="el-icon-delete"></i> 批量删除</el-button>
-          <el-button   size="small" type="primary" @click="checkSecond">选中第一、二行</el-button>
-
+        <el-button-group>
+          <el-button size="small" type="primary" @click="addRow"
+            ><i class="el-icon-plus"></i> 新增</el-button
+          >
+          <el-button size="small" type="danger" @click="batchDelete"
+            ><i class="el-icon-delete"></i> 批量删除</el-button
+          >
+          <el-button size="small" type="primary" @click="checkSecond"
+            >选中第一、二行</el-button
+          >
         </el-button-group>
-        <crud-toolbar v-bind="_crudToolbarProps" v-on="_crudToolbarListeners"  />
+        <crud-toolbar v-bind="_crudToolbarProps" v-on="_crudToolbarListeners" />
       </div>
 
       <template slot="expandSlot" slot-scope="scope">
-        这里显示行展开数据:{{scope.row.data}}
+        这里显示行展开数据:{{ scope.row.data }}
       </template>
-
     </d2-crud-x>
   </d2-container>
 </template>

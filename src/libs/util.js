@@ -30,5 +30,59 @@ util.open = function (url) {
   a.click()
   document.body.removeChild(document.getElementById('d2admin-link-temp'))
 }
+/**
+ * 将任意对象转化为树
+ * @param data
+ * @param key
+ * @param pid
+ * @param parent
+ * @returns {Array}
+ */
+util.formatDataToTree = (data, key = 'menu_id', pid = 'parent_id', parent = {}) => {
+  if (!data || Object.keys(data).length <= 0) {
+    return []
+  }
 
+  const map = {}
+  const isSetParent = Object.keys(parent).length > 0
+
+  data.forEach(value => {
+    if (isSetParent && parent.value.includes(value[parent.key])) {
+      value[pid] = 0
+    }
+
+    map[value[key]] = { ...value }
+  })
+
+  const tree = []
+  for (const id in data) {
+    if (!Object.prototype.hasOwnProperty.call(data, id)) {
+      continue
+    }
+
+    // 对应索引
+    const index = data[id][key]
+    if (!Object.prototype.hasOwnProperty.call(map, index)) {
+      continue
+    }
+
+    // 子节点压入
+    if (map[index][pid]) {
+      if (!map[map[index][pid]]) {
+        continue
+      }
+
+      if (!Object.prototype.hasOwnProperty.call(map[map[index][pid]], 'children')) {
+        map[map[index][pid]].children = []
+      }
+
+      map[map[index][pid]].children.push(map[index])
+      continue
+    }
+
+    tree.push(map[index])
+  }
+
+  return tree
+}
 export default util

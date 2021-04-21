@@ -45,11 +45,11 @@ export default ({ request }) => ({
     })
   },
   // 获取分类列表
-  GetCategoryList (params) {
+  GetCategoryList () {
     return request({
       url: '/admin/v1/pink-circle-category/index',
-      method: 'get',
-      params
+      method: 'get'
+
     })
   },
   // 创建分类
@@ -76,7 +76,7 @@ export default ({ request }) => ({
       data
     })
   },
-  // 删除一个分类
+  // 删除分类
   DeleteCategory (params) {
     return request({
       url: '/admin/v1/pink-circle-category/delete',
@@ -96,6 +96,14 @@ export default ({ request }) => ({
   GetAuthTemplateList (params) {
     return request({
       url: '/admin/v1/template/list',
+      method: 'get',
+      params
+    })
+  },
+  // 素材列表
+  GetMaterialList (params) {
+    return request({
+      url: '/admin/v1/material/index',
       method: 'get',
       params
     })

@@ -5,8 +5,7 @@ import d2Container from './d2-container'
 import { d2CrudPlus } from 'd2-crud-plus'
 
 import {
-  request,
-  requestForMock
+  request
 } from '@/api/service'
 
 import { BASEURL } from '@/api/config'
@@ -80,34 +79,33 @@ Vue.prototype.$echarts = echarts
 // #region 引入d2CrudPlus
 Vue.use(d2CrudPlus, {
   starTip: false,
-  getRemoteDictFunc (url, dict) {
+  async getRemoteDictFunc (url, dict) {
     // 此处配置你的字典http请求方法
     // 实际使用请改成request
-    console.log('asdasd: ')
-    return requestForMock({
+    const ret = await request({
       url: url,
       data: dict.body,
       method: 'get'
-    }).then(ret => {
-      return ret.data
     })
+    console.log('ret:', ret)
+
+    return ret.data
   },
   commonOption () {
     // 公共配置
     return {
       format: {
-        page: {
-          // page接口返回的数据结构配置，
-          request: {
-            current: 'current',
-            size: 'size'
+        page: { // page接口返回的数据结构配置
+          request: { // 请求参数
+            current: 'page', // 当前页码
+            size: 'per_page' // 当前每页条数
           },
-          response: {
-            current: 'current', // 当前页码 ret.data.current
-            size: 'size', // 当前页码 ret.data.current
-            // size: (data) => { return data.size }, // 每页条数，ret.data.size, 你也可以配置一个方法，自定义返回
+          response: { // 返回结果
+            current: 'current_page', // 当前页码 ret.data.current
+            size: 'per_page', // 每页条数，ret.data.size,
+            // size: (data) => { return data.size }, //你也可以配置一个方法，自定义返回
             total: 'total', // 总记录数 ret.data.total
-            records: 'records' // 列表数组 ret.data.records
+            records: 'data' // 列表数组 ret.data.records
           }
         }
       },

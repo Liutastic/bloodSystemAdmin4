@@ -95,12 +95,21 @@ export default {
     },
     {
       path: 'activities/activities',
-      name: 'activities',
+      name: 'activitiesActivities',
       meta: {
         title: '所有活动',
         auth: true
       },
-      component: _import('marketing/activities/activities')
+      component: _import('marketing/activities/activities/')
+    },
+    {
+      path: 'activities/participant',
+      name: 'activitiesParticipant',
+      meta: {
+        title: '参与人记录',
+        auth: true
+      },
+      component: _import('marketing/activities/participant/')
     }
   ]
 }
