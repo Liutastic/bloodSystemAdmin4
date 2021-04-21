@@ -48,12 +48,14 @@
         <el-table-column prop="is_enable" label="状态">
           <template slot-scope="scope">
             <el-tag
+              style="cursor: pointer"
               v-if="scope.row.is_enable === 1"
               type="success"
               @click="changeIssuerStatus(scope.row)"
               >启用</el-tag
             >
             <el-tag
+              style="cursor: pointer"
               v-else-if="scope.row.is_enable === 0"
               @click="changeIssuerStatus(scope.row)"
               type="danger"

@@ -1,7 +1,7 @@
 import StringUtils from 'd2-crud-plus/src/lib/utils/util.string'
 import { BASEURL } from '@/api/config'
 import { DICT_STATUS, DICT_STATIS_TYPE, DICT_YES_NO } from './dict.js'
-
+import API from './api'
 export const crudOptions = vm => {
   return {
     options: {
@@ -69,7 +69,7 @@ export const crudOptions = vm => {
         key: 'release_type',
         type: 'radio',
         dict: {
-          url: `${BASEURL}/admin/v1/activity/release-type`,
+          url: `${BASEURL}/svc/marketing-svc/admin/v1/activity/release-type`,
 
           cache: true,
           value: 'id', // 数据字典中value字段的属性名
@@ -85,13 +85,20 @@ export const crudOptions = vm => {
             form,
             { getColumn, mode, component, immediate, getComponent }
           ) {
+            const childArr = component.dict.data.filter(item => item.id === value)
             const dictChild =
-              component.dict.data.filter(item => item.id === value)[0].child ??
+              childArr[0].child ??
               []
             form.category_id = undefined // 将“city”的值置空
             console.log('dictChild:', value, dictChild)
             await getComponent('category_id').reloadDict() // 执行city的select组件的reloadDict()方法，触发“city”重新加载字典
             getComponent('category_id').setDictData(dictChild)
+            console.log('key,:', key, value)
+
+            console.log('vm:', vm.getEditFormTemplate('permissions'))
+            vm.getEditFormTemplate('permissions').title = childArr[0]?.name
+
+            await getComponent('permissions').loadDict() // 执行city的select组件的reloadDict()方法，触发“city”重新加载字典
           }
           // valueChangeImmediate: true
         }
@@ -102,9 +109,23 @@ export const crudOptions = vm => {
         type: 'select',
         disabled: true,
         dict: {
-          data: [],
+          // data: ,
+
+          // url: `${BASEURL}/admin/v1/activity/release-type`,
           value: 'id', // 数据字典中value字段的属性名
-          label: 'name' // 数据字典中label字段的属性名
+          label: 'name', // 数据字典中label字段的属性名
+          children: 'child', // children的属性名
+          //  覆盖全局getRemoteDictData方法,返回 Promise<[dictData]>
+          getData: async (url, dict, { form, component }) => {
+            const { data } = await API.getActivityReleaseType()
+            const distData = []
+            data.filter(item => {
+              console.log('item: ', item)
+              if (item.id === form.release_type) return distData.push(...item.child)
+            })
+            return distData
+          }
+
         },
         form: {
           component: {
@@ -135,6 +156,34 @@ export const crudOptions = vm => {
         //   row.category_name = row.category_name
         // }
       },
+
+      {
+        title: '参加权限',
+        key: 'permissionTitle',
+        disabled: true, // 设置true可以在行展示中隐藏
+        form: { slot: true }
+      },
+      {
+        title: '',
+        key: 'permissions',
+        type: 'checkbox',
+        disabled: true, // 设置true可以在行展示中隐藏
+        dict: {
+          value: 'id', // 数据字典中value字段的属性名
+          label: 'name', // 数据字典中label字段的属性名
+          getData: async (url, dict, { form, component }) => {
+            // 配置此参数会覆盖全局的getRemoteDictFunc
+            const ret = await API.getPermissionsTags({ release_type: form.release_type })
+            let { data } = ret
+            // 转字符串防止checkbox报错
+            data = data.map(item => ({ ...item, id: item.id.toString() }))
+
+            return data
+          }
+        }
+
+      },
+
       {
         title: '统计类型',
         key: 'statistics_type',

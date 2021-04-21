@@ -108,6 +108,14 @@ export default ({ request }) => ({
       params
     })
   },
+  // 改变素材状态
+  UpdateMaterialStatus (data) {
+    return request({
+      url: '/svc/marketing-svc/admin/v1/material/update',
+      method: 'put',
+      data
+    })
+  },
   // 新增视频素材
   AddVideoMaterial (params) {
     return request({
