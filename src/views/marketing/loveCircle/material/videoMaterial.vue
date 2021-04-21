@@ -103,7 +103,7 @@
             </div>
           </div>
           <div class="submit-btn-box">
-            <el-button type="primary" size="mini" @click="save">{{id ? '修改' : '上传'}}</el-button>
+            <el-button type="primary" size="mini" @click="save">{{id ? '修改' : '保存'}}</el-button>
           </div>
         </div>
       </el-col>
@@ -278,7 +278,6 @@ export default {
         })
         return
       }
-      this.$loading()
       this.formData.pink_circle_category_id = this.materailClassValue[0] ? this.materailClassValue[0] : ''
       this.formData.category_child_id = this.materailClassValue[1] ? this.materailClassValue[1] : ''
       // console.log('上传参数', this.formData)
@@ -287,7 +286,6 @@ export default {
         const { code, msg } = await this.$apis.EditMaterial(this.formData, this.id)
         // console.log(code, msg, data)
         if (code === 0) {
-          this.$loading().close()
           this.$message({
             message: '操作成功！',
             type: 'success'
@@ -296,7 +294,6 @@ export default {
             this.$router.back(-1)
           }, 2000)
         } else {
-          this.$loading().close()
           this.$message.error(msg)
         }
         return
@@ -305,13 +302,16 @@ export default {
       const { code, msg } = await this.$apis.AddVideoMaterial(this.formData)
       // console.log(code, msg, data)
       if (code === 0) {
-        this.$loading().close()
+        setTimeout(() => {
+          this.$router.push({
+            path: '/marketing/loveCircle/allMaterial'
+          })
+        }, 2000)
         this.$message({
           message: '操作成功！',
           type: 'success'
         })
       } else {
-        this.$loading().close()
         this.$message.error(msg)
       }
     },
@@ -402,7 +402,9 @@ export default {
       const { code, data } = await this.$apis.GetPermissionList({ page: 1, per_page: 1000 })
       // console.log('权限模板', code, msg, data)
       if (code === 0) {
-        this.permissionOption = data.data
+        this.permissionOption = data.data.filter(val => {
+          return val.status === 1
+        })
       }
     },
     // 获取发布人列表
@@ -438,13 +440,14 @@ export default {
     width:100% !important;
   }
   .btn{
-    width: 49px;
-    height: 16px;
+    width: 60px;
+    height: 25px;
     background: #2589FF;
-    border-radius: 1px;
+    border-radius: 3px;
     text-align:center;
-    line-height:16px;
+    line-height:25px;
     font-size:8px;
+    opacity: 0.8;
     color:#ffffff;
   }
   .upload-btn{

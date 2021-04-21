@@ -91,7 +91,6 @@
               <div class="label color-333 font-size-8"><span class="red-tip">*</span>上传图片：</div>
               <div class="flex-sub">
                 <el-upload
-                  v-if="show2"
                   class="upload-btn"
                   :action="QINIUURL"
                   :data="dataToken"
@@ -100,9 +99,9 @@
                   :before-upload="beforeUpload">
                   <i class="el-icon-picture color-666"></i>
                 </el-upload>
-                <div class="upload-btn cursor" @click="controlUploadProRelate" v-if="show1">
+                <!-- <div class="upload-btn cursor" @click="controlUploadProRelate" v-if="show1">
                   <i class="el-icon-picture color-666"></i>
-                </div>
+                </div> -->
                 <div class="upload-btn cursor" @click="controlUploadProNum9" v-if="show3">
                   <i class="el-icon-picture color-666"></i>
                 </div>
@@ -118,7 +117,7 @@
             <div class="color-333 font-size-8 mb-9">关联商品: {{relatePro.name ? relatePro.name : '暂未关联商品'}}</div>
           </div>
           <div class="submit-btn-box">
-            <el-button type="primary" size="mini" @click="save">{{id ? '修改' : '上传'}}</el-button>
+            <el-button type="primary" size="mini" @click="save">{{id ? '修改' : '保存'}}</el-button>
           </div>
         </div>
       </el-col>
@@ -187,12 +186,12 @@ export default {
     }
   },
   computed: {
-    show1 () {
-      return this.formData.media.length && this.formData.media.length < 9 && this.formData.media[this.formData.media.length - 1] && !this.formData.media[this.formData.media.length - 1].goods_id
-    },
-    show2 () {
-      return !this.formData.media.length || (this.formData.media.length && this.formData.media.length < 9 && this.formData.media[this.formData.media.length - 1] && this.formData.media[this.formData.media.length - 1].goods_id)
-    },
+    // show1 () {
+    //   return this.formData.media.length && this.formData.media.length < 9 && this.formData.media[this.formData.media.length - 1] && !this.formData.media[this.formData.media.length - 1].goods_id
+    // },
+    // show2 () {
+    //   return !this.formData.media.length || (this.formData.media.length && this.formData.media.length < 9 && this.formData.media[this.formData.media.length - 1] && this.formData.media[this.formData.media.length - 1].goods_id)
+    // },
     show3 () {
       return this.formData.media.length === 9
     }
@@ -283,6 +282,7 @@ export default {
     },
     // 上传
     async save () {
+      console.log(this.formData)
       if (!this.formData.name) {
         this.$message({
           message: '素材名称不能为空~',
@@ -339,7 +339,9 @@ export default {
         })
         return
       }
-      this.$loading()
+      if (!this.formData.media[this.formData.media.length - 1].url) {
+        this.formData.media.splice(this.formData.media.length - 1, 1)
+      }
       this.formData.pink_circle_category_id = this.materailClassValue[0] ? this.materailClassValue[0] : ''
       this.formData.category_child_id = this.materailClassValue[1] ? this.materailClassValue[1] : ''
       console.log('上传参数', this.formData)
@@ -348,7 +350,6 @@ export default {
         const { code, msg } = await this.$apis.EditMaterial(this.formData, this.id)
         // console.log(code, msg, data)
         if (code === 0) {
-          this.$loading().close()
           this.$message({
             message: '操作成功！',
             type: 'success'
@@ -357,7 +358,6 @@ export default {
             this.$router.back(-1)
           }, 2000)
         } else {
-          this.$loading().close()
           this.$message.error(msg)
         }
         return
@@ -366,13 +366,16 @@ export default {
       const { code, msg, data } = await this.$apis.AddImageMaterial(this.formData)
       console.log(code, msg, data)
       if (code === 0) {
-        this.$loading().close()
         this.$message({
           message: '操作成功！',
           type: 'success'
         })
+        setTimeout(() => {
+          this.$router.push({
+            path: '/marketing/loveCircle/allMaterial'
+          })
+        }, 2000)
       } else {
-        this.$loading().close()
         this.$message.error(msg)
       }
     },
@@ -413,23 +416,23 @@ export default {
     uploadProImgSuccess (res) {
       this.relatePro = {}
       this.relateProId = null
-      if (this.formData.media.length && this.formData.media[this.formData.media.length - 1].goods_id && !this.formData.media[this.formData.media.length - 1].url) {
-        this.formData.media[this.formData.media.length - 1].url = res.hash
-        return
-      }
-      if (!this.formData.media.length || (this.formData.media[this.formData.media.length - 1].url && this.formData.media[this.formData.media.length - 1].goods_id)) {
-        console.log()
-        this.formData.media.push({ url: res.hash, goods_id: '' })
-      }
-      console.log('this.formData.media', this.formData.media)
+      // if (this.formData.media.length && this.formData.media[this.formData.media.length - 1].goods_id && this.formData.media[this.formData.media.length - 1].url) {
+      //   this.formData.media[this.formData.media.length - 1].url = res.hash
+      //   return
+      // }
+      // if (!this.formData.media.length || (this.formData.media[this.formData.media.length - 1].url && this.formData.media[this.formData.media.length - 1].goods_id)) {
+      //   console.log()
+      this.formData.media.push({ url: res.hash, goods_id: '' })
+      // }
+      // console.log('this.formData.media', this.formData.media)
     },
     // 提醒并且控制上传图片后一定要先上传关联商品才可以上传下一张
-    controlUploadProRelate () {
-      this.$message({
-        message: '请先关联上一张图片的产品，再上传下一张喔~',
-        type: 'warning'
-      })
-    },
+    // controlUploadProRelate () {
+    //   this.$message({
+    //     message: '请先关联上一张图片的产品，再上传下一张喔~',
+    //     type: 'warning'
+    //   })
+    // },
     controlUploadProNum9 () {
       this.$message({
         message: '限制最多上传9张图片喔~',
@@ -486,9 +489,11 @@ export default {
     // 获取权限模板列表
     async getPermissionList () {
       const { code, data } = await this.$apis.GetPermissionList({ page: 1, per_page: 1000 })
-      // console.log('权限模板', code, msg, data)
+      console.log('权限模板', code, data)
       if (code === 0) {
-        this.permissionOption = data.data
+        this.permissionOption = data.data.filter(val => {
+          return val.status === 1
+        })
       }
     },
     // 获取发布人列表
@@ -524,13 +529,14 @@ export default {
     width:100% !important;
   }
   .btn{
-    width: 49px;
-    height: 16px;
+    width: 60px;
+    height: 25px;
     background: #2589FF;
-    border-radius: 1px;
+    border-radius: 3px;
     text-align:center;
-    line-height:16px;
+    line-height:25px;
     font-size:8px;
+    opacity: 0.8;
     color:#ffffff;
   }
   .upload-btn{
