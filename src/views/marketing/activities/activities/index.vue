@@ -14,12 +14,15 @@
       <crud-toolbar v-bind="_crudToolbarProps" v-on="_crudToolbarListeners" />
     </div>
     <d2-crud-x ref="d2Crud" v-bind="_crudProps" v-on="_crudListeners">
+      <template slot="permissionFormSlot" slot-scope="scope">
+        <el-button type="success" size="small">全选权限</el-button>
+        <el-button type="danger" size="small">清空权限</el-button>
+      </template>
     </d2-crud-x>
   </d2-container>
 </template>
 
 <script>
-// import { getActivityList } from '@/api'
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 import api from './api'
@@ -41,9 +44,13 @@ export default {
      * 新增数据
      */
     addRequest (data) {
-      console.log('data:', data)
-
       return api.addActivityStore(data)
+    },
+    /**
+     * 删除数据
+     */
+    async delRequest (row) {
+      await api.deleteActivity({ id: row.id })
     }
   }
 }
