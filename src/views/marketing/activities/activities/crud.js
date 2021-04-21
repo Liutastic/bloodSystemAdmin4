@@ -1,5 +1,6 @@
 import StringUtils from 'd2-crud-plus/src/lib/utils/util.string'
 import { BASEURL } from '@/api/config'
+import { DICT_STATUS, DICT_STATIS_TYPE, DICT_IS_TOLL } from './dict.js'
 
 export const crudOptions = (vm) => {
   return {
@@ -37,7 +38,6 @@ export const crudOptions = (vm) => {
           key: 'title',
           title: '活动名称',
           placeHolder: '请输入活动名称'
-
         },
         form: {
           rules: [
@@ -49,18 +49,19 @@ export const crudOptions = (vm) => {
         title: '发布平台',
         key: 'release_type',
         type: 'select',
+        value: 0,
         dict: {
-          url: `${BASEURL}/admin/v1/activity/release-type`
-          // data: [ // 本地数据字典，若data为null，则通过http请求获取远程数据字典
-          //   { value: 'sz', label: '商城&美肌' },
-          //   { value: 'gz', label: '名媛' },
-          //   { value: 'wh', label: '共享新零售' }
-          // ]
+          url: `${BASEURL}/admin/v1/activity/release-type`,
+          cache: true
         },
         form: {
           rules: [
             { required: true, message: '请选择发布平台' }
-          ]
+          ],
+          valueChange (key, value, form) {
+            form.category_id = ''
+            console.log(vm.getEditForm())
+          }
         },
         component: {
           name: ''
@@ -68,17 +69,39 @@ export const crudOptions = (vm) => {
       },
       {
         title: '活动分类',
-        key: 'category_id'
+        key: 'category_id',
+        type: 'select',
+        dict: {
+          url: `${BASEURL}/admin/v1/activity/category`,
+          cache: true
+        }
+      },
+      {
+        title: '统计类型',
+        key: 'statistics_type',
+        type: 'select',
+        dict: { data: DICT_STATIS_TYPE },
+        form: {}
+      },
+      {
+        title: '是否收费',
+        key: 'is_toll',
+        type: 'select',
+        dict: {
+          data: DICT_IS_TOLL
+        }
       },
       {
         title: '报名结束',
         key: 'signDate',
-        type: 'daterange',
+        type: 'datetimerange',
         form: {
+          title: '报名时间',
           component: {
             span: 18
           }
         },
+
         formatter (row) {
           return row.sign_end_at
         },
@@ -88,8 +111,6 @@ export const crudOptions = (vm) => {
           }
         },
         valueResolve (row, key) {
-          console.log('row:', row)
-
           if (row.signDate != null && row.signDate.length > 1) {
             row.sign_start_at = row.signDate[0]
             row.sign_end_at = row.signDate[1]
@@ -105,6 +126,7 @@ export const crudOptions = (vm) => {
         key: 'activity_end_at',
         type: 'daterange',
         form: {
+          title: '活动时间',
           component: {
             span: 18
           }
@@ -127,37 +149,36 @@ export const crudOptions = (vm) => {
       {
         title: '启用状态',
         key: 'is_enable',
-        type: 'switch',
+        type: 'select',
         dict: {
-          data: [
-            { value: 0, label: '禁用' },
-            { value: 1, label: '启用' }
-          ]
+          data: DICT_STATUS
         },
-        value: 'value', // 数据字典中value字段的属性名
-        label: 'label', // 数据字典中label字段的属性名
+        search: {
+          key: 'is_enable',
+          title: '启用状态'
+        },
         form: {
           rules: [
             { required: true, message: '请选择启用状态' }
           ],
-
+          value: 1,
           valueResolve (row, key) {
             row[key] = row[key] ? 1 : 0
           }
-          // valueChange (key, value, form) {
-          //   form[key] = value ? 0 : 1
-          // }
-        },
-
-        component: {
-          name: '',
-          valueBinding: 'is_enable',
-
-          props: {
-            type: 'primary'
-          }
-
         }
+        // component: {
+        //   valueBinding: 'is_enable',
+        //   on: {
+        //     click (form) {
+        //       console.log('vm:', form.scope.row)
+        //       // console.log('api:', api)
+
+        //       // console.log('vm:', vm.$refs)
+
+        //       // vm.doRefresh()
+        //     }
+        //   }
+        // }
 
       }
 
