@@ -29,11 +29,12 @@ export const crudOptions = function (vm) {
       {
         title: '权限模板',
         key: 'competence_name',
-        search: {
-          key: 'category_name',
-          component: {
-            name: 'dict-select'
-          }
+        type: 'select',
+        search: { key: 'competence_name', disabled: false },
+        dict: {
+          url: '/admin/v1/template/list',
+          value: 'id',
+          label: 'title'
         }
       },
       {
@@ -44,6 +45,7 @@ export const crudOptions = function (vm) {
         }
       },
       {
+        // 1是图文 2是视频
         title: '素材类型',
         key: 'type'
       },
@@ -52,8 +54,14 @@ export const crudOptions = function (vm) {
         key: 'created_at'
       },
       {
+        // 在.vue引入组件，然后在这里使用on属性配置
         title: '状态',
-        key: 'is_enable'
+        key: 'is_enable',
+        select: {
+          component: {
+            name: 'el-tag'
+          }
+        }
       }
     ],
     format: {
