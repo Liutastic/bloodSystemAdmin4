@@ -270,6 +270,7 @@ export default {
         return
       }
       this.relatePro = item
+      this.relateProId = item.id
       this.formData.media[this.formData.media.length - 1].goods_id = item.id
     },
     // 上传
