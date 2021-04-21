@@ -9,7 +9,7 @@ export default {
    */
   getActivityList (params) {
     return request({
-      url: '/admin/v1/activity/index',
+      url: '/svc/marketing-svc/admin/v1/activity/index',
       method: 'get',
       params
     })
@@ -22,7 +22,7 @@ export default {
    */
   getActivityReleaseType (params) {
     return request({
-      url: '/admin/v1/activity/release-type',
+      url: '/svc/marketing-svc/admin/v1/activity/release-type',
       method: 'get',
       params
     })
@@ -35,7 +35,7 @@ export default {
    */
   addActivityStore (data) {
     return request({
-      url: '/admin/v1/activity/store',
+      url: '/svc/marketing-svc/admin/v1/activity/store',
       method: 'post',
       data
     })
@@ -48,9 +48,23 @@ export default {
    */
   deleteActivity (data) {
     return request({
-      url: '/admin/v1/activity/delete',
+      url: '/svc/marketing-svc/admin/v1/activity/delete',
       method: 'delete',
       data
+    })
+  },
+
+  /**
+   * 获取权限字典
+   * http://doc.vodeshop.com/web/#/34?page_id=2649
+   * @param {*} params
+   * @returns
+   */
+  getPermissionsTags (params) {
+    return request({
+      url: '/svc/marketing-svc/admin/v1/activity/permissions-tags',
+      method: 'get',
+      params
     })
   }
 
