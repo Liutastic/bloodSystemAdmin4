@@ -248,7 +248,7 @@ export default {
     },
     // 获取权限模板列表, 选择器使用
     async getTemplateList () {
-      const { data, msg, code } = await this.$apis.GetPermissionList()
+      const { data, msg, code } = await this.$apis.GetPermissionList({ page: 1, per_page: 9999 })
       if (code === 0) {
         const list = []
         data.data.forEach(ele => {

@@ -1,6 +1,7 @@
 import cookies from './util.cookies'
 import db from './util.db'
 import log from './util.log'
+import dayjs from 'dayjs'
 
 const util = {
   cookies,
@@ -84,6 +85,42 @@ util.formatDataToTree = (data, key = 'menu_id', pid = 'parent_id', parent = {}) 
   }
 
   return tree
+}
+
+/**
+ *
+ * @param {*} data对象
+ * @returns
+ */
+util.formatDate = (data) => {
+  return dayjs(data).format('YYYY-MM-DD HH:mm:ss')
+}
+/**
+ *
+ * @param {*} date1
+ * @param {*} date2
+ * @description 返回参数1 - 参数2的天数
+ */
+util.dateDiff = (date_1, date_2) => {
+  const timeLine = dayjs(date_1).diff(dayjs(date_2)) / 1000
+  const second = parseInt(timeLine % (60 * 60) % 60)
+  const minute = parseInt(timeLine % (60 * 60) / 60)
+  const hour = parseInt(timeLine / 60 / 60)
+  return {
+    stamp: timeLine * 1000,
+    seconds: timeLine,
+    minutes: parseInt(timeLine / 60),
+    hours: parseInt(timeLine / 60 / 60),
+    days: parseInt(timeLine / 60 / 60 / 24),
+    weeks: parseInt(timeLine / 60 / 60 / 24 / 7),
+    time: `${hour < 10
+      ? `0${hour}`
+      : hour}:${minute < 10
+        ? `0${minute}`
+        : minute}:${second < 10
+          ? `0${second}`
+          : second}`
+  }
 }
 
 /**

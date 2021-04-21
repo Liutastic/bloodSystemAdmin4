@@ -1,9 +1,17 @@
 <template>
   <d2-container>
     <template slot="header">
-      <span style="margin-right: 30px">所有素材</span>
-      <el-button type="mini" @click="toAddMaterial(1)">新增图片素材</el-button>
-      <el-button type="mini" @click="toAddMaterial(2)">新增视频素材</el-button>
+      <div class="header-content">
+        <span style="margin-right: 30px">所有素材</span>
+        <div>
+          <el-button size="mini" type="primary" @click="toAddMaterial(1)"
+            >新增图片素材</el-button
+          >
+          <el-button size="mini" type="primary" @click="toAddMaterial(2)"
+            >新增视频素材</el-button
+          >
+        </div>
+      </div>
     </template>
     <crud-search
       ref="search"
@@ -16,21 +24,67 @@
       v-on="_crudListeners"
       @edit="handleClick"
     ></d2-crud-x>
+    <!-- <crud-toolbar v-bind="_crudToolbarProps" v-on="_crudToolbarListeners" /> -->
   </d2-container>
 </template>
 
 <script>
 import { crudOptions } from './materialCrud'
 import { d2CrudPlus } from 'd2-crud-plus'
+import util from '@/libs/util'
 export default {
   name: 'allMaterial',
   mixins: [d2CrudPlus.crud],
   methods: {
+    // 自定义搜索方法
+    async handleSearch (e) {
+      const dateObj = this.formatDate(e.created_at)
+      delete e.created_at
+      if (util.dateDiff(dateObj.end_at, dateObj.start_at).days > 30) {
+        this.$message({
+          type: 'warning',
+          message: '选择的日期不可以大于30天'
+        })
+        return
+      }
+      const { code, msg } = await this.$apis.filterMaterial({
+        ...e,
+        start_at: dateObj.start_at,
+        end_at: dateObj.end_at
+      })
+      if (code === 0) {
+
+      } else {
+        this.$message({
+          type: 'error',
+          message: msg
+        })
+      }
+    },
+    // 格式化选择器时间
+    formatDate (arr) {
+      const formatArr = arr
+      if (Object.prototype.toString.call(formatArr) !== '[object Array]') {
+        return
+      }
+      for (let i = 0; i < formatArr.length; i++) {
+        formatArr[i] = util.formatDate(formatArr[i])
+      }
+      console.log(arr)
+      console.log(util.dateDiff(formatArr[1], formatArr[0]))
+      return {
+        start_at: formatArr[0],
+        end_at: formatArr[1]
+      }
+    },
     getCrudOptions () {
       return crudOptions(this)
     },
     pageRequest (query) {
       return this.$apis.GetMaterialList(query)
+    },
+    delRequest (row) {
+      return this.$apis.DeleteMaterial(row.id)
     },
     // 路由跳转
     toAddMaterial (type) {
@@ -65,3 +119,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+</style>
