@@ -5,7 +5,10 @@
       :columns="columns"
       :data="permissionData"
       :rowHandle="rowHandle"
+      :pagination="pagination"
       :options="options"
+      :loading="loading"
+      @pagination-current-change="paginationCurrentChange"
       @row-remove="deleteRow"
       @custom-edit="goEdit"/>
   </d2-container>
@@ -63,20 +66,38 @@ export default {
           confirm: true,
           order: 2
         }
-      }
+      },
+      pagination: {
+        page: 1,
+        per_page: 15,
+        total: 0
+      },
+      loading: false
     }
   },
   mounted () {
+    this.$loading()
     this.getPermissionList()
   },
   methods: {
     // 获取权限列表
     async getPermissionList () {
-      const { code, msg, data } = await this.$apis.GetPermissionList()
+      const { code, msg, data } = await this.$apis.GetPermissionList(this.pagination)
       console.log(code, msg, data)
       if (code === 0) {
-        this.permissionData = data.data
+        this.$loading().close()
+        this.permissionData = data.data.map(item => {
+          return {
+            ...item,
+            status: {
+              id: item.id,
+              status: item.status
+            }
+          }
+        })
+        this.pagination.total = data.total
         console.log('this.permissionData', this.permissionData)
+        this.loading = false
       }
     },
     // 删除
@@ -103,6 +124,10 @@ export default {
         path: '/marketing/loveCircle/permission/addTemplate',
         query: { id: row.id }
       })
+    },
+    paginationCurrentChange (currentPage) {
+      this.pagination.currentPage = currentPage
+      this.getPermissionList()
     }
   }
 }

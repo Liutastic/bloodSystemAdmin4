@@ -7,6 +7,7 @@
         @delPublisherPart="delPublisherPart"
         @delContentPart="delContentPart"
         @delProImgPart="delProImgPart"
+        :type="'image'"
         :virtualNum="formData.pink_circle_fictitious_forward"
         :issuerInfo="issuerInfo"
         :proImgList="formData.media"
@@ -32,8 +33,7 @@
                 class="input-width-100"
                 v-model="materailClassValue"
                 size="mini"
-                :options="materailClassList"
-                @change="selMaClassChange" />
+                :options="materailClassList" />
               </div>
             </div>
             <div class="flex align-center mb-9">
@@ -75,11 +75,11 @@
             <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8">展示商品：</div>
               <div class="flex-sub">
-                <el-input class="input-width-100" size="mini" />
+                <el-input class="input-width-100" size="mini" @change="inputShowProId" v-model="formData.goods_id"/>
               </div>
-              <div class="btn ml-5 cursor" @click="choosePro">选择商品</div>
+              <div class="btn ml-5 cursor" @click="choosePro('show')">选择商品</div>
             </div>
-            <div class="color-333 font-size-8 mb-9">已绑商品: 我是商品，我是商品我是商品</div>
+            <div class="color-333 font-size-8 mb-9">已绑商品:{{showProInfo.name ? showProInfo.name : '暂未绑定商品'}}</div>
             <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8">文本内容：</div>
               <div class="flex-sub">
@@ -103,20 +103,20 @@
             <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8">关联商品：</div>
               <div class="flex-sub">
-                <el-input class="input-width-100" size="mini" v-model="relatePro" />
+                <el-input class="input-width-100" @chang="inputRelateProId" size="mini" v-model="relateProId" />
               </div>
-              <div class="btn ml-5 cursor" @click="choosePro">选择商品</div>
+              <div class="btn ml-5 cursor" @click="choosePro('href')">选择商品</div>
             </div>
-            <div class="color-333 font-size-8 mb-9">关联商品: 我是商品，我是商品我是商品</div>
+            <div class="color-333 font-size-8 mb-9">关联商品: {{relatePro.name ? relatePro.name : '暂未关联商品'}}</div>
           </div>
           <div class="submit-btn-box">
-            <el-button type="primary" size="mini" @click="save">上传</el-button>
+            <el-button type="primary" size="mini" @click="save">{{id ? '修改' : '上传'}}</el-button>
           </div>
         </div>
       </el-col>
     </el-row>
     <!-- 选择商品弹窗 -->
-    <SelProDialog :selProDialogShow="selProDialogShow" @closeSelProDialog="closeSelProDialog"></SelProDialog>
+    <SelProDialog :selProDialogShow="selProDialogShow" @selHrefPro="selHrefPro" @closeSelProDialog="closeSelProDialog"></SelProDialog>
   </d2-container>
 </template>
 
@@ -137,6 +137,7 @@ export default {
       formData: {
         // 素材名
         name: '',
+        // 素材分类一级id
         pink_circle_category_id: null,
         // 权限模板id
         pink_circle_competence_id: null,
@@ -146,93 +147,196 @@ export default {
         pink_circle_fictitious_forward: null,
         media: [{ goods_id: 33889, url: 'FgxbSPy-x-rCSOt-lz1L17gQneRj' }],
         // 发布人id
-        pink_circle_user_id: null
+        pink_circle_user_id: null,
+        // 素材分类子id
+        category_child_id: null
       },
+      // 判断选择商品的类型 show=选择展示商品 href=选择链接商品
+      chooseProType: '',
       // 权限模板选项集合
-      permissionOption: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
-      ],
-      // 素材分类
+      permissionOption: [],
+      // 选中的素材分类
       materailClassValue: [],
       // 素材分类选项集合
-      materailClassList: [
-        {
-          value: 'zhinan',
-          label: '指南',
-          children: [{
-            value: 'shejiyuanze',
-            label: '设计原则',
-            children: [{
-              value: 'yizhi',
-              label: '一致'
-            }, {
-              value: 'fankui',
-              label: '反馈'
-            }, {
-              value: 'xiaolv',
-              label: '效率'
-            }, {
-              value: 'kekong',
-              label: '可控'
-            }]
-          }, {
-            value: 'daohang',
-            label: '导航',
-            children: [{
-              value: 'cexiangdaohang',
-              label: '侧向导航'
-            }, {
-              value: 'dingbudaohang',
-              label: '顶部导航'
-            }]
-          }]
-        }
-      ],
+      materailClassList: [],
       // 发布人相关信息
       issuerInfo: {},
       // 展示商品的信息
       showProInfo: {},
       // 发布人选项合集
-      publisherOption: [
-        {
-          id: '1',
-          label: '黄金糕'
-        }, {
-          id: '3',
-          label: '双皮奶'
-        }
-      ],
-      // 关联商品
-      relatePro: null,
+      publisherOption: [],
+      // 关联商品对象内容
+      relatePro: {},
+      // 关联商品id
+      relateProId: null,
       // 选择商品弹窗显示隐藏
-      selProDialogShow: false
+      selProDialogShow: false,
+      // 编辑的时候素材的id
+      id: '33',
+      // 素材详情
+      materialDetail: {}
     }
   },
-  mounted () {
+  async mounted () {
+    if (this.id) {
+      this.$loading()
+      const { code, msg, data } = await this.$apis.GetMaterialDetail({ id: this.id })
+      if (code === 0) {
+        this.$loading().close()
+        console.log('获取素材详情', data)
+        this.materialDetail = data
+        this.formData.name = data.name
+        this.formData.pink_circle_category_id = data.category.id
+        this.formData.pink_circle_competence_id = data.competence.id
+        this.formData.goods_id = data.goods.id
+        this.formData.content = data.content
+        this.formData.pink_circle_fictitious_forward = String(data.forward)
+        this.formData.category_child_id = data.category_child_id
+        const arr = []
+        data.media.forEach(val => {
+          arr.push({ goods_id: val.id, url: val.url })
+        })
+        this.formData.media = arr
+        this.formData.pink_circle_user_id = data.user.id
+        this.issuerInfo = data.user
+        // this.showProInfo = this.getProDetail(data.goods.id)
+        this.materailClassValue = [data.category.id, data.category_child_id]
+        this.getCategoryList()
+        this.getPermissionList()
+        this.getAllIssuerList()
+      } else {
+        this.$loading().close()
+        this.$message.error(msg)
+      }
+      return
+    }
     this.getCategoryList()
     this.getPermissionList()
     this.getAllIssuerList()
   },
   methods: {
+    // 获取商品详情
+    async getProDetail (id) {
+      const { code, msg, data } = await this.$apis.GetProDetail(id)
+      console.log('获取商品详情', code, msg, data)
+      if (code === 0) {
+        return data.data
+      }
+    },
+    // 输入的展示商品id后调用
+    async inputShowProId (e) {
+      console.log('获取输入的展示商品id', e)
+      // this.showProInfo = this.getProDetail(e)
+    },
+    // 输入的图片链接商品id后调用
+    async inputRelateProId (e) {
+      console.log('获取输入的展示商品id', e)
+      // this.relatePro = this.getProDetail(e)
+    },
+    // 选择图片链接的商品
+    selHrefPro (item) {
+      this.selProDialogShow = false
+      console.log('选择商品1', item, this.chooseProType)
+      if (this.chooseProType === 'show') {
+        this.formData.goods_id = item.id
+        this.showProInfo = item
+        console.log('this.showProInfo', this.showProInfo)
+        return
+      }
+      this.relatePro = item
+      this.formData.media[this.formData.media.length - 1].goods_id = item.id
+    },
     // 上传
     async save () {
+      if (!this.formData.name) {
+        this.$message({
+          message: '素材名称不能为空~',
+          type: 'warning'
+        })
+        return
+      }
+      if (!this.materailClassValue.length) {
+        this.$message({
+          message: '请选择素材分类~',
+          type: 'warning'
+        })
+        return
+      }
+      if (!this.formData.pink_circle_competence_id) {
+        this.$message({
+          message: '请选择权限模板~',
+          type: 'warning'
+        })
+        return
+      }
+      if (!this.formData.pink_circle_fictitious_forward) {
+        this.$message({
+          message: '请输入虚拟转发数~',
+          type: 'warning'
+        })
+        return
+      }
+      if (!this.formData.pink_circle_user_id) {
+        this.$message({
+          message: '请选择发布人~',
+          type: 'warning'
+        })
+        return
+      }
+      if (!this.formData.goods_id) {
+        this.$message({
+          message: '请选择展示商品~',
+          type: 'warning'
+        })
+        return
+      }
+      if (!this.formData.content) {
+        this.$message({
+          message: '请输入文本内容~',
+          type: 'warning'
+        })
+        return
+      }
+      if (!this.formData.media.length) {
+        this.$message({
+          message: '请上传关联商品~',
+          type: 'warning'
+        })
+        return
+      }
+      this.$loading()
+      this.formData.pink_circle_category_id = this.materailClassValue[0] ? this.materailClassValue[0] : ''
+      this.formData.category_child_id = this.materailClassValue[1] ? this.materailClassValue[1] : ''
+      console.log('上传参数', this.formData)
+      // 更新编辑
+      if (this.id) {
+        const { code, msg, data } = await this.$apis.EditMaterial(this.formData, this.id)
+        console.log(code, msg, data)
+        if (code === 0) {
+          this.$loading().close()
+          this.$message({
+            message: '操作成功！',
+            type: 'success'
+          })
+        } else {
+          this.$loading().close()
+          this.$message.error(msg)
+        }
+        return
+      }
+      // 新增
       const { code, msg, data } = await this.$apis.AddImageMaterial(this.formData)
       console.log(code, msg, data)
+      if (code === 0) {
+        this.$loading().close()
+        this.$message({
+          message: '操作成功！',
+          type: 'success'
+        })
+      } else {
+        this.$loading().close()
+        this.$message.error(msg)
+      }
     },
     // 预览页面删除发布人模块
     delPublisherPart () {
@@ -247,10 +351,13 @@ export default {
     // 删除商品图片模块
     delProImgPart () {
       this.formData.media = []
+      this.relatePro = {}
+      this.relateProId = null
     },
     // 删除商品展示模块
     delShowProPart () {
       this.showProInfo = {}
+      this.formData.goods_id = null
     },
     // 删除商品图片
     delProImg (index) {
@@ -263,9 +370,6 @@ export default {
       console.log('改变发布人', e)
       this.issuerInfo = this.publisherOption.find(val => val.id === e)
       console.log('this.issuerInfo', this.issuerInfo)
-    },
-    selMaClassChange (e) {
-      console.log(e)
     },
     uploadProImgSuccess (res) {
       console.log(res)
@@ -281,7 +385,8 @@ export default {
       console.log(val)
     },
     // 选择商品
-    choosePro () {
+    choosePro (type) {
+      this.chooseProType = type
       console.log('选择', this.selProDialogShow)
       this.selProDialogShow = true
     },
@@ -290,12 +395,31 @@ export default {
       console.log('关闭', this.selProDialogShow)
       this.selProDialogShow = false
     },
+    // 处理级联选择器对象Key问题
+    transitionKey (list) {
+      const keyMap = {
+        name: 'label',
+        id: 'value',
+        children: 'children',
+        parent_id: 'parent_id'
+      }
+      function toTransition (list) {
+        var newObj = list instanceof Array ? [] : {}
+        for (const key in list) {
+          var newKey = keyMap[key] ? keyMap[key] : key
+          newObj[newKey] = typeof list[key] === 'object' ? toTransition(list[key], keyMap) : list[key]
+        }
+        return newObj
+      }
+      return toTransition(list)
+    },
     // 获取素材分类
     async getCategoryList () {
-      const { code, msg, data } = await this.$apis.GetCategoryList()
+      const { code, msg, data } = await this.$apis.GetCategoryAllList()
       console.log('素材分类', code, msg, data)
       if (code === 0) {
-        this.materailClassList = data.data
+        console.log(this.transitionKey(data))
+        this.materailClassList = this.transitionKey(data)
       }
     },
     // 获取权限模板列表

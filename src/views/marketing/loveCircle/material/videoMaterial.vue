@@ -1,12 +1,510 @@
 <template>
   <d2-container>
-    <template slot="header">d1</template>
-    视频素材
+    <el-row>
+      <el-col class="flex justify-center" :span="10">
+        <preview-model
+        @delProImg="delProImg"
+        @delPublisherPart="delPublisherPart"
+        @delContentPart="delContentPart"
+        @delProImgPart="delProImgPart"
+        :type="'video'"
+        :virtualNum="formData.pink_circle_fictitious_forward"
+        :issuerInfo="issuerInfo"
+        :proImgList="formData.media"
+        :content="formData.content"
+        :showProInfo="showProInfo"></preview-model>
+      </el-col>
+      <el-col class="flex justify-center" :span="10">
+        <div class="publish-box">
+          <div class="title color-333 font-bold">爱粉圈素材编辑区</div>
+          <!-- 素材基础信息 -->
+          <div>
+            <div class="color-666 font-size-9 mb-9 text-center">素材基础信息</div>
+            <div class="flex align-center mb-9">
+              <div class="label color-333 font-size-8">素材名称：</div>
+              <div class="flex-sub">
+                <el-input class="input-width-100" show-word-limit maxlength="10" size="mini" v-model="formData.name" />
+              </div>
+            </div>
+            <div class="flex align-center mb-9">
+              <div class="label color-333 font-size-8">素材分类：</div>
+              <div class="flex-sub">
+                <el-cascader
+                class="input-width-100"
+                v-model="materailClassValue"
+                size="mini"
+                :options="materailClassList" />
+              </div>
+            </div>
+            <div class="flex align-center mb-9">
+              <div class="label color-333 font-size-8">权限模板：</div>
+              <div class="flex-sub">
+                <el-select v-model="formData.pink_circle_competence_id" class="input-width-100" size="mini">
+                  <el-option
+                    v-for="item in permissionOption"
+                    :key="item.id"
+                    :label="item.title"
+                    :value="item.id">
+                  </el-option>
+                </el-select>
+              </div>
+            </div>
+            <div class="flex align-center mb-9">
+              <div class="label color-333 font-size-8">虚拟转发：</div>
+              <div class="flex-sub">
+                <el-input type="number" class="input-width-100" size="mini" v-model="formData.pink_circle_fictitious_forward" />
+              </div>
+            </div>
+          </div>
+          <!-- 素材图文信息 -->
+          <div>
+             <div class="color-666 font-size-9 mb-9 text-center">素材图文信息</div>
+             <div class="flex align-center mb-9">
+              <div class="label color-333 font-size-8">发布人：</div>
+              <div class="flex-sub">
+                <el-select @change="publisherChange" v-model="formData.pink_circle_user_id" class="input-width-100" size="mini">
+                  <el-option
+                    v-for="item in publisherOption"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+                  </el-option>
+                </el-select>
+              </div>
+            </div>
+            <div class="flex align-center mb-9">
+              <div class="label color-333 font-size-8">展示商品：</div>
+              <div class="flex-sub">
+                <el-input class="input-width-100" size="mini" @change="inputShowProId" v-model="formData.goods_id"/>
+              </div>
+              <div class="btn ml-5 cursor" @click="choosePro()">选择商品</div>
+            </div>
+            <div class="color-333 font-size-8 mb-9">已绑商品:{{showProInfo.name ? showProInfo.name : '暂未绑定商品'}}</div>
+            <div class="flex align-center mb-9">
+              <div class="label color-333 font-size-8">文本内容：</div>
+              <div class="flex-sub">
+                <el-input type="textarea" class="input-width-100" size="mini" v-model="formData.content" />
+              </div>
+            </div>
+            <div class="flex align-center mb-9">
+              <div class="label color-333 font-size-8">上传视频：</div>
+              <div class="flex-sub">
+                <el-upload
+                  class="upload-btn"
+                  :action="QINIUURL"
+                  :data="dataToken"
+                  :show-file-list="false"
+                  :on-success="uploadProImgSuccess"
+                  :before-upload="beforeUpload">
+                  <i class="el-icon-plus"></i>
+                </el-upload>
+              </div>
+            </div>
+          </div>
+          <div class="submit-btn-box">
+            <el-button type="primary" size="mini" @click="save">上传</el-button>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+    <!-- 选择商品弹窗 -->
+    <SelProDialog :selProDialogShow="selProDialogShow" @selHrefPro="selHrefPro" @closeSelProDialog="closeSelProDialog"></SelProDialog>
   </d2-container>
 </template>
 
 <script>
+import PreviewModel from './components/PreviewModel'
+import SelProDialog from './components/SelProDialog'
+import { QINIUURL } from '@/api/config'
 export default {
-  name: 'loveCircle'
+  name: 'imageMaterial',
+  components: {
+    PreviewModel,
+    SelProDialog
+  },
+  data () {
+    return {
+      QINIUURL,
+      dataToken: { token: '' }, // 上传的token
+      formData: {
+        // 素材名
+        name: '',
+        // 素材分类一级id
+        pink_circle_category_id: null,
+        // 权限模板id
+        pink_circle_competence_id: null,
+        goods_id: null,
+        content: '',
+        // 虚拟转发
+        pink_circle_fictitious_forward: null,
+        // media: [{ goods_id: 33889, url: 'FgxbSPy-x-rCSOt-lz1L17gQneRj' }],
+        media: [],
+        // 发布人id
+        pink_circle_user_id: null,
+        // 素材分类子id
+        category_child_id: null
+      },
+      // 权限模板选项集合
+      permissionOption: [],
+      // 选中的素材分类
+      materailClassValue: [],
+      // 素材分类选项集合
+      materailClassList: [],
+      // 发布人相关信息
+      issuerInfo: {},
+      // 展示商品的信息
+      showProInfo: {},
+      // 发布人选项合集
+      publisherOption: [],
+      // 选择商品弹窗显示隐藏
+      selProDialogShow: false,
+      // 编辑的素材id
+      id: null,
+      // 素材详情
+      materialDetail: {}
+    }
+  },
+  async mounted () {
+    if (this.id) {
+      this.$loading()
+      const { code, msg, data } = await this.$apis.GetMaterialDetail({ id: this.id })
+      if (code === 0) {
+        this.$loading().close()
+        console.log('获取素材详情', data)
+        this.materialDetail = data
+        this.formData.name = data.name
+        this.formData.pink_circle_category_id = data.category.id
+        this.formData.pink_circle_competence_id = data.competence.id
+        this.formData.goods_id = data.goods.id
+        this.formData.content = data.content
+        this.formData.pink_circle_fictitious_forward = String(data.forward)
+        this.formData.category_child_id = data.category_child_id
+        const arr = []
+        data.media.forEach(val => {
+          arr.push({ goods_id: val.id, url: val.url })
+        })
+        this.formData.media = arr
+        this.formData.pink_circle_user_id = data.user.id
+        this.issuerInfo = data.user
+        // this.showProInfo = this.getProDetail(data.goods.id)
+        this.materailClassValue = [data.category.id, data.category_child_id]
+        this.getCategoryList()
+        this.getPermissionList()
+        this.getAllIssuerList()
+      } else {
+        this.$loading().close()
+        this.$message.error(msg)
+      }
+      return
+    }
+    this.getCategoryList()
+    this.getPermissionList()
+    this.getAllIssuerList()
+  },
+  methods: {
+    // 获取商品详情
+    async getProDetail (id) {
+      const { code, msg, data } = await this.$apis.GetProDetail(id)
+      console.log('获取商品详情', code, msg, data)
+      if (code === 0) {
+        return data.data
+      }
+    },
+    // 输入的展示商品id后调用
+    async inputShowProId (e) {
+      console.log('获取输入的展示商品id', e)
+      // this.showProInfo = this.getProDetail(e)
+    },
+    // 选择图片链接的商品
+    selHrefPro (item) {
+      this.selProDialogShow = false
+      console.log('选择商品1', item)
+      this.formData.goods_id = item.id
+      this.showProInfo = item
+      console.log('this.showProInfo', this.showProInfo)
+    },
+    // 上传
+    async save () {
+      if (!this.formData.name) {
+        this.$message({
+          message: '素材名称不能为空~',
+          type: 'warning'
+        })
+        return
+      }
+      if (!this.materailClassValue.length) {
+        this.$message({
+          message: '请选择素材分类~',
+          type: 'warning'
+        })
+        return
+      }
+      if (!this.formData.pink_circle_competence_id) {
+        this.$message({
+          message: '请选择权限模板~',
+          type: 'warning'
+        })
+        return
+      }
+      if (!this.formData.pink_circle_fictitious_forward) {
+        this.$message({
+          message: '请输入虚拟转发数~',
+          type: 'warning'
+        })
+        return
+      }
+      if (!this.formData.pink_circle_user_id) {
+        this.$message({
+          message: '请选择发布人~',
+          type: 'warning'
+        })
+        return
+      }
+      if (!this.formData.goods_id) {
+        this.$message({
+          message: '请选择展示商品~',
+          type: 'warning'
+        })
+        return
+      }
+      if (!this.formData.content) {
+        this.$message({
+          message: '请输入文本内容~',
+          type: 'warning'
+        })
+        return
+      }
+      if (!this.formData.media.length) {
+        this.$message({
+          message: '请上传关联商品~',
+          type: 'warning'
+        })
+        return
+      }
+      this.$loading()
+      this.formData.pink_circle_category_id = this.materailClassValue[0] ? this.materailClassValue[0] : ''
+      this.formData.category_child_id = this.materailClassValue[1] ? this.materailClassValue[1] : ''
+      console.log('上传参数', this.formData)
+      // 更新编辑
+      if (this.id) {
+        const { code, msg, data } = await this.$apis.EditMaterial(this.formData, this.id)
+        console.log(code, msg, data)
+        if (code === 0) {
+          this.$loading().close()
+          this.$message({
+            message: '操作成功！',
+            type: 'success'
+          })
+        } else {
+          this.$loading().close()
+          this.$message.error(msg)
+        }
+        return
+      }
+      // 新增
+      const { code, msg, data } = await this.$apis.AddImageMaterial(this.formData)
+      console.log(code, msg, data)
+      if (code === 0) {
+        this.$loading().close()
+        this.$message({
+          message: '操作成功！',
+          type: 'success'
+        })
+      } else {
+        this.$loading().close()
+        this.$message.error(msg)
+      }
+    },
+    // 预览页面删除发布人模块
+    delPublisherPart () {
+      this.issuerInfo = {}
+      this.formData.pink_circle_fictitious_forward = null
+      this.formData.pink_circle_user_id = null
+    },
+    // 预览页删除文案模块
+    delContentPart () {
+      this.formData.content = ''
+    },
+    // 删除商品图片模块
+    delProImgPart () {
+      this.formData.media = []
+    },
+    // 删除商品展示模块
+    delShowProPart () {
+      this.showProInfo = {}
+      this.formData.goods_id = null
+    },
+    // 删除商品图片
+    delProImg (index) {
+      console.log(this.formData.media)
+      this.formData.media.splice(index, 1)
+      console.log(this.formData.media)
+    },
+    // 选择发布人
+    publisherChange (e) {
+      console.log('改变发布人', e)
+      this.issuerInfo = this.publisherOption.find(val => val.id === e)
+      console.log('this.issuerInfo', this.issuerInfo)
+    },
+    uploadProImgSuccess (res) {
+      console.log(res)
+      const arr = [{ url: res.hash, goods_id: '' }]
+      this.formData.media = arr
+    },
+    async beforeUpload () {
+      this.$loading()
+      const { uptoken } = await this.$apis.qiniuToken()
+      this.dataToken.token = uptoken
+      this.$loading().close()
+    },
+    uploadProImgPropress (val) {
+      console.log(val)
+    },
+    // 选择商品
+    choosePro () {
+      console.log('选择', this.selProDialogShow)
+      this.selProDialogShow = true
+    },
+    // 关闭选择商品弹窗
+    closeSelProDialog () {
+      console.log('关闭', this.selProDialogShow)
+      this.selProDialogShow = false
+    },
+    // 处理级联选择器对象Key问题
+    transitionKey (list) {
+      const keyMap = {
+        name: 'label',
+        id: 'value',
+        children: 'children',
+        parent_id: 'parent_id'
+      }
+      function toTransition (list) {
+        var newObj = list instanceof Array ? [] : {}
+        for (const key in list) {
+          var newKey = keyMap[key] ? keyMap[key] : key
+          newObj[newKey] = typeof list[key] === 'object' ? toTransition(list[key], keyMap) : list[key]
+        }
+        return newObj
+      }
+      return toTransition(list)
+    },
+    // 获取素材分类
+    async getCategoryList () {
+      const { code, msg, data } = await this.$apis.GetCategoryAllList()
+      console.log('素材分类', code, msg, data)
+      if (code === 0) {
+        console.log(this.transitionKey(data))
+        this.materailClassList = this.transitionKey(data)
+      }
+    },
+    // 获取权限模板列表
+    async getPermissionList () {
+      const { code, msg, data } = await this.$apis.GetPermissionList()
+      console.log('权限模板', code, msg, data)
+      if (code === 0) {
+        this.permissionOption = data.data
+      }
+    },
+    // 获取发布人列表
+    async getAllIssuerList () {
+      const { code, msg, data } = await this.$apis.GetAllIssuerList()
+      console.log('发布人列表', code, msg, data)
+      if (code === 0) {
+        this.publisherOption = data
+      }
+    }
+  }
 }
 </script>
+<style lang="scss" scoped>
+.publish-box{
+  width:300px;
+  min-height:610px;
+  background: #F7F8FA;
+  padding:0 10px;
+  box-sizing: border-box;
+  .title{
+    height:30px;
+    line-height:30px;
+    text-align: center;
+    font-size: 10px;
+    font-weight: bold;
+    font-family: PingFangSC-Medium, PingFang SC;
+  }
+  .label{
+    width:65px;
+  }
+  .input-width-100{
+    width:100% !important;
+  }
+  .btn{
+    width: 49px;
+    height: 16px;
+    background: #2589FF;
+    border-radius: 1px;
+    text-align:center;
+    line-height:16px;
+    font-size:8px;
+    color:#ffffff;
+  }
+  .upload-btn{
+    width:75px;
+    height:75px;
+    background: #FFFFFF;
+    border-radius: 1px;
+    text-align: center;
+    line-height:75px;
+  }
+  .submit-btn-box{
+    margin-top:20px;
+    text-align: center;
+  }
+}
+.cursor{
+  cursor: pointer;
+}
+.text-center{
+  text-align: center;
+}
+.flex{
+  display:flex;
+}
+.align-center{
+  align-items: center;
+}
+.justify-center{
+  justify-content: center;
+}
+.flex-sub{
+  flex:1;
+}
+.font-size-9{
+  font-size: 9px;
+}
+.font-size-8{
+  font-size: 8px;
+}
+.padding-lr-8{
+  padding-left:8px;
+  padding-right:8px;
+}
+.padding-tb-10{
+  padding-top:10px;
+  padding-bottom:10px;
+}
+.color-333{
+  color:#333333;
+}
+.color-666{
+  color:#666666;
+}
+.mb-9{
+  margin-bottom:9px;
+}
+.mt-40{
+  margin-top:40px;
+}
+.ml-5{
+  margin-left:5px;
+}
+</style>

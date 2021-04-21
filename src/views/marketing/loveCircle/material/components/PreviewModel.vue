@@ -5,7 +5,7 @@
     <!-- 发布者信息模块 -->
     <div v-show="isShowOnePart" class="every-temple-part border-dashed flex align-center justify-between padding-lr-8 padding-tb-10">
       <div class="flex align-center">
-        <el-avatar size="mini" :src="issuerInfo.avatar | qiniu"></el-avatar>
+        <el-avatar size="'mini'" :src="issuerInfo.avatar | qiniu"></el-avatar>
         <div class="flex flex-direction-column ml-9">
           <span class="font-size-9 color-333">{{issuerInfo.name}}</span>
           <span class="font-size-8 color-999 mt-3">刚刚</span>
@@ -29,7 +29,7 @@
       </div>
     </div>
     <!-- 图片链接九宫格模块 -->
-    <div v-show="proImgList.length" class="every-temple-part border-dashed padding-lr-8 padding-tb-10">
+    <div v-if="type === 'image' && proImgList.length" class="every-temple-part border-dashed padding-lr-8 padding-tb-10">
       <div class="flex flex-wrap" :class="{'nine-img-box': proImgList.length !== 4}">
         <div class="pro-img-box" v-for="(item, index) in proImgList" :key="index">
           <el-image
@@ -43,23 +43,35 @@
         <i class="el-icon-circle-close right-del-icon"></i>
       </div>
     </div>
+    <!-- // 视频 -->
+    <div v-if="type === 'video' && proImgList.length" class="every-temple-part border-dashed padding-lr-8 padding-tb-10">
+      <video
+        :src="proImgList[0].url | qiniu(750, 'video')"
+        class="video"
+        controls="controls">
+        您的浏览器不支持视频播放
+      </video>
+      <div class="right-del-btn" @click="delTemplate(3)">
+        <i class="el-icon-circle-close right-del-icon"></i>
+      </div>
+    </div>
     <!-- 商品详细部分 -->
     <div v-show="isShowFourPart" class="every-temple-part border-dashed padding-lr-8 padding-tb-10">
       <div class="flex">
         <el-image
           class="bottom-pro-img"
-          src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+          :src="showProInfo.image | qiniu"
           fit="'contain'"></el-image>
         <div class="pro-right-info flex justify-between flex-direction-column">
-          <div class="color-333 font-size-10 hidden-ellipsis">冰糖橙10斤现摘现发橙子冰糖橙1010斤现摘现发橙子冰糖橙10</div>
+          <div class="color-333 font-size-10 hidden-ellipsis">{{showProInfo.name}}</div>
           <div class="pro-price-part flex">
             <div class="flex align-center justify-center flex-direction-column padding-lr-6">
-              <div class="font-size-15 color-red font-bold">¥280</div>
+              <div class="font-size-15 color-red font-bold">¥{{showProInfo.vip_price}}</div>
               <div class="font-size-14 color-red font-bold">会员价</div>
             </div>
             <div class="flex-sub pro-white-part flex justify-between">
               <div class="flex align-center justify-center flex-direction-column">
-                <div class="font-size-15 color-999">¥280</div>
+                <div class="font-size-15 color-999">¥{{showProInfo.price}}</div>
                 <div class="font-size-10 color-999">零售价</div>
               </div>
               <div class="btn-box flex align-center justify-center flex-direction-column">
@@ -74,6 +86,7 @@
         <i class="el-icon-circle-close right-del-icon"></i>
       </div>
     </div>
+    <div v-if="isShowEmptyTip" class="empty color-999 font-size-9">右边添加数据进行预览</div>
   </div>
 </template>
 
@@ -100,6 +113,10 @@ export default {
     content: {
       type: String,
       default: ''
+    },
+    type: {
+      type: String,
+      default: 'image'
     }
   },
   computed: {
@@ -113,6 +130,10 @@ export default {
     // 判断是否展示展示商品模块
     isShowFourPart () {
       return JSON.stringify(this.showProInfo) !== '{}'
+    },
+    // 判断是否展示空白提示
+    isShowEmptyTip () {
+      return JSON.stringify(this.issuerInfo) === '{}' && JSON.stringify(this.showProInfo) === '{}' && !this.proImgList.length && !this.content && !this.virtualNum
     }
   },
   data () {
@@ -125,6 +146,7 @@ export default {
     },
     // 删除版块 1=发布人 2=文案 3=商品图片 4=展示商品
     delTemplate (type) {
+      console.log('删除', type)
       switch (type) {
         case 1:
           this.$emit('delPublisherPart')
@@ -148,6 +170,13 @@ export default {
   width:300px;
   min-height:610px;
   background: #F7F8FA;
+  position:relative;
+  .empty{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+  }
   .title{
     height:30px;
     line-height:30px;
@@ -236,6 +265,9 @@ export default {
       color:#ffffff;
     }
   }
+}
+.video{
+  width:60%;
 }
 .border-dashed{
   border-bottom: 1px dashed #979797;

@@ -11,7 +11,7 @@
         <div class="flex align-center mb-9">
           <div class="label color-333 font-size-8">查找商品：</div>
           <div class="flex-sub">
-            <el-input class="input-width-100" size="mini" v-model="formData.keyWord" />
+            <el-input class="input-width-100" size="mini" v-model="keyWord" />
           </div>
         </div>
         <div class="flex align-center mb-9">
@@ -32,23 +32,26 @@
     </div>
     <!-- 商品列表部分 -->
     <div class="pro-list-box" v-infinite-scroll="load">
-      <div class="pro-item mb-9 flex justify-between align-center" v-for="(item, index) in [1,2,,3,4,4,4,4]" :key="index">
+      <div class="pro-item mb-9 flex justify-between align-center" v-for="(item, index) in proList" :key="index">
         <div class="pro-left-part flex align-center flex-sub">
           <el-image
             class="pro-img"
-            src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+            :src="item.image | qiniu"
             fit="'contain'"></el-image>
           <div class="pro-left-info color-333 font-size-8  ml-10">
-            <div class="mb-5 hidden-ellipsis">冰糖橙10斤现摘现摘现斤现摘现发橙子冰糖冰糖橙现摘现发橙子冰糖冰糖橙现摘现发橙子冰糖冰糖橙</div>
-            <div class="mb-5">价格：580元</div>
+            <div class="mb-5 hidden-ellipsis">{{item.name}}</div>
+            <div class="mb-5">价格：{{item.price}}元</div>
             <div class="mb-5">会员价：280元</div>
-            <div>2021-04-15 16:28:28</div>
+            <div>{{item.updated_at}}</div>
           </div>
         </div>
         <div>
-          <el-button class="ml-5" @click="selPro" size="mini" type="danger">选择</el-button>
+          <el-button class="ml-5" @click="selPro(item)" size="mini" type="danger">选择</el-button>
         </div>
       </div>
+      <div v-if="proList.length && isFinished" class="mt-10 color-333 font-size-9">已经没有更多啦~</div>
+      <div v-if="!proList.length && firstLoad" class="empty-tip color-333 font-size-9">请输入搜索条件进行检索~</div>
+      <div v-if="!proList.length && !firstLoad" class="empty-tip color-333 font-size-9">暂无相关商品~</div>
     </div>
   </div>
 </el-dialog>
@@ -64,50 +67,38 @@ export default {
     }
   },
   data () {
+    const _self = this
     return {
-      formData: {
-        keyWord: '',
-        category_id: null
-      },
+      // 判断商品列表是否已经全部加载完成
+      isFinished: false,
+      // 判断获取商品是否加载完成
+      isLoading: true,
+      page: 1,
+      keyWord: '',
+      // 商品列表
+      proList: [],
+      firstLoad: true,
       // 素材分类
       categoryValue: [],
-      // 素材分类选项集合
-      categoryOption: [
-        {
-          value: 'zhinan',
-          label: '指南',
-          children: [{
-            value: 'shejiyuanze',
-            label: '设计原则',
-            children: [{
-              value: 'yizhi',
-              label: '一致'
-            }, {
-              value: 'fankui',
-              label: '反馈'
-            }, {
-              value: 'xiaolv',
-              label: '效率'
-            }, {
-              value: 'kekong',
-              label: '可控'
-            }]
-          }, {
-            value: 'daohang',
-            label: '导航',
-            children: [{
-              value: 'cexiangdaohang',
-              label: '侧向导航'
-            }, {
-              value: 'dingbudaohang',
-              label: '顶部导航'
-            }]
-          }]
-        }
-      ],
+      // 级联选择器懒加载配置
       props: {
         lazy: true,
-        lazyLoad: this.lazyLoad
+        label: 'name',
+        value: 'id',
+        async lazyLoad (node, resolve) { // 区域树懒加载的方法
+          console.log('出现懒加载', node)
+          const { data } = node
+          console.log(data)
+          // if ((data && data.haschild === false) || (data && data.leaf === true)) {
+          //   return resolve([])
+          // }
+          let id
+          if (data) {
+            id = data.id
+          }
+          const temp = await _self.getProCategoryList(id)
+          resolve(temp)
+        }
       }
     }
   },
@@ -116,52 +107,56 @@ export default {
     close () {
       this.$emit('closeSelProDialog')
     },
-    selCategoryChange (e) {
-      console.log(e)
-    },
     load () {
+      if (this.isFinished) {
+        return
+      }
+      if (this.isLoading) {
+        return
+      }
+      this.isLoading = true
+      this.page++
+      this.getProList()
       console.log('触底加载')
     },
     search () {
-
+      this.proList = []
+      console.log(this.categoryValue, this.keyWord)
+      this.getProList()
     },
-    selPro () {
-
+    // 选择商品
+    selPro (val) {
+      console.log('选择商品', val)
+      this.$emit('selHrefPro', val)
     },
+    // 获取商品分类列表
+    async getProCategoryList (id) {
+      const { code, msg, data } = await this.$apis.GetProCategoryList({ category_id: id })
+      console.log('获取商品分类', code, msg, data)
+      return data.data
+    },
+    // 获取商品列表
     async getProList () {
-      const { code, msg, data } = await this.$apis.GetProList(this.formData)
-      console.log(code, msg, data)
-    },
-    // 动态加载商品分类
-    lazyLoad (node, resolve) {
-      setTimeout(() => {
-        console.log('node', node)
-        this.getProvence(node, resolve)
-      }, 1000)
+      const params = {
+        category_id: this.categoryValue.length ? this.categoryValue[this.categoryValue.length - 1] : null,
+        keyWord: this.keyWord,
+        page: this.page
+      }
+      const { code, msg, data } = await this.$apis.GetProList(params)
+      console.log('获取商品列表', code, msg, data)
+      if (code === 0) {
+        this.firstLoad = false
+        this.proList.push(...data.data)
+        if (!data.data.length) {
+          this.isFinished = true
+        }
+        this.isLoading = false
+      }
     }
-    // getProvence(node, resolve) {
-    //   queryAuthorizedUnit({
-    //     userId: JSON.parse(sessionStorage.userInfoLogin).yhid,
-    //     unitCodeId: node.data ? node.data.value.split('/')[0] : '',
-    //     startDate: '2019-9-12'
-    //   }).then((json) => {
-    //     if (Array.isArray(json.data.value)) {
-    //       const nodes = json.data.value.map(item => ({
-    //         value: item.concatdw, //
-    //         // value: item.dwdm,
-    //         label: item.dwmc,
-    //         leaf: node.level >= 5 // 5层级
-    //       }))
-    //       resolve(nodes)
-    //     } else {
-    //       this.$message.error(json.data.value || json.data.error)
-    //     }
-    //   }).catch(error => this.$message.error(error))
-    // }
   },
   mounted () {
-    console.log('商品列表执行')
-    this.getProList()
+    // console.log('商品列表执行')
+    // this.getProList()
   }
 }
 </script>
@@ -188,6 +183,13 @@ export default {
   }
   .pro-left-info{
     width:75%;
+  }
+  .empty-tip{
+    text-align: center;
+    position:relative;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
   }
 }
 .input-width-100{
@@ -242,6 +244,9 @@ export default {
 }
 .mt-40{
   margin-top:40px;
+}
+.mt-10{
+  margin-top:10px;
 }
 .ml-5{
   margin-left:5px;

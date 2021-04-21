@@ -9,7 +9,7 @@ export default ({ request }) => ({
   // 获取权限模板列表
   GetPermissionList (data) {
     return request({
-      url: '/admin/v1/template/list',
+      url: `/admin/v1/template/list?page=${data.page}&per_page=${data.per_page}`,
       method: 'get'
     })
   },
@@ -116,10 +116,17 @@ export default ({ request }) => ({
       params
     })
   },
+  // 获取全部素材分类列表
+  GetCategoryAllList () {
+    return request({
+      url: 'admin/v1/pink-circle-category/all-category',
+      method: 'get'
+    })
+  },
   // 获取商品列表
   GetProList (data) {
     return request({
-      url: `/admin/v1/goods/search?keyword=${data.keyword}&category_id=${data.category_id}`,
+      url: `/admin/v1/goods/search?keyword=${data.keyWord}&category_id=${data.category_id}&page=${data.page}`,
       method: 'get'
     })
   },
@@ -151,6 +158,43 @@ export default ({ request }) => ({
     return request({
       url: `/admin/v1/pink-circle-user/delete?id=${params.id}`,
       method: 'delete'
+    })
+  },
+  // 运营状态数据获取
+  GetRunStatusData (params) {
+    return request({
+      url: '/admin/v1/state-diagram/index',
+      method: 'get',
+      params
+    })
+  },
+  // 获取素材详情
+  GetMaterialDetail (data) {
+    return request({
+      url: `/admin/v1/material/show?id=${data.id}`,
+      method: 'get'
+    })
+  },
+  // 编辑素材
+  EditMaterial (data, id) {
+    return request({
+      url: `/admin/v1/material/update?id=${id}`,
+      method: 'put',
+      data
+    })
+  },
+  // 获取商品详情
+  GetProDetail (id) {
+    return request({
+      url: `/api/v1/goods/show?goods_id=${id}`,
+      method: 'get'
+    })
+  },
+  // 运营状态获取素材分类列表
+  GetRunCategoryList (data) {
+    return request({
+      url: '/admin/v1/pink-circle-category/category',
+      method: 'get'
     })
   }
 })

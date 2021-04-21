@@ -8,26 +8,31 @@
 export default {
   props: {
     value: {
-      type: Number,
+      type: Object,
       required: true
     }
   },
   computed: {
     type () {
-      return this.value ? 'success' : 'danger'
+      return this.status ? 'success' : 'danger'
     },
     text () {
-      return this.value ? '启用' : '禁用'
+      return this.status ? '启用' : '禁用'
+    }
+  },
+  data () {
+    return {
+      status: this.value.status
     }
   },
   methods: {
     async editPermissionStatus () {
-      console.log(this.value)
-      // const { code, msg, data } = await this.$apis.EditPermissionStatus(data)
-      // console.log(code, msg, data)
-      // if (code === 0) {
-      // }
-      this.$emit('input', !this.value)
+      const { code, msg } = await this.$apis.EditPermissionStatus({ id: this.value.id, status: this.value.status === 1 ? 0 : 1 })
+      if (code === 0) {
+        this.status = !this.status
+      } else {
+        this.$message.error(msg)
+      }
     }
   }
 }
