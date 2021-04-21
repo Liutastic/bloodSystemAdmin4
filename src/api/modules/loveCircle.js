@@ -131,6 +131,13 @@ export default ({ request }) => ({
       method: 'get'
     })
   },
+  // 修改素材状态
+  EditMaterialStatus () {
+    return request({
+      url: '',
+      method: 'put'
+    })
+  },
   // 获取商品列表
   GetProList (data) {
     return request({

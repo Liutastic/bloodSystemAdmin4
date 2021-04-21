@@ -11,6 +11,7 @@ export const crudOptions = function (vm) {
         title: '素材名称',
         key: 'name',
         width: 120,
+        showOverflowTooltip: true,
         form: {
           disabled: true
         },
@@ -25,12 +26,13 @@ export const crudOptions = function (vm) {
         search: {
           key: 'category_name'
         }
+
       },
       {
         title: '权限模板',
         key: 'competence_name',
         type: 'select',
-        search: { key: 'competence_name', disabled: false },
+        search: { key: 'competence_id', disabled: false },
         dict: {
           url: '/admin/v1/template/list',
           value: 'id',
@@ -48,6 +50,14 @@ export const crudOptions = function (vm) {
         // 1是图文 2是视频
         title: '素材类型',
         key: 'type'
+        // formatter: (row, column, cellValue, index) => {
+        //   console.log(row, column, cellValue, index)
+        //   if (cellValue === 1) {
+        //     cellValue = '图文'
+        //   } else if (cellValue === 2) {
+        //     cellValue = '视频'
+        //   }
+        // }
       },
       {
         title: '创建日期',
@@ -57,10 +67,8 @@ export const crudOptions = function (vm) {
         // 在.vue引入组件，然后在这里使用on属性配置
         title: '状态',
         key: 'is_enable',
-        select: {
-          component: {
-            name: 'el-tag'
-          }
+        component: {
+          name: 'el-tag'
         }
       }
     ],
@@ -79,6 +87,23 @@ export const crudOptions = function (vm) {
           }
         }
       }
+    },
+    rowHandle: {
+      view: false,
+      edit: false,
+      custom: [
+        {
+          thin: false,
+          text: '编辑',
+          type: 'primary',
+          icon: 'el-icon-edit',
+          size: 'small',
+          show: true,
+          disabled: false,
+          order: 1,
+          emit: 'edit'
+        }
+      ]
     }
   }
 }
