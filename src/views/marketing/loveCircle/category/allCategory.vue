@@ -235,6 +235,14 @@ export default {
   },
   methods: {
     handleCreate (params) {
+      this.formData = {
+        pink_circle_competence_id: null,
+        parent_id: 0,
+        name: '',
+        is_enable: 1,
+        sort: 0,
+        id: 1
+      }
       if (params === 'create') {
         this.formStatus = 'create'
       } else if (params === 'update') {

@@ -190,9 +190,14 @@ export const crudOptions = (StatusTag, that) => {
           name: StatusTag,
           on: {
             input: async (e) => {
-              const { code } = await that.$apis.UpdateMaterialStatus({ id: e.props.scope.row.id, is_enable: e.props.scope.row.is_enable === 1 ? 0 : 1 })
+              const { code, msg } = await that.$apis.UpdateMaterialStatus({ id: e.props.scope.row.id, is_enable: e.props.scope.row.is_enable === 1 ? 0 : 1 })
               if (code === 0) {
                 that.pageRequest()
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: msg
+                })
               }
             }
             // input (e) {
