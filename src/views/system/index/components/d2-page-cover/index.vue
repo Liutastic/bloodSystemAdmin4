@@ -1,18 +1,19 @@
 <template>
   <div class="d2-page-cover">
     <div class="d2-page-cover__logo">
-      <slot/>
+      <!-- <slot/> -->
+      <img src="https://image.v1.vodeshop.com/images/gysa-default-logo.png" alt="各有所爱总后台">
     </div>
-    <p class="d2-page-cover__title">D2 Admin {{$version}}</p>
-    <p class="d2-page-cover__sub-title">优雅的中后台集成方案</p>
+    <p class="d2-page-cover__title">各有所爱总后台{{$version}}</p>
+    <!-- <p class="d2-page-cover__sub-title">优雅的中后台集成方案</p> -->
     <p class="d2-page-cover__build-time">FINAL BUILD TIME {{$buildTime}}</p>
-    <slot name="footer"/>
+    <!-- <slot name="footer"/>
     <a target="blank" href="https://github.com/d2-projects/d2-admin">
       <img
         style="position: absolute; top: 0; right: 0; border: 0; width: 150px;"
         src="./image/darkblue@2x.png"
         alt="Fork me on GitHub">
-    </a>
+    </a> -->
   </div>
 </template>
 

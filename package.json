@@ -1,6 +1,6 @@
 {
-  "name": "d2-admin",
-  "version": "1.20.1",
+  "name": "gysa",
+  "version": "1.0.0",
   "scripts": {
     "serve": "vue-cli-service serve --open",
     "start": "npm run serve",
