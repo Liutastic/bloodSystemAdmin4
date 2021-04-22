@@ -1,5 +1,5 @@
 import StringUtils from 'd2-crud-plus/src/lib/utils/util.string'
-import { BASEURL, IMGBASEURL } from '@/api/config'
+import { IMGBASEURL } from '@/api/config'
 import { DICT_STATUS, DICT_STATIS_TYPE, DICT_YES_NO } from './dict.js'
 import API from './api'
 import util from '@/libs/util'
@@ -108,14 +108,6 @@ export const crudOptions = vm => {
         key: 'id',
         width: '80',
 
-        search: {
-          key: 'id',
-          title: '用户ID',
-          placeHolder: '请输入用户ID',
-          component: {
-            disabled: false
-          }
-        },
         form: {
           component: {
             show: true,
@@ -145,18 +137,18 @@ export const crudOptions = vm => {
         title: '发布平台',
         key: 'release_type',
         type: 'radio',
+        search: {
+          disabled: false,
+          compnent: {
+            // 查询 使用选择框组件，并且是可以清除的
+            name: 'dict-select',
+            props: {
+              clearable: true
+            }
+          }
+        },
         dict: {
           getData: async (url, dict, { form, component }) => {
-            console.log('dict:', dict)
-
-            console.log('ict.data:', dict.data)
-
-            if (dict.data?.length) {
-              console.log('2312:', 2312)
-              return dict.data
-            }
-            console.log('12321:', 12321)
-
             const { data } = await API.getActivityReleaseType()
             dict.data = data
             return data
@@ -260,7 +252,11 @@ export const crudOptions = vm => {
           slot: true,
           valueBuilder (row, key) {
           }
+        },
+        view: {
+          disabled: true
         }
+
       },
       {
         title: '',
@@ -271,11 +267,7 @@ export const crudOptions = vm => {
           value: 'value', // 数据字典中value字段的属性名
           label: 'name', // 数据字典中label字段的属性名
           getData: async (url, dict, { form, component }) => {
-            console.log('form: ', form)
-            console.log('component: ', component)
             // 配置此参数会覆盖全局的getRemoteDictFunc
-            console.log('component:', component)
-
             const ret = await API.getPermissionsTags({ release_type: form.release_type })
             let { data } = ret
             // 转字符串防止checkbox报错
@@ -288,6 +280,7 @@ export const crudOptions = vm => {
               form.permissions = data.map(item => item.value)
             }
 
+            dict.dict = data
             return data
           },
 
@@ -319,6 +312,14 @@ export const crudOptions = vm => {
         title: '报名结束',
         key: 'signDate',
         type: 'datetimerange',
+        search: {
+          title: '报名时间',
+          disabled: false,
+          span: 10,
+          compnent: {
+            // 查询 使用选择框组件，并且是可以清除的
+          }
+        },
         form: {
           title: '报名时间',
           component: {
@@ -388,6 +389,20 @@ export const crudOptions = vm => {
         }
       },
       {
+        title: '参与人数',
+        key: 'sign_count',
+        // component: {
+        //   name: 'el-button',
+        //   scopedSlots: {
+        //     default (h) {
+        //       return (11)
+        //     }
+        //   }
+        // }
+        rowSlot: true
+      },
+
+      {
         title: '启用状态',
         key: 'is_enable',
         type: 'select',
@@ -395,8 +410,12 @@ export const crudOptions = vm => {
           data: DICT_STATUS
         },
         search: {
-          key: 'is_enable',
-          title: '启用状态'
+          disabled: false,
+          compnent: {
+            // 查询 使用选择框组件，并且是可以清除的
+            name: 'dict-select'
+
+          }
         },
         form: {
           rules: [{ required: true, message: '请选择启用状态' }],
@@ -449,19 +468,6 @@ export const crudOptions = vm => {
         }
       },
       {
-        title: '活动结束是否公开',
-        key: 'is_public',
-        type: 'switch',
-        show: false,
-        form: {
-          value: 1,
-          component: {
-            name: 'dict-switch',
-            dict: {
-              data: DICT_YES_NO
-            }
-          }
-        }
       },
       {
         title: '顶栏活动标题图',

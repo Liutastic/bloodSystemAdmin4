@@ -14,9 +14,17 @@
       <crud-toolbar v-bind="_crudToolbarProps" v-on="_crudToolbarListeners" />
     </div>
     <d2-crud-x ref="d2Crud" v-bind="_crudProps" v-on="_crudListeners">
-      <template slot="permissionTitleFormSlot" slot-scope="scope">
-        <el-button type="success" size="small" @click="checkAll">全选权限</el-button>
-        <el-button type="danger" size="small"  @click="checkAll(0)">清空权限</el-button>
+      <template slot="permissionTitleFormSlot">
+        <el-button type="success" size="small" @click="checkAll(1)"
+          >全选权限</el-button
+        >
+        <el-button type="danger" size="small" @click="checkAll(0)"
+          >清空权限</el-button
+        >
+      </template>
+      <template slot="sign_countSlot" slot-scope="scope">
+         <el-button type="text" size="mini">{{scope.row.sign_count}}</el-button>
+
       </template>
     </d2-crud-x>
   </d2-container>
@@ -26,117 +34,89 @@
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 import api from './api'
-import log from '@/libs/util.log'
 export default {
   mixins: [d2CrudPlus.crud],
   methods: {
-    // 全选权限
     async checkAll (type) {
-      const form = this
-      console.log('1111: ')
-      form.permissions = []
-      console.log('getEditForm', this.getEditForm().permissions = [])
-      console.log('getEditFormTemplate', this.getEditFormTemplate())
-      // if(!type)
-      console.log(await this.getDictData('permissions'))
-      console.log('form:', form)
+      // 清空权限
+      if (!type) {
+        this.getEditForm().permissions = []
+
+        return
+      }
+      // 全选权限
+      const dictData = this.getEditFormTemplate('permissions').component.props
+        .dict.dict
+      this.getEditForm().permissions = dictData.map(item => item.value)
     },
     getCrudOptions () {
       return crudOptions(this)
     },
 
+    getParams (data) {
+      const {
+        title,
+        release_type,
+        category_id,
+        statistics_type,
+        sign_start_at,
+        sign_end_at,
+        activity_start_at,
+        activity_end_at,
+        is_enable,
+        is_toll,
+        toll_amount,
+        is_public,
+        header_image,
+        share_image,
+        permissions,
+        content
+      } = data
+
+      return {
+        title,
+        release_type,
+        category_id,
+        statistics_type,
+        sign_start_at,
+        sign_end_at,
+        activity_start_at,
+        activity_end_at,
+        is_enable,
+        is_toll,
+        toll_amount,
+        is_public,
+        header_image,
+        share_image,
+        permissions,
+        content
+      }
+    },
     /**
      * 请求数据
      */
     pageRequest (query) {
-      return api.getActivityList(query)
+      const params = {
+        ...this.getParams(query),
+        page: query.page,
+        per_page: query.per_page
+      }
+
+      return api.getActivityList(params)
     },
 
     /**
      * 新增数据
      */
     addRequest (data) {
-      const {
-        title,
-        release_type,
-        category_id,
-        statistics_type,
-        sign_start_at,
-        sign_end_at,
-        activity_start_at,
-        activity_end_at,
-        is_enable,
-        is_toll,
-        toll_amount,
-        is_public,
-        header_image,
-        share_image,
-        permissions,
-        content
-      } = data
-      return api.addActivityStore({
-        title,
-        release_type,
-        category_id,
-        statistics_type,
-        sign_start_at,
-        sign_end_at,
-        activity_start_at,
-        activity_end_at,
-        is_enable,
-        is_toll,
-        toll_amount,
-        is_public,
-        header_image,
-        share_image,
-        permissions,
-        content
-      })
+      return api.addActivityStore(this.getParams(data))
     },
     /**
      * 编辑数据
      */
     updateRequest (data) {
-      console.log('2132:', data)
-
-      const {
-        id,
-        title,
-        release_type,
-        category_id,
-        statistics_type,
-        sign_start_at,
-        sign_end_at,
-        activity_start_at,
-        activity_end_at,
-        is_enable,
-        is_toll,
-        toll_amount,
-        is_public,
-        header_image,
-        share_image,
-        permissions,
-        content
-      } = data
-      return api.putActivity({
-        id,
-        title,
-        release_type,
-        category_id,
-        statistics_type,
-        sign_start_at,
-        sign_end_at,
-        activity_start_at,
-        activity_end_at,
-        is_enable,
-        is_toll,
-        toll_amount,
-        is_public,
-        header_image,
-        share_image,
-        permissions,
-        content
-      })
+      const params = { ...this.getParams(data), id: data.id }
+      return api.putActivity(params)
     },
     /**
      * 删除数据
