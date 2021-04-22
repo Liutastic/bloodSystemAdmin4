@@ -33,7 +33,7 @@ export const menuHeader = supplementPath([
     title: '首页',
     icon: 'home'
   },
-  demo,
+  // demo,
   marketing
 ])
 

@@ -40,7 +40,7 @@ export default {
   path: '/demo',
   name: 'demo',
   meta,
-  redirect: { name: 'demo' },
+  redirect: { name: 'page1' },
   component: layoutHeaderAside,
   children: [
     {
