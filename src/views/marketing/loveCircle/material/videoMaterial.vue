@@ -91,6 +91,7 @@
               <div class="label color-333 font-size-8"><span class="red-tip">*</span>上传视频：</div>
               <div class="flex-sub">
                 <el-upload
+                  v-if="!formData.media.length"
                   class="upload-btn"
                   :action="QINIUURL"
                   :data="dataToken"
@@ -99,6 +100,9 @@
                   :before-upload="beforeUpload">
                   <i class="el-icon-plus"></i>
                 </el-upload>
+                 <div class="upload-btn cursor" @click="controlUploadProNum" v-if="formData.media.length">
+                  <i class="el-icon-plus color-666"></i>
+                </div>
               </div>
             </div>
           </div>
@@ -188,8 +192,10 @@ export default {
         this.formData.media = arr
         this.formData.pink_circle_user_id = data.user.id
         this.issuerInfo = data.user
-        const res = await this.$apis.GetProDetail(data.goods.id)
-        this.showProInfo = res.data
+        if (data.goods && data.goods.id) {
+          const res = await this.$apis.GetProDetail(data.goods.id)
+          this.showProInfo = res.data
+        }
         this.materailClassValue = [data.category.id, data.category_child_id]
         this.getCategoryList()
         this.getPermissionList()
@@ -205,6 +211,12 @@ export default {
     this.getAllIssuerList()
   },
   methods: {
+    controlUploadProNum () {
+      this.$message({
+        message: '您已经上传视频啦~',
+        type: 'warning'
+      })
+    },
     // 输入的展示商品id后调用
     async inputShowProId (e) {
       // console.log('获取输入的展示商品id', e)

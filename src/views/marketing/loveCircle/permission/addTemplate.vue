@@ -100,6 +100,7 @@ export default {
         this.mallCheckList = this.handelTagShowList(data.competence.mall, this.mallOption)
         this.dymCheckList = this.handelTagShowList(data.competence.dym, this.dymOption)
         this.retailCheckList = this.handelTagShowList(data.competence.retail, this.retailOption)
+        this.isDisable = data.status !== 0
         console.log(this.mallCheckList, this.dymCheckList, this.retailCheckList)
       }
     },

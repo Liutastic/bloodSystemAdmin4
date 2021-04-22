@@ -91,6 +91,7 @@
               <div class="label color-333 font-size-8"><span class="red-tip">*</span>上传图片：</div>
               <div class="flex-sub">
                 <el-upload
+                  v-if="formData.media.length < 9"
                   class="upload-btn"
                   :action="QINIUURL"
                   :data="dataToken"
@@ -102,7 +103,7 @@
                 <!-- <div class="upload-btn cursor" @click="controlUploadProRelate" v-if="show1">
                   <i class="el-icon-picture color-666"></i>
                 </div> -->
-                <div class="upload-btn cursor" @click="controlUploadProNum9" v-if="show3">
+                <div class="upload-btn cursor" @click="controlUploadProNum9" v-if="formData.media.length === 9">
                   <i class="el-icon-picture color-666"></i>
                 </div>
               </div>
@@ -192,9 +193,6 @@ export default {
     // show2 () {
     //   return !this.formData.media.length || (this.formData.media.length && this.formData.media.length < 9 && this.formData.media[this.formData.media.length - 1] && this.formData.media[this.formData.media.length - 1].goods_id)
     // },
-    show3 () {
-      return this.formData.media.length === 9
-    }
   },
   async mounted () {
     this.id = this.$route.query.id ? this.$route.query.id : null
@@ -219,8 +217,10 @@ export default {
         this.formData.media = arr
         this.formData.pink_circle_user_id = data.user.id
         this.issuerInfo = data.user
-        const res = await this.$apis.GetProDetail(data.goods.id)
-        this.showProInfo = res.data
+        if (data.goods && data.goods.id) {
+          const res = await this.$apis.GetProDetail(data.goods.id)
+          this.showProInfo = res.data
+        }
         // console.log('this.showProInfo', this.showProInfo)
         this.materailClassValue = [data.category.id, data.category_child_id]
         this.getCategoryList()
