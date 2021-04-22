@@ -164,7 +164,10 @@
               <el-input v-model="formData.name"></el-input>
             </el-form-item>
             <el-form-item label="分类排序" prop="sort">
-              <el-input v-model.number="formData.sort"></el-input>
+              <el-input
+                v-model.number="formData.sort"
+                placeholder="数字越小, 排序越前"
+              ></el-input>
             </el-form-item>
             <el-form-item label="权限模板" prop="pink_circle_competence_id">
               <el-select v-model="formData.pink_circle_competence_id">
@@ -256,6 +259,8 @@ export default {
       }
     },
     handleCreate (params) {
+      // this.$refs.form.resetFields()
+      this.$refs.form.clearValidate()
       this.formData = {
         pink_circle_competence_id: null,
         parent_id: '',

@@ -39,7 +39,8 @@ export default {
   mixins: [d2CrudPlus.crud],
   data () {
     return {
-      filterData: []
+      filterData: [],
+      query: {}
     }
   },
   methods: {
@@ -86,6 +87,7 @@ export default {
       return crudOptions(StatusTag, this)
     },
     async pageRequest (query) {
+      this.query = query
       const { data, code, msg } = await this.$apis.GetMaterialList(query)
       if (code === 0) {
         this.filterData = data.data

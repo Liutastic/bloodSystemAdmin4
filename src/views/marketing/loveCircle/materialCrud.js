@@ -135,7 +135,7 @@ export const crudOptions = (StatusTag, that) => {
           component: {
             name: 'dict-select',
             style: {
-              marginRight: '400px'
+              // marginRight: '900px'
             }
           }
         },
@@ -229,7 +229,7 @@ export const crudOptions = (StatusTag, that) => {
             input: async (e) => {
               const { code, msg } = await that.$apis.UpdateMaterialStatus({ id: e.props.scope.row.id, is_enable: e.props.scope.row.is_enable === 1 ? 0 : 1 })
               if (code === 0) {
-                that.pageRequest()
+                that.pageRequest(that.query)
               } else {
                 this.$message({
                   type: 'error',
