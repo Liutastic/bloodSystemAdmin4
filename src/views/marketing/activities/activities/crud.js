@@ -270,6 +270,8 @@ export const crudOptions = vm => {
           value: 'value', // 数据字典中value字段的属性名
           label: 'name', // 数据字典中label字段的属性名
           getData: async (url, dict, { form, component }) => {
+            console.log('form: ', form)
+            console.log('component: ', component)
             // 配置此参数会覆盖全局的getRemoteDictFunc
             console.log('component:', component)
 
@@ -280,7 +282,30 @@ export const crudOptions = vm => {
               ...item,
               id: item.id.toString()
             }))
+
+            if (!form.id) {
+              form.permissions = data.map(item => item.value)
+            }
+
             return data
+          },
+
+          // 同步字典
+          async valueChange (
+            key,
+            value,
+            form,
+            { getColumn, mode, component, immediate, getComponent }
+          ) {
+            console.log(65564664, component)
+          },
+
+          onReady (data, dict, { component }) {
+            console.log('data, dict, { component }:', data, dict, component)
+
+            // 远程数据字典加载完成事件，每个引用该字典的组件都会触发一次
+            // console.log('context22:', vm.getEditFormTemplate('permissions'))
+            // console.log(vm.getEditFormTemplate('permissions').component)
           }
         }
       },

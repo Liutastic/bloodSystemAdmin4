@@ -135,7 +135,7 @@ export default ({ request }) => ({
   // 删除一个素材
   DeleteMaterial (id) {
     return request({
-      url: `/admin/v1/material/delete?id=${id}`,
+      url: `/svc/marketing-svc/admin/v1/material/delete?id=${id}`,
       method: 'delete'
     })
   },

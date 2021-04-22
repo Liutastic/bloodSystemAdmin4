@@ -107,10 +107,19 @@ export const crudOptions = (StatusTag, that) => {
         key: 'category_name',
         sortable: true,
         align: 'center',
+        type: 'select',
         search: {
-          key: 'category_name'
+          key: 'category_id',
+          disabled: false,
+          component: {
+            name: 'dict-select'
+          }
+        },
+        dict: {
+          url: '/svc/marketing-svc/admin/v1/pink-circle-category/index',
+          value: 'id',
+          label: 'name'
         }
-
       },
       {
         title: '权限模板',
@@ -126,6 +135,14 @@ export const crudOptions = (StatusTag, that) => {
         },
         dict: {
           url: '/svc/marketing-svc/admin/v1/template/list',
+          transfer: (data) => {
+            for (const i of data) {
+              if (i.key === 'data') {
+                // console.log(i.value.filter(item => item.status === 1))
+                return i.value.filter(item => item.status === 1)
+              }
+            }
+          },
           value: 'id',
           label: 'title'
         }
@@ -212,14 +229,6 @@ export const crudOptions = (StatusTag, that) => {
                 })
               }
             }
-            // input (e) {
-            //   UpdateMaterialStatus({
-            //     id: e.props.scope.row.id,
-            //     is_enable: e.props.scope.row.is_enable === 1 ? 0 : 1
-            //   }).then(res => {
-            //     console.log(res)
-            //   })
-            // }
           }
         }
       }

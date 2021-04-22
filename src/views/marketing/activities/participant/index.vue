@@ -1,6 +1,6 @@
 <template>
   <d2-container :class="{'page-compact':crud.pageOptions.compact}">
-    <template slot="header">参与人记录
+    <template slot="header">
       <!-- <example-helper title="帮助"  >
         <h4>请点击右下角查看本页源码</h4>
       </example-helper> -->
