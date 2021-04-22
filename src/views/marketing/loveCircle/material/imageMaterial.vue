@@ -80,6 +80,10 @@
               </div>
               <div class="btn ml-5 cursor" @click="choosePro('show')">选择商品</div>
             </div>
+            <div class="flex align-center mb-9" v-if="idIsError">
+              <div class="label color-333 font-size-8"></div>
+              <div class="ml-5 red-tip font-size-8">请输入正确的商品ID</div>
+            </div>
             <div class="color-333 font-size-8 mb-9">已绑商品:{{showProInfo.name ? showProInfo.name : '暂未绑定商品'}}</div>
             <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8"><span class="red-tip">*</span>文本内容：</div>
@@ -119,6 +123,10 @@
               </div>
               <div class="btn ml-5 cursor" @click="choosePro('href')">选择商品</div>
             </div>
+            <div class="flex align-center mb-9" v-if="relateTdIsError">
+              <div class="label color-333 font-size-8"></div>
+              <div class="ml-5 red-tip font-size-8">请输入正确的商品ID</div>
+            </div>
             <div class="color-333 font-size-8 mb-9">关联商品: {{relatePro.name ? relatePro.name : '暂未关联商品'}}</div>
           </div>
           <div class="submit-btn-box pb-20">
@@ -145,6 +153,8 @@ export default {
   data () {
     return {
       QINIUURL,
+      idIsError: false,
+      relateTdIsError: false,
       dataToken: { token: '' }, // 上传的token
       formData: {
         // 素材名
@@ -245,23 +255,35 @@ export default {
     // 输入的展示商品id后调用
     async inputShowProId (e) {
       // console.log('获取输入的展示商品id', e)
-      const { data } = await this.$apis.GetProDetail(e)
-      this.showProInfo = data
-      this.formData.goods_id = data.id
+      const { code, data } = await this.$apis.GetProDetail(e)
+      if (code === 0) {
+        this.idIsError = false
+        this.showProInfo = data
+        this.formData.goods_id = data.id
+      } else {
+        this.idIsError = true
+        this.formData.goods_id = null
+      }
     },
     // 输入的图片链接商品id后调用
     async inputRelateProId (e) {
       // console.log('获取输入的展示商品id', e)
-      const { data } = await this.$apis.GetProDetail(e)
       // console.log('商品详情', data)
-      this.relatePro = data
-      this.relateProId = data.id
-      if (this.formData.media.length && this.formData.media[this.formData.media.length - 1].url && !this.formData.media[this.formData.media.length - 1].goods_id) {
-        this.formData.media[this.formData.media.length - 1].goods_id = data.id
-        return
-      }
-      if (!this.formData.media.length || (this.formData.media[this.formData.media.length - 1].url && this.formData.media[this.formData.media.length - 1].goods_id)) {
-        this.formData.media.push({ goods_id: e, url: '' })
+      const { code, data } = await this.$apis.GetProDetail(e)
+      if (code === 0) {
+        this.relateTdIsError = false
+        this.relatePro = data
+        this.relateProId = data.id
+        if (this.formData.media.length && this.formData.media[this.formData.media.length - 1].url && !this.formData.media[this.formData.media.length - 1].goods_id) {
+          this.formData.media[this.formData.media.length - 1].goods_id = data.id
+          return
+        }
+        if (!this.formData.media.length || (this.formData.media[this.formData.media.length - 1].url && this.formData.media[this.formData.media.length - 1].goods_id)) {
+          this.formData.media.push({ goods_id: e, url: '' })
+        }
+      } else {
+        this.relateTdIsError = true
+        this.relateProId = null
       }
     },
     // 选择图片链接的商品

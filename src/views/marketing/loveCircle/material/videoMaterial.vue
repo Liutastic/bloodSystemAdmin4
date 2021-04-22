@@ -80,6 +80,10 @@
               </div>
               <div class="btn ml-5 cursor" @click="choosePro()">选择商品</div>
             </div>
+            <div class="flex align-center mb-9" v-if="idIsError">
+              <div class="label color-333 font-size-8"></div>
+              <div class="ml-5 red-tip font-size-8">请输入正确的商品ID</div>
+            </div>
             <div class="color-333 font-size-8 mb-9">已绑商品:{{showProInfo.name ? showProInfo.name : '暂未绑定商品'}}</div>
             <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8"><span class="red-tip">*</span>文本内容：</div>
@@ -135,6 +139,7 @@ export default {
     return {
       QINIUURL,
       dataToken: { token: '' }, // 上传的token
+      idIsError: false,
       formData: {
         // 素材名
         name: '',
@@ -226,9 +231,14 @@ export default {
     // 输入的展示商品id后调用
     async inputShowProId (e) {
       // console.log('获取输入的展示商品id', e)
-      const { data } = await this.$apis.GetProDetail(e)
-      this.showProInfo = data
-      this.formData.goods_id = data.id
+      const { data, code } = await this.$apis.GetProDetail(e)
+      if (code === 0) {
+        this.idIsError = false
+        this.showProInfo = data
+        this.formData.goods_id = data.id
+      } else {
+        this.idIsError = true
+      }
     },
     // 选择图片链接的商品
     selHrefPro (item) {

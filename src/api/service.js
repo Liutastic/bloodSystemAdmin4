@@ -44,8 +44,10 @@ function createService () {
             break
           default:
             // 不是正确的 code
-            errorCreate(`${dataAxios.msg}: ${response.config.url}`)
-            break
+            try {
+              errorCreate(dataAxios.msg)
+            } catch (e) {}
+            return dataAxios
         }
       }
     },
