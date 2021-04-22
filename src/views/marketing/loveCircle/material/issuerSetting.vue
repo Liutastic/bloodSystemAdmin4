@@ -130,6 +130,13 @@ export default {
     await this.getIssuerList(this.params)
   },
   methods: {
+    initialForm () {
+      this.formData = {
+        name: '',
+        is_enable: true,
+        avatar: null
+      }
+    },
     handleSuccess (res, file) {
       console.log(res)
       this.formData.avatar = res.hash
@@ -219,6 +226,7 @@ export default {
               message: '添加成功'
             })
             await this.getIssuerList(this.params)
+            this.initialForm()
           } else {
             this.$message(msg)
           }
