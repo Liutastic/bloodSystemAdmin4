@@ -146,8 +146,21 @@ export const crudOptions = vm => {
         key: 'release_type',
         type: 'radio',
         dict: {
-          url: `${BASEURL}/svc/marketing-svc/admin/v1/activity/release-type`,
+          getData: async (url, dict, { form, component }) => {
+            console.log('dict:', dict)
 
+            console.log('ict.data:', dict.data)
+
+            if (dict.data?.length) {
+              console.log('2312:', 2312)
+              return dict.data
+            }
+            console.log('12321:', 12321)
+
+            const { data } = await API.getActivityReleaseType()
+            dict.data = data
+            return data
+          },
           cache: true,
           value: 'id', // 数据字典中value字段的属性名
           label: 'name', // 数据字典中label字段的属性名
@@ -162,18 +175,24 @@ export const crudOptions = vm => {
             form,
             { getColumn, mode, component, immediate, getComponent }
           ) {
+            console.log('component:', component.dict)
+
             const childArr = component.dict.data.filter(item => item.id === value)
             const dictChild =
               childArr[0].child ??
               []
             form.category_id = undefined // 将“city”的值置空
-            console.log('dictChild:', value, dictChild)
             await getComponent('category_id').reloadDict() // 执行city的select组件的reloadDict()方法，触发“city”重新加载字典
             getComponent('category_id').setDictData(dictChild)
 
             // 配置权限字段
             vm.getEditFormTemplate('permissions').title = childArr[0]?.name
             await getComponent('permissions').loadDict() // 执行city的select组件的reloadDict()方法，触发“city”重新加载字典
+
+            const permissionDict = await getComponent('permissions').getDictData()
+            console.log('dictArr:', dictArr)
+
+            await getComponent('permissions').setValue(dictArr)
           }
 
           // valueChangeImmediate: true
@@ -196,6 +215,9 @@ export const crudOptions = vm => {
               if (item.id === form.release_type) return distData.push(...item.child)
             })
             return distData
+          },
+          onDictChanged () {
+            console.log('11231111:', 11231111)
           }
 
         },
@@ -236,7 +258,6 @@ export const crudOptions = vm => {
         form: {
           slot: true,
           valueBuilder (row, key) {
-            console.log('123:', 123)
           }
         }
       },
@@ -252,6 +273,8 @@ export const crudOptions = vm => {
             console.log('form: ', form)
             console.log('component: ', component)
             // 配置此参数会覆盖全局的getRemoteDictFunc
+            console.log('component:', component)
+
             const ret = await API.getPermissionsTags({ release_type: form.release_type })
             let { data } = ret
             // 转字符串防止checkbox报错
@@ -285,7 +308,6 @@ export const crudOptions = vm => {
             // console.log(vm.getEditFormTemplate('permissions').component)
           }
         }
-
       },
 
       {
