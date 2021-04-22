@@ -30,7 +30,7 @@
     <!-- 图片链接九宫格模块 -->
     <div v-if="type === 'image' && proImgList.length" class="every-temple-part border-dashed padding-lr-8 padding-tb-10">
       <div class="flex flex-wrap" :class="{'nine-img-box': proImgList.length !== 4}">
-        <div class="pro-img-box" v-for="(item, index) in proImgList" :key="index">
+        <div class="pro-img-box" v-for="(item, index) in proImgList" :key="index" v-if="item.url">
           <el-image
           class="pro-img"
           :src="item.url | qiniu"
@@ -173,7 +173,7 @@ export default {
 <style lang="scss" scoped>
 .pre-model-box{
   width:300px;
-  min-height:610px;
+  min-height:700px;
   background: #F7F8FA;
   position:relative;
   .empty{
@@ -275,6 +275,7 @@ export default {
     }
     .right-del-icon{
       color:#ffffff;
+      font-size:15px !important;
     }
   }
 }

@@ -35,6 +35,14 @@
         <el-checkbox v-for="(item, index) in retailOption" :value="item.id" :key="index" :label="item.title"></el-checkbox>
       </el-checkbox-group>
     </el-row>
+    <el-row class="mb-25" type="flex" align="center">
+      <span class="label flex align-center">启用状态：</span>
+      <el-switch
+        v-model="isDisable"
+        active-color="#13ce66"
+        inactive-color="#999999">
+      </el-switch>
+    </el-row>
     <el-row class="mt-40" type="flex" align="center" justify="center">
      <el-button @click="save" size="mini" type="primary">保存</el-button>
     </el-row>
@@ -50,6 +58,7 @@ export default {
         title: '',
         competence: []
       },
+      isDisable: true,
       id: null,
       // 各有所爱权限 0= 普通用户 1=saver会员 2=三星服务商 3=五星服务商 4=七星服务商
       mallOption: [
@@ -91,6 +100,7 @@ export default {
         this.mallCheckList = this.handelTagShowList(data.competence.mall, this.mallOption)
         this.dymCheckList = this.handelTagShowList(data.competence.dym, this.dymOption)
         this.retailCheckList = this.handelTagShowList(data.competence.retail, this.retailOption)
+        this.isDisable = data.status !== 0
         console.log(this.mallCheckList, this.dymCheckList, this.retailCheckList)
       }
     },
@@ -120,13 +130,15 @@ export default {
         })
         return
       }
-      if (!this.mallCheckList.length || !this.dymCheckList.length || !this.retailCheckList.length) {
+      if ((this.mallCheckList.length + this.dymCheckList.length + this.retailCheckList.length) === 0) {
         this.$message({
           message: '请选择权限！',
           type: 'warning'
         })
         return
       }
+      this.formData.status = this.isDisable ? 1 : 0
+      console.log(this.formData)
       const mallTagList = this.handelTagList(this.mallCheckList, this.mallOption, 'mall_')
       const dymTagList = this.handelTagList(this.dymCheckList, this.dymOption, 'dym_')
       const retailTagList = this.handelTagList(this.retailCheckList, this.retailOption, 'retail_')
