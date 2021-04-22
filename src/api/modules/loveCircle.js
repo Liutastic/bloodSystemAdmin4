@@ -117,19 +117,19 @@ export default ({ request }) => ({
     })
   },
   // 新增视频素材
-  AddVideoMaterial (params) {
+  AddVideoMaterial (data) {
     return request({
       url: '/svc/marketing-svc/admin/v1/material/video',
       method: 'post',
-      params
+      data
     })
   },
   // 新增图片素材
-  AddImageMaterial (params) {
+  AddImageMaterial (data) {
     return request({
       url: '/svc/marketing-svc/admin/v1/material/image',
       method: 'post',
-      params
+      data
     })
   },
   // 删除一个素材

@@ -28,9 +28,9 @@
       </div>
     </div>
     <!-- 图片链接九宫格模块 -->
-    <div v-if="type === 'image' && proImgList.length" class="every-temple-part border-dashed padding-lr-8 padding-tb-10">
-      <div class="flex flex-wrap" :class="{'nine-img-box': proImgList.length !== 4}">
-        <div class="pro-img-box" v-for="(item, index) in proImgList" :key="index" v-if="item.url">
+    <div v-if="type === 'image' && handelProImgList.length && handelProImgList.length > 1" class="every-temple-part border-dashed padding-lr-8 padding-tb-10">
+      <div class="flex flex-wrap" :class="{'nine-img-box': handelProImgList.length !== 4}">
+        <div class="pro-img-box" v-for="(item, index) in handelProImgList" :key="index">
           <el-image
           class="pro-img"
           :src="item.url | qiniu"
@@ -42,10 +42,23 @@
         <i class="el-icon-circle-close right-del-icon"></i>
       </div>
     </div>
+    <!-- // 只有一张图片 -->
+    <div v-if="type === 'image' && handelProImgList.length && handelProImgList.length === 1" class="every-temple-part border-dashed padding-lr-8 padding-tb-10">
+      <div class="one-pro-img-box">
+        <el-image
+        class="one-pro-img"
+        :src="handelProImgList[0].url | qiniu"
+        fit="contain"></el-image>
+        <i class="el-icon-error del-icon cursor" @click="delProImg(index)"></i>
+      </div>
+      <div class="right-del-btn" @click="delTemplate(3)">
+        <i class="el-icon-circle-close right-del-icon"></i>
+      </div>
+    </div>
     <!-- // 视频 -->
-    <div v-if="type === 'video' && proImgList.length" class="every-temple-part border-dashed padding-lr-8 padding-tb-10">
+    <div v-if="type === 'video' && handelProImgList.length" class="every-temple-part border-dashed padding-lr-8 padding-tb-10">
       <video
-        :src="proImgList[0].url | qiniu(750, 'video')"
+        :src="handelProImgList[0].url | qiniu(750, 'video')"
         class="video"
         controls="controls">
         您的浏览器不支持视频播放
@@ -119,6 +132,13 @@ export default {
     }
   },
   computed: {
+    handelProImgList () {
+      const arr = this.proImgList.filter(val => {
+        return val.url
+      })
+      console.log(arr)
+      return arr
+    },
     showVirtualNum () {
       return this.virtualNum > 10000 ? this.virtualNum / 10000 + '万' : this.virtualNum
     },
@@ -207,16 +227,25 @@ export default {
     border-radius: 3px;
     padding:5px;
   }
-  .pro-img-box{
+  .one-pro-img-box{
     position:relative;
-    margin-right:3px;
-    margin-bottom:3px;
-    .del-icon{
+    .one-pro-img{
+      width: 100%px;
+      height: auto;
+      display:block;
+      background:#ffffff;
+    }
+  }
+  .del-icon{
       position: absolute;
       top:4px;
       right:4px;
       color:#FE2C2C;
     }
+  .pro-img-box{
+    position:relative;
+    margin-right:3px;
+    margin-bottom:3px;
     .pro-img{
       width: 92px;
       height: 92px;

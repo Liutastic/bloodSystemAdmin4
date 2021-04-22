@@ -228,7 +228,7 @@ export default {
         this.formData.category_child_id = data.category_child_id ? data.category_child_id : null
         const arr = []
         data.media.forEach(val => {
-          arr.push({ goods_id: val.id, url: val.url })
+          arr.push({ goods_id: (val.goods && val.goods.id) ? val.goods.id : null, url: val.url })
         })
         this.formData.media = arr
         this.formData.pink_circle_user_id = data.user.id
@@ -367,7 +367,7 @@ export default {
       }
       if (!this.formData.media.length) {
         this.$message({
-          message: '请上传关联商品~',
+          message: '请上传图片~',
           type: 'warning'
         })
         return

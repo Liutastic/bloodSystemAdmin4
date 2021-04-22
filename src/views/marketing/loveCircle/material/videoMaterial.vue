@@ -129,7 +129,6 @@
 import PreviewModel from './components/PreviewModel'
 import SelProDialog from './components/SelProDialog'
 import { QINIUURL } from '@/api/config'
-import error from '@/plugin/error'
 export default {
   name: 'imageMaterial',
   components: {
@@ -199,7 +198,7 @@ export default {
         this.formData.category_child_id = data.category_child_id ? data.category_child_id : null
         const arr = []
         data.media.forEach(val => {
-          arr.push({ goods_id: val.id, url: val.url })
+          arr.push({ goods_id: (val.goods && val.goods.id) ? val.goods.id : null, url: val.url })
         })
         this.formData.media = arr
         this.formData.pink_circle_user_id = data.user.id
