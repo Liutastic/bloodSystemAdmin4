@@ -99,6 +99,7 @@ export const crudOptions = (StatusTag, that) => {
           disabled: true
         },
         search: {
+          width: 233,
           key: 'name'
         }
       },
@@ -109,6 +110,7 @@ export const crudOptions = (StatusTag, that) => {
         align: 'center',
         type: 'select',
         search: {
+          width: 233,
           key: 'category_id',
           disabled: false,
           component: {
@@ -127,10 +129,14 @@ export const crudOptions = (StatusTag, that) => {
         type: 'select',
         align: 'center',
         search: {
+          width: 233,
           key: 'competence_id',
           disabled: false,
           component: {
-            name: 'dict-select'
+            name: 'dict-select',
+            style: {
+              marginRight: '400px'
+            }
           }
         },
         dict: {
@@ -153,6 +159,7 @@ export const crudOptions = (StatusTag, that) => {
         width: 300,
         align: 'center',
         search: {
+          width: 233,
           key: 'goods_id'
         }
       },
@@ -163,6 +170,7 @@ export const crudOptions = (StatusTag, that) => {
         type: 'select',
         align: 'center',
         search: {
+          width: 233,
           key: 'type',
           disabled: false,
           component: {
