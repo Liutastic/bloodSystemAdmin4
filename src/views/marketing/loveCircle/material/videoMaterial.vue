@@ -195,7 +195,7 @@ export default {
         this.formData.pink_circle_competence_id = data.competence.id
         this.formData.goods_id = data.goods.id
         this.formData.content = data.content
-        this.formData.pink_circle_fictitious_forward = String(data.forward)
+        this.formData.pink_circle_fictitious_forward = data.forward
         this.formData.category_child_id = data.category_child_id ? data.category_child_id : null
         const arr = []
         data.media.forEach(val => {

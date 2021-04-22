@@ -95,11 +95,11 @@ export default {
       const { code, msg, data } = await this.$apis.GetPermissionDetail({ id: this.id })
       console.log(code, msg, data)
       if (code === 0) {
-        console.log('成功了')
+        console.log('成功了', data)
         this.formData.title = data.title
-        this.mallCheckList = this.handelTagShowList(data.competence.mall, this.mallOption)
-        this.dymCheckList = this.handelTagShowList(data.competence.dym, this.dymOption)
-        this.retailCheckList = this.handelTagShowList(data.competence.retail, this.retailOption)
+        if (data.competence.mall && data.competence.mall.length) this.mallCheckList = this.handelTagShowList(data.competence.mall, this.mallOption)
+        if (data.competence.dym && data.competence.dym.length) this.dymCheckList = this.handelTagShowList(data.competence.dym, this.dymOption)
+        if (data.competence.retail && data.competence.retail.length) this.retailCheckList = this.handelTagShowList(data.competence.retail, this.retailOption)
         this.isDisable = data.status !== 0
         console.log(this.mallCheckList, this.dymCheckList, this.retailCheckList)
       }

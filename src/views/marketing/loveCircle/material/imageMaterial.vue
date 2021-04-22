@@ -215,6 +215,7 @@ export default {
       this.$loading()
       const { code, msg, data } = await this.$apis.GetMaterialDetail({ id: this.id })
       if (code === 0) {
+        console.log('素材详情', data)
         this.$loading().close()
         // console.log('获取素材详情', data)
         this.materialDetail = data
@@ -223,7 +224,7 @@ export default {
         this.formData.pink_circle_competence_id = data.competence.id
         this.formData.goods_id = data.goods.id
         this.formData.content = data.content
-        this.formData.pink_circle_fictitious_forward = String(data.forward)
+        this.formData.pink_circle_fictitious_forward = data.forward
         this.formData.category_child_id = data.category_child_id ? data.category_child_id : null
         const arr = []
         data.media.forEach(val => {
@@ -235,6 +236,7 @@ export default {
         if (data.goods && data.goods.id) {
           const res = await this.$apis.GetProDetail(data.goods.id)
           if (res.code === 0) this.showProInfo = res.data
+          console.log('获取详情的数据', res)
         }
         // console.log('this.showProInfo', this.showProInfo)
         this.materailClassValue = [data.category.id]
