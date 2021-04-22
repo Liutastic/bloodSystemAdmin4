@@ -41,7 +41,7 @@ export default {
     },
     {
       path: 'loveCircle/category/allCategory',
-      name: 'addtemplate',
+      name: 'allcategory',
       meta: {
         title: '所有分类',
         auth: true
