@@ -138,7 +138,7 @@
             label-width="80px"
           >
             <el-form-item label="上级分类" prop="parent_id">
-              <el-cascader
+              <!-- <el-cascader
                 v-model="formData.parent_id"
                 placeholder="不选择则表示顶层分类"
                 :options="treeData"
@@ -147,7 +147,18 @@
                 filterable
                 clearable
               >
-              </el-cascader>
+              </el-cascader> -->
+              <el-select
+                v-model="formData.parent_id"
+                placeholder="不选择则表示顶层分类"
+              >
+                <el-option
+                  v-for="item in treeData"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="分类名称" prop="name">
               <el-input v-model="formData.name"></el-input>
@@ -201,11 +212,11 @@ export default {
         checkStrictly: true,
         emitPath: false
       },
-      textMap: { update: '编辑分类', create: '新建分类' },
+      textMap: { update: '编辑分类', create: '新增分类' },
       switchStatus: true,
       formData: {
         pink_circle_competence_id: null,
-        parent_id: 0,
+        parent_id: '',
         name: '',
         is_enable: 1,
         sort: 0,
@@ -234,10 +245,20 @@ export default {
     await this.getTemplateList()
   },
   methods: {
+    initialForm () {
+      this.formData = {
+        pink_circle_competence_id: null,
+        parent_id: '',
+        name: '',
+        is_enable: 1,
+        sort: 0,
+        id: 1
+      }
+    },
     handleCreate (params) {
       this.formData = {
         pink_circle_competence_id: null,
-        parent_id: 0,
+        parent_id: '',
         name: '',
         is_enable: 1,
         sort: 0,
@@ -300,7 +321,7 @@ export default {
       this.formData = {
         id: data.id,
         pink_circle_competence_id: data.pink_circle_competence_id,
-        parent_id: data.parent_id,
+        parent_id: data.parent_id === 0 ? '' : data.parent_id,
         name: data.name,
         is_enable: data.is_enable,
         sort: data.sort
@@ -354,8 +375,15 @@ export default {
     },
     // 树节点新建btn
     handleAdd (data) {
-      console.log(data)
+      console.log('data', data)
       this.formStatus = 'create'
+      if (data.children) {
+        // 在父节点点击新增则新增该父节点下的子节点
+        this.formData.parent_id = data.id
+      } else {
+        // 在子节点点击新增则新增和该子节点同级的分类
+        this.formData.parent_id = data.parent_id
+      }
       this.$refs.tree.setCurrentKey(data.id)
       // this.formData.id = key
     },
@@ -364,7 +392,7 @@ export default {
       this.formLoading = true
       this.$refs.form.validate(async valid => {
         if (valid) {
-          const { code, msg } = await this.$apis.CreateCategory(this.formData)
+          const { code, msg } = await this.$apis.CreateCategory(this.formData.parent_id === '' ? { ...this.formData, parent_id: 0 } : this.formData)
           if (code === 0) {
             this.$message({
               type: 'success',
@@ -378,6 +406,7 @@ export default {
               type: 'error',
               message: msg
             })
+            this.initialForm()
           }
         }
       })
