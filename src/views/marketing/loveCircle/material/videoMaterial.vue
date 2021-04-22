@@ -205,7 +205,7 @@ export default {
         this.issuerInfo = data.user
         if (data.goods && data.goods.id) {
           const res = await this.$apis.GetProDetail(data.goods.id)
-          this.showProInfo = res.data
+          if (res.code === 0) this.showProInfo = res.data
         }
         this.materailClassValue = [data.category.id, data.category_child_id]
         this.getCategoryList()
@@ -238,6 +238,7 @@ export default {
         this.formData.goods_id = data.id
       } else {
         this.idIsError = true
+        this.formData.goods_id = null
       }
     },
     // 选择图片链接的商品

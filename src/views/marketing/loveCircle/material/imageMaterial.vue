@@ -234,7 +234,7 @@ export default {
         this.issuerInfo = data.user
         if (data.goods && data.goods.id) {
           const res = await this.$apis.GetProDetail(data.goods.id)
-          this.showProInfo = res.data
+          if (res.code === 0) this.showProInfo = res.data
         }
         // console.log('this.showProInfo', this.showProInfo)
         this.materailClassValue = [data.category.id, data.category_child_id]

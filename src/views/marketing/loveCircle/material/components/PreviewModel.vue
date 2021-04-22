@@ -137,7 +137,7 @@ export default {
     // 处理文本换行显示
     showText () {
       const arr = []
-      this.content.split('\n').forEach(item => arr.push(`<p style="margin:0;">${item.trim()}</p>`))
+      this.content.split('\n').forEach(item => arr.push(`<p style="margin:0;word-break: break-word;">${item.trim()}</p>`))
       console.log(arr)
       return arr.join('')
     }
