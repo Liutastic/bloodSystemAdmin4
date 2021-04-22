@@ -31,15 +31,17 @@ export default {
     }
   },
   async mounted () {
-    const { code, msg, data } = await this.$apis.GetRunCategoryList({})
-    console.log('分类', code, msg, data)
-    this.categoryOptions = data
-    console.log(this.categoryOptions)
-    this.$nextTick(() => {
-      const myEchar = document.getElementById('myEchar')
-      this.myChart = echarts.init(myEchar)
-      this.updateData({})
-    })
+    const { code, data } = await this.$apis.GetRunCategoryList({})
+    console.log('分类', code, data)
+    if (code === 0) {
+      this.categoryOptions = data
+      console.log(this.categoryOptions)
+      this.$nextTick(() => {
+        const myEchar = document.getElementById('myEchar')
+        this.myChart = echarts.init(myEchar)
+        this.updateData({})
+      })
+    }
   },
   methods: {
     optionChange (val) {

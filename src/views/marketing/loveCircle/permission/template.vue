@@ -122,11 +122,6 @@ export default {
           type: 'success'
         })
         done()
-      } else {
-        this.$message({
-          message: msg,
-          type: 'warning'
-        })
       }
     },
     // 去编辑页面
