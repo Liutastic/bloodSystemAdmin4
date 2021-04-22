@@ -22,13 +22,13 @@
           <div>
             <div class="color-666 font-size-9 mb-9 text-center">素材基础信息</div>
             <div class="flex align-center mb-9">
-              <div class="label color-333 font-size-8">素材名称：</div>
+              <div class="label color-333 font-size-8"><span class="red-tip">*</span>素材名称：</div>
               <div class="flex-sub">
                 <el-input class="input-width-100" show-word-limit maxlength="10" size="mini" v-model="formData.name" />
               </div>
             </div>
             <div class="flex align-center mb-9">
-              <div class="label color-333 font-size-8">素材分类：</div>
+              <div class="label color-333 font-size-8"><span class="red-tip">*</span>素材分类：</div>
               <div class="flex-sub">
                 <el-cascader
                 class="input-width-100"
@@ -38,7 +38,7 @@
               </div>
             </div>
             <div class="flex align-center mb-9">
-              <div class="label color-333 font-size-8">权限模板：</div>
+              <div class="label color-333 font-size-8"><span class="red-tip">*</span>权限模板：</div>
               <div class="flex-sub">
                 <el-select v-model="formData.pink_circle_competence_id" class="input-width-100" size="mini">
                   <el-option
@@ -61,7 +61,7 @@
           <div>
              <div class="color-666 font-size-9 mb-9 text-center">素材图文信息</div>
              <div class="flex align-center mb-9">
-              <div class="label color-333 font-size-8">发布人：</div>
+              <div class="label color-333 font-size-8"><span class="red-tip">*</span>发布人：</div>
               <div class="flex-sub">
                 <el-select @change="publisherChange" v-model="formData.pink_circle_user_id" class="input-width-100" size="mini">
                   <el-option
@@ -82,15 +82,16 @@
             </div>
             <div class="color-333 font-size-8 mb-9">已绑商品:{{showProInfo.name ? showProInfo.name : '暂未绑定商品'}}</div>
             <div class="flex align-center mb-9">
-              <div class="label color-333 font-size-8">文本内容：</div>
+              <div class="label color-333 font-size-8"><span class="red-tip">*</span>文本内容：</div>
               <div class="flex-sub">
-                <el-input type="textarea" class="input-width-100" size="mini" v-model="formData.content" />
+                <el-input type="textarea" :rows="8" class="input-width-100" size="mini" v-model="formData.content" />
               </div>
             </div>
             <div class="flex align-center mb-9">
-              <div class="label color-333 font-size-8">上传视频：</div>
+              <div class="label color-333 font-size-8"><span class="red-tip">*</span>上传视频：</div>
               <div class="flex-sub">
                 <el-upload
+                  v-if="!formData.media.length && !uploadLoading"
                   class="upload-btn"
                   :action="QINIUURL"
                   :data="dataToken"
@@ -99,11 +100,18 @@
                   :before-upload="beforeUpload">
                   <i class="el-icon-plus"></i>
                 </el-upload>
+                <div class="upload-btn cursor" @click="controlUploadProNum" v-if="formData.media.length && !uploadLoading">
+                  <i class="el-icon-plus color-666"></i>
+                </div>
+                <div class="upload-btn cursor flex flex-direction-column align-center justify-center"  v-if="uploadLoading">
+                  <span class="color-666 font-size-8" style="line-height:20px;">上传中</span>
+                  <i class="el-icon-loading color-666"></i>
+                </div>
               </div>
             </div>
           </div>
-          <div class="submit-btn-box">
-            <el-button type="primary" size="mini" @click="save">上传</el-button>
+          <div class="submit-btn-box pb-20">
+            <el-button type="primary" size="mini" @click="save">{{id ? '修改' : '保存'}}</el-button>
           </div>
         </div>
       </el-col>
@@ -162,7 +170,9 @@ export default {
       // 编辑的素材id
       id: null,
       // 素材详情
-      materialDetail: {}
+      materialDetail: {},
+      // 图片上传状态
+      uploadLoading: false
     }
   },
   async mounted () {
@@ -172,7 +182,7 @@ export default {
       const { code, msg, data } = await this.$apis.GetMaterialDetail({ id: this.id })
       if (code === 0) {
         this.$loading().close()
-        console.log('获取素材详情', data)
+        // console.log('获取素材详情', data)
         this.materialDetail = data
         this.formData.name = data.name
         this.formData.pink_circle_category_id = data.category.id
@@ -188,8 +198,10 @@ export default {
         this.formData.media = arr
         this.formData.pink_circle_user_id = data.user.id
         this.issuerInfo = data.user
-        const res = await this.$apis.GetProDetail(data.goods.id)
-        this.showProInfo = res.data
+        if (data.goods && data.goods.id) {
+          const res = await this.$apis.GetProDetail(data.goods.id)
+          this.showProInfo = res.data
+        }
         this.materailClassValue = [data.category.id, data.category_child_id]
         this.getCategoryList()
         this.getPermissionList()
@@ -205,9 +217,15 @@ export default {
     this.getAllIssuerList()
   },
   methods: {
+    controlUploadProNum () {
+      this.$message({
+        message: '您已经上传视频啦~',
+        type: 'warning'
+      })
+    },
     // 输入的展示商品id后调用
     async inputShowProId (e) {
-      console.log('获取输入的展示商品id', e)
+      // console.log('获取输入的展示商品id', e)
       const { data } = await this.$apis.GetProDetail(e)
       this.showProInfo = data
       this.formData.goods_id = data.id
@@ -215,10 +233,10 @@ export default {
     // 选择图片链接的商品
     selHrefPro (item) {
       this.selProDialogShow = false
-      console.log('选择商品1', item)
+      // console.log('选择商品1', item)
       this.formData.goods_id = item.id
       this.showProInfo = item
-      console.log('this.showProInfo', this.showProInfo)
+      // console.log('this.showProInfo', this.showProInfo)
     },
     // 上传
     async save () {
@@ -243,13 +261,13 @@ export default {
         })
         return
       }
-      if (!this.formData.pink_circle_fictitious_forward) {
-        this.$message({
-          message: '请输入虚拟转发数~',
-          type: 'warning'
-        })
-        return
-      }
+      // if (!this.formData.pink_circle_fictitious_forward) {
+      //   this.$message({
+      //     message: '请输入虚拟转发数~',
+      //     type: 'warning'
+      //   })
+      //   return
+      // }
       if (!this.formData.pink_circle_user_id) {
         this.$message({
           message: '请选择发布人~',
@@ -257,13 +275,13 @@ export default {
         })
         return
       }
-      if (!this.formData.goods_id) {
-        this.$message({
-          message: '请选择展示商品~',
-          type: 'warning'
-        })
-        return
-      }
+      // if (!this.formData.goods_id) {
+      //   this.$message({
+      //     message: '请选择展示商品~',
+      //     type: 'warning'
+      //   })
+      //   return
+      // }
       if (!this.formData.content) {
         this.$message({
           message: '请输入文本内容~',
@@ -273,21 +291,19 @@ export default {
       }
       if (!this.formData.media.length) {
         this.$message({
-          message: '请上传关联商品~',
+          message: '请上传视频~',
           type: 'warning'
         })
         return
       }
-      this.$loading()
       this.formData.pink_circle_category_id = this.materailClassValue[0] ? this.materailClassValue[0] : ''
       this.formData.category_child_id = this.materailClassValue[1] ? this.materailClassValue[1] : ''
-      console.log('上传参数', this.formData)
+      // console.log('上传参数', this.formData)
       // 更新编辑
       if (this.id) {
-        const { code, msg, data } = await this.$apis.EditMaterial(this.formData, this.id)
-        console.log(code, msg, data)
+        const { code, msg } = await this.$apis.EditMaterial(this.formData, this.id)
+        // console.log(code, msg, data)
         if (code === 0) {
-          this.$loading().close()
           this.$message({
             message: '操作成功！',
             type: 'success'
@@ -296,22 +312,24 @@ export default {
             this.$router.back(-1)
           }, 2000)
         } else {
-          this.$loading().close()
           this.$message.error(msg)
         }
         return
       }
       // 新增
-      const { code, msg, data } = await this.$apis.AddVideoMaterial(this.formData)
-      console.log(code, msg, data)
+      const { code, msg } = await this.$apis.AddVideoMaterial(this.formData)
+      // console.log(code, msg, data)
       if (code === 0) {
-        this.$loading().close()
+        setTimeout(() => {
+          this.$router.push({
+            path: '/marketing/loveCircle/allMaterial'
+          })
+        }, 2000)
         this.$message({
           message: '操作成功！',
           type: 'success'
         })
       } else {
-        this.$loading().close()
         this.$message.error(msg)
       }
     },
@@ -336,38 +354,40 @@ export default {
     },
     // 删除商品图片
     delProImg (index) {
-      console.log(this.formData.media)
+      // console.log(this.formData.media)
       this.formData.media.splice(index, 1)
-      console.log(this.formData.media)
+      // console.log(this.formData.media)
     },
     // 选择发布人
     publisherChange (e) {
-      console.log('改变发布人', e)
+      // console.log('改变发布人', e)
       this.issuerInfo = this.publisherOption.find(val => val.id === e)
-      console.log('this.issuerInfo', this.issuerInfo)
+      // console.log('this.issuerInfo', this.issuerInfo)
     },
     uploadProImgSuccess (res) {
-      console.log(res)
+      // console.log(res)
       const arr = [{ url: res.hash, goods_id: '' }]
       this.formData.media = arr
+      this.uploadLoading = false
     },
     async beforeUpload () {
       this.$loading()
       const { uptoken } = await this.$apis.qiniuToken()
       this.dataToken.token = uptoken
       this.$loading().close()
+      this.uploadLoading = true
     },
     uploadProImgPropress (val) {
       console.log(val)
     },
     // 选择商品
     choosePro () {
-      console.log('选择', this.selProDialogShow)
+      // console.log('选择', this.selProDialogShow)
       this.selProDialogShow = true
     },
     // 关闭选择商品弹窗
     closeSelProDialog () {
-      console.log('关闭', this.selProDialogShow)
+      // console.log('关闭', this.selProDialogShow)
       this.selProDialogShow = false
     },
     // 处理级联选择器对象Key问题
@@ -390,8 +410,8 @@ export default {
     },
     // 获取素材分类
     async getCategoryList () {
-      const { code, msg, data } = await this.$apis.GetCategoryAllList()
-      console.log('素材分类', code, msg, data)
+      const { code, data } = await this.$apis.GetCategoryAllList()
+      // console.log('素材分类', code, msg, data)
       if (code === 0) {
         console.log(this.transitionKey(data))
         this.materailClassList = this.transitionKey(data)
@@ -399,16 +419,18 @@ export default {
     },
     // 获取权限模板列表
     async getPermissionList () {
-      const { code, msg, data } = await this.$apis.GetPermissionList({ page: 1, per_page: 1000 })
-      console.log('权限模板', code, msg, data)
+      const { code, data } = await this.$apis.GetPermissionList({ page: 1, per_page: 1000 })
+      // console.log('权限模板', code, msg, data)
       if (code === 0) {
-        this.permissionOption = data.data
+        this.permissionOption = data.data.filter(val => {
+          return val.status === 1
+        })
       }
     },
     // 获取发布人列表
     async getAllIssuerList () {
-      const { code, msg, data } = await this.$apis.GetAllIssuerList()
-      console.log('发布人列表', code, msg, data)
+      const { code, data } = await this.$apis.GetAllIssuerList()
+      // console.log('发布人列表', code, msg, data)
       if (code === 0) {
         this.publisherOption = data
       }
@@ -419,7 +441,7 @@ export default {
 <style lang="scss" scoped>
 .publish-box{
   width:300px;
-  min-height:610px;
+  min-height:700px;
   background: #F7F8FA;
   padding:0 10px;
   box-sizing: border-box;
@@ -438,13 +460,14 @@ export default {
     width:100% !important;
   }
   .btn{
-    width: 49px;
-    height: 16px;
+    width: 60px;
+    height: 25px;
     background: #2589FF;
-    border-radius: 1px;
+    border-radius: 3px;
     text-align:center;
-    line-height:16px;
+    line-height:25px;
     font-size:8px;
+    opacity: 0.8;
     color:#ffffff;
   }
   .upload-btn{
@@ -471,6 +494,9 @@ export default {
 }
 .align-center{
   align-items: center;
+}
+.flex-direction-column{
+  flex-direction: column;
 }
 .justify-center{
   justify-content: center;
@@ -506,5 +532,11 @@ export default {
 }
 .ml-5{
   margin-left:5px;
+}
+.red-tip{
+  color:#F4222D;
+}
+.pb-20{
+  padding-bottom:20px;
 }
 </style>

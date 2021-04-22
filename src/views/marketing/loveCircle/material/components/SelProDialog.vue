@@ -93,7 +93,6 @@ export default {
         async lazyLoad (node, resolve) { // 区域树懒加载的方法
           console.log('出现懒加载', node)
           const { data } = node
-          console.log(data)
           // if ((data && data.haschild === false) || (data && data.leaf === true)) {
           //   return resolve([])
           // }
@@ -122,7 +121,7 @@ export default {
       this.isLoading = true
       this.page++
       this.getProList()
-      console.log('触底加载')
+      // console.log('触底加载')
     },
     search () {
       this.busy = true
@@ -132,13 +131,13 @@ export default {
     },
     // 选择商品
     selPro (val) {
-      console.log('选择商品', val)
+      // console.log('选择商品', val)
       this.$emit('selHrefPro', val)
     },
     // 获取商品分类列表
     async getProCategoryList (id) {
-      const { code, msg, data } = await this.$apis.GetProCategoryList({ category_id: id })
-      console.log('获取商品分类', code, msg, data)
+      const { data } = await this.$apis.GetProCategoryList({ category_id: id })
+      // console.log('获取商品分类', code, msg, data)
       return data.data
     },
     // 获取商品列表
@@ -148,8 +147,8 @@ export default {
         keyWord: this.keyWord,
         page: this.page
       }
-      const { code, msg, data } = await this.$apis.GetProList(params)
-      console.log('获取商品列表', code, msg, data)
+      const { code, data } = await this.$apis.GetProList(params)
+      // console.log('获取商品列表', code, msg, data)
       if (code === 0) {
         this.busy = false
         this.firstLoad = false

@@ -55,6 +55,19 @@ export default {
   },
 
   /**
+   * 编辑活动
+   * http://doc.vodeshop.com/web/#/34?page_id=2625
+   * @param {*} data
+   */
+  putActivity (data) {
+    return request({
+      url: '/svc/marketing-svc/admin/v1/activity/update',
+      method: 'put',
+      data
+    })
+  },
+
+  /**
    * 获取权限字典
    * http://doc.vodeshop.com/web/#/34?page_id=2649
    * @param {*} params

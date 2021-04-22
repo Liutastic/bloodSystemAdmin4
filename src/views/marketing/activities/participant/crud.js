@@ -85,12 +85,12 @@ export const crudOptions = {
     },
     {
       title: '支付时间',
-      key: 'paytime',
+      key: 'pay_time',
       sortable: true,
       align: 'center',
 
-      search: { key: 'paytime', disabled: false },
-      type: 'datetime'
+      search: { key: 'pay_time', disabled: false },
+      type: 'text'
       // width: 300
     },
     {
