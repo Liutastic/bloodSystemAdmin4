@@ -384,7 +384,17 @@ export default {
       this.formData.media = arr
       this.uploadLoading = false
     },
-    async beforeUpload () {
+    async beforeUpload (file) {
+      console.log(file)
+      const types = ['video/mp4']
+      const isMp4 = types.includes(file.type)
+      if (!isMp4) {
+        this.$message({
+          message: '上传视频只能是 MP4 格式喔~',
+          type: 'warning'
+        })
+        return
+      }
       this.$loading()
       const { uptoken } = await this.$apis.qiniuToken()
       this.dataToken.token = uptoken

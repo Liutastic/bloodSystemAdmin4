@@ -138,7 +138,7 @@ export default {
       })
     },
     paginationCurrentChange (currentPage) {
-      this.pagination.currentPage = currentPage
+      this.pagination.page = currentPage
       this.getPermissionList()
     }
   }

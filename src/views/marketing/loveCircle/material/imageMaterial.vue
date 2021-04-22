@@ -474,6 +474,15 @@ export default {
     },
     async beforeUpload (file) {
       console.log(file)
+      const types = ['image/jpg', 'image/png']
+      const isImage = types.includes(file.type)
+      if (!isImage) {
+        this.$message({
+          message: '上传图片只能是 JPG、PNG 格式喔~',
+          type: 'warning'
+        })
+        return
+      }
       this.$loading()
       const { uptoken } = await this.$apis.qiniuToken()
       this.dataToken.token = uptoken
