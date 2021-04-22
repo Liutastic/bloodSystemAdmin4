@@ -414,6 +414,7 @@ export const crudOptions = vm => {
         title: '启用状态',
         key: 'is_enable',
         type: 'select',
+        width: '100px',
         dict: {
           data: DICT_STATUS
         },
@@ -430,10 +431,10 @@ export const crudOptions = vm => {
           on: {
             click (event) {
               // 获取选中行ID
-              const id = event.scope.row.id
+              const title = event.scope.row?.title
               const status = Math.abs(event.props.value - 1)
               console.log('event:', event, status)
-              vm.$confirm(`此操作将${status ? '启用' : '禁用'}该活动, 是否继续 ? `, '提示', {
+              vm.$confirm(`此操作将${status ? '启用' : '禁用'}该活动（${title}）, 是否继续 ? `, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -460,6 +461,7 @@ export const crudOptions = vm => {
         title: '是否收费',
         key: 'is_toll',
         type: 'select',
+        width: '80px',
         dict: {
           data: DICT_YES_NO
         },
@@ -502,6 +504,7 @@ export const crudOptions = vm => {
         dict: {
           data: DICT_YES_NO
         },
+        show: false,
         search: {
           disabled: false,
           compnent: {

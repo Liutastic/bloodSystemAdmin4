@@ -104,6 +104,20 @@ export const crudOptions = {
       // fixed: 'right'
     },
     {
+      title: '是否付费',
+      key: 'is_toll',
+      sortable: true,
+      align: 'center',
+      component: {
+        name: 'div'
+
+      }
+      // dict: {
+      //   data: DIST.DICT_YES_NO
+      // }
+
+    },
+    {
       title: '活动状态',
       key: 'status',
       sortable: true,
