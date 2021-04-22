@@ -86,13 +86,15 @@ export const crudOptions = (StatusTag, that) => {
         title: 'ID',
         key: 'id',
         sortable: true,
-        width: 90
+        width: 90,
+        align: 'center'
       },
       {
         title: '素材名称',
         key: 'name',
         width: 120,
         showOverflowTooltip: true,
+        align: 'center',
         form: {
           disabled: true
         },
@@ -104,6 +106,7 @@ export const crudOptions = (StatusTag, that) => {
         title: '素材分类',
         key: 'category_name',
         sortable: true,
+        align: 'center',
         search: {
           key: 'category_name'
         }
@@ -113,6 +116,7 @@ export const crudOptions = (StatusTag, that) => {
         title: '权限模板',
         key: 'competence_name',
         type: 'select',
+        align: 'center',
         search: {
           key: 'competence_id',
           disabled: false,
@@ -129,6 +133,8 @@ export const crudOptions = (StatusTag, that) => {
       {
         title: '展示商品',
         key: 'goods_name',
+        width: 300,
+        align: 'center',
         search: {
           key: 'goods_name'
         }
@@ -138,6 +144,7 @@ export const crudOptions = (StatusTag, that) => {
         title: '素材类型',
         key: 'type',
         type: 'select',
+        align: 'center',
         search: {
           key: 'type',
           disabled: false,
@@ -156,7 +163,8 @@ export const crudOptions = (StatusTag, that) => {
         title: '创建日期',
         key: 'created_at',
         type: 'datetimerange',
-        width: 300,
+        align: 'center',
+        width: 180,
         search: {
           disabled: false,
           width: 350
@@ -189,6 +197,7 @@ export const crudOptions = (StatusTag, that) => {
         // 在.vue引入组件，然后在这里使用on属性配置
         title: '状态',
         key: 'is_enable',
+        align: 'center',
         component: {
           name: StatusTag,
           on: {
@@ -234,6 +243,7 @@ export const crudOptions = (StatusTag, that) => {
     rowHandle: {
       view: false,
       edit: false,
+      align: 'center',
       custom: [
         {
           thin: false,
