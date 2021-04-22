@@ -9,63 +9,63 @@ export default {
       children: [
         {
           title: '运营状态',
-          icon: 'home',
+          icon: 'bar-chart',
           path: '/marketing/loveCircle/operation'
         },
         {
           title: '权限设置',
-          icon: 'home',
+          icon: 'vcard',
           children: [
             {
               title: '权限模板',
-              icon: 'home',
+              icon: 'hand-stop-o',
               path: '/marketing/loveCircle/permission/template'
             },
             {
               title: '新增权限模板',
-              icon: 'home',
+              icon: 'edit',
               path: '/marketing/loveCircle/permission/addTemplate'
             }
           ]
         },
         {
           title: '分类设置',
-          icon: 'home',
+          icon: 'align-justify',
           children: [
             {
               title: '所有分类',
-              icon: 'home',
+              icon: 'minus',
               path: '/marketing/loveCircle/category/allCategory'
             },
             {
               title: '新增/编辑分类',
-              icon: 'home',
+              icon: 'edit',
               path: '/marketing/loveCircle/category/addCategory'
             }
           ]
         },
         {
           title: '所有素材',
-          icon: 'home',
+          icon: 'file-o',
           path: '/marketing/loveCircle/allMaterial'
         },
         {
           title: '上传素材',
-          icon: 'home',
+          icon: 'paste',
           children: [
             {
               title: '发布人身份设置',
-              icon: 'home',
+              icon: 'user',
               path: '/marketing/loveCircle/material/issuerSetting'
             },
             {
               title: '图文素材',
-              icon: 'home',
+              icon: 'file-photo-o',
               path: '/marketing/loveCircle/material/imageMaterial'
             },
             {
               title: '视频素材',
-              icon: 'home',
+              icon: 'file-video-o',
               path: '/marketing/loveCircle/material/videoMaterial'
             }
           ]
