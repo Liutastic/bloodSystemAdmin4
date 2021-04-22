@@ -282,7 +282,7 @@ export default {
     },
     // 获取权限模板列表, 选择器使用
     async getTemplateList () {
-      const { data, msg, code } = await this.$apis.GetPermissionList({ page: 1, per_page: 9999 })
+      const { data, code } = await this.$apis.GetPermissionList({ page: 1, per_page: 9999 })
       if (code === 0) {
         const list = []
         data.data.forEach(ele => {
@@ -300,24 +300,14 @@ export default {
         })
         console.log(list)
         this.templateList = list
-      } else {
-        this.$message({
-          type: 'error',
-          message: msg
-        })
       }
     },
     // 获取分类列表
     async getCategoryList () {
-      const { data, msg, code } = await this.$apis.GetCategoryList()
+      const { data, code } = await this.$apis.GetCategoryList()
       if (code === 0) {
         this.treeData = util.formatDataToTree(data, 'id')
         // console.log('this.treeData', this.treeData)
-      } else {
-        this.$message({
-          type: 'error',
-          message: msg
-        })
       }
     },
     // 点击树节点
@@ -360,7 +350,7 @@ export default {
         is_enable
       }
       if (this.selectedList.length !== 0) {
-        const { msg, code } = await this.$apis.UpdateCategoryStatus(obj)
+        const { code } = await this.$apis.UpdateCategoryStatus(obj)
         if (code === 0) {
           this.$message({
             type: 'success',
@@ -369,11 +359,6 @@ export default {
           this.selectedList = []
           this.$refs.tree.setCheckedNodes([])
           await this.getCategoryList()
-        } else {
-          this.$message({
-            type: 'error',
-            message: msg
-          })
         }
       }
       this.loading = false
@@ -459,11 +444,6 @@ export default {
             message: '删除成功'
           })
           this.getCategoryList()
-        } else if (code === 2000) {
-          this.$message({
-            type: 'error',
-            message: '删除失败，该分类下还有子分类'
-          })
         }
       })
     },

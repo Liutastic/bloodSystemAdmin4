@@ -109,8 +109,6 @@ export default {
      * 新增数据
      */
     async addRequest (data) {
-      console.log('data:', data)
-
       await api.addActivityStore(this.getParams(data))
       return null
     },

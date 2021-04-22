@@ -215,15 +215,13 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async () => {
-        const { code, msg } = await this.$apis.DeleteIssuer(row)
+        const { code } = await this.$apis.DeleteIssuer(row)
         if (code === 0) {
           this.$message({
             type: 'success',
             message: '删除成功!'
           })
           await this.getIssuerList(this.params)
-        } else {
-          this.$message(msg)
         }
       })
     },

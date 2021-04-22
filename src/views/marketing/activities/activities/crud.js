@@ -425,6 +425,26 @@ export const crudOptions = vm => {
 
           }
         },
+        component: {
+
+          on: {
+            click (event) {
+              // 获取选中行ID
+              const id = event.scope.row.id
+              const status = Math.abs(event.props.value - 1)
+              console.log('event:', event, status)
+              vm.$confirm(`此操作将${status ? '启用' : '禁用'}该活动, 是否继续 ? `, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(async () => {
+                await vm.updateRequest({ ...event.scope.row, is_enable: status })
+                vm.$message.success('操作成功')
+                await vm.doRefresh()
+              })
+            }
+          }
+        },
         form: {
           rules: [{ required: true, message: '请选择启用状态' }],
           value: 1,

@@ -12,6 +12,6 @@ export const DICT_YES_NO = [
 
 // 状态字典
 export const DICT_STATUS = [
-  { value: 1, label: '启用' },
-  { value: 0, label: '禁用' }
+  { value: 1, label: '启用', color: 'success' },
+  { value: 0, label: '禁用', color: 'danger' }
 ]
