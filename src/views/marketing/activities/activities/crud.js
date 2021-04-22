@@ -249,6 +249,8 @@ export const crudOptions = vm => {
           value: 'value', // 数据字典中value字段的属性名
           label: 'name', // 数据字典中label字段的属性名
           getData: async (url, dict, { form, component }) => {
+            console.log('form: ', form)
+            console.log('component: ', component)
             // 配置此参数会覆盖全局的getRemoteDictFunc
             const ret = await API.getPermissionsTags({ release_type: form.release_type })
             let { data } = ret
@@ -258,7 +260,21 @@ export const crudOptions = vm => {
               id: item.id.toString()
             }))
 
+            if (!form.id) {
+              form.permissions = data.map(item => item.value)
+            }
+
             return data
+          },
+
+          // 同步字典
+          async valueChange (
+            key,
+            value,
+            form,
+            { getColumn, mode, component, immediate, getComponent }
+          ) {
+            console.log(65564664, component)
           },
 
           onReady (data, dict, { component }) {

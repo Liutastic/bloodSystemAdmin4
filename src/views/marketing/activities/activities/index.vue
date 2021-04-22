@@ -15,7 +15,7 @@
     </div>
     <d2-crud-x ref="d2Crud" v-bind="_crudProps" v-on="_crudListeners">
       <template slot="permissionTitleFormSlot" slot-scope="scope">
-        <el-button type="success" size="small">全选权限</el-button>
+        <el-button type="success" size="small" @click="checkAll">全选权限</el-button>
         <el-button type="danger" size="small">清空权限</el-button>
       </template>
     </d2-crud-x>
@@ -29,6 +29,13 @@ import api from './api'
 export default {
   mixins: [d2CrudPlus.crud],
   methods: {
+    // 全选权限
+    async checkAll () {
+      console.log('1111: ')
+      console.log(await this.getDictData('permissions'))
+      const form = this
+      console.log('form:', form)
+    },
     getCrudOptions () {
       return crudOptions(this)
     },
