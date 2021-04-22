@@ -161,7 +161,7 @@ export const crudOptions = vm => {
             dict.data = data
             return data
           },
-          cache: true,
+          cache: false,
           value: 'id', // 数据字典中value字段的属性名
           label: 'name', // 数据字典中label字段的属性名
           children: 'child' // 数据字典中children字段的属性名
@@ -188,11 +188,12 @@ export const crudOptions = vm => {
             // 配置权限字段
             vm.getEditFormTemplate('permissions').title = childArr[0]?.name
             await getComponent('permissions').loadDict() // 执行city的select组件的reloadDict()方法，触发“city”重新加载字典
-
-            const permissionDict = await getComponent('permissions').getDictData()
-            console.log('dictArr:', dictArr)
-
-            await getComponent('permissions').setValue(dictArr)
+            // console.log(getComponent('permissions'))
+            // const permissionDict = await getComponent('permissions').getDictData()
+            // console.log('permissionDict:', permissionDict)
+            // const dictArr = permissionDict.map(item => item.value)
+            // console.log('dictArr:', dictArr)
+            // await getComponent('permissions').setValue(dictArr)
           }
 
           // valueChangeImmediate: true
@@ -288,16 +289,6 @@ export const crudOptions = vm => {
             }
 
             return data
-          },
-
-          // 同步字典
-          async valueChange (
-            key,
-            value,
-            form,
-            { getColumn, mode, component, immediate, getComponent }
-          ) {
-            console.log(65564664, component)
           },
 
           onReady (data, dict, { component }) {
