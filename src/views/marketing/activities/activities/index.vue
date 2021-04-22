@@ -108,11 +108,14 @@ export default {
     /**
      * 新增数据
      */
-    addRequest (data) {
-      return api.addActivityStore(this.getParams(data))
+    async addRequest (data) {
+      console.log('data:', data)
+
+      await api.addActivityStore(this.getParams(data))
+      return null
     },
     /**
-     * 编辑数据
+     * 编辑数据addRequest
      */
     updateRequest (data) {
       const params = { ...this.getParams(data), id: data.id }
