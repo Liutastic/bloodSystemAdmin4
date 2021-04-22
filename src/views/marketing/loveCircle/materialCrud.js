@@ -153,7 +153,7 @@ export const crudOptions = (StatusTag, that) => {
         width: 300,
         align: 'center',
         search: {
-          key: 'goods_name'
+          key: 'goods_id'
         }
       },
       {
