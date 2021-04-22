@@ -84,14 +84,14 @@
             <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8"><span class="red-tip">*</span>文本内容：</div>
               <div class="flex-sub">
-                <el-input type="textarea" class="input-width-100" size="mini" v-model="formData.content" />
+                <el-input type="textarea" size="mini " :rows="8" class="input-width-100 text-area" v-model="formData.content" />
               </div>
             </div>
             <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8"><span class="red-tip">*</span>上传图片：</div>
               <div class="flex-sub">
                 <el-upload
-                  v-if="formData.media.length < 9"
+                  v-if="formData.media.length < 9 && !uploadLoading"
                   class="upload-btn"
                   :action="QINIUURL"
                   :data="dataToken"
@@ -103,8 +103,12 @@
                 <!-- <div class="upload-btn cursor" @click="controlUploadProRelate" v-if="show1">
                   <i class="el-icon-picture color-666"></i>
                 </div> -->
-                <div class="upload-btn cursor" @click="controlUploadProNum9" v-if="formData.media.length === 9">
+                <div class="upload-btn cursor" @click="controlUploadProNum9" v-if="formData.media.length === 9 && !uploadLoading">
                   <i class="el-icon-picture color-666"></i>
+                </div>
+                <div class="upload-btn cursor flex flex-direction-column align-center justify-center" v-if="uploadLoading">
+                  <div class="color-666 font-size-8" style="line-height:20px;">上传中</div>
+                  <i class="el-icon-loading color-666"></i>
                 </div>
               </div>
             </div>
@@ -117,7 +121,7 @@
             </div>
             <div class="color-333 font-size-8 mb-9">关联商品: {{relatePro.name ? relatePro.name : '暂未关联商品'}}</div>
           </div>
-          <div class="submit-btn-box">
+          <div class="submit-btn-box pb-20">
             <el-button type="primary" size="mini" @click="save">{{id ? '修改' : '保存'}}</el-button>
           </div>
         </div>
@@ -183,7 +187,8 @@ export default {
       // 编辑的时候素材的id
       id: '33',
       // 素材详情
-      materialDetail: {}
+      materialDetail: {},
+      uploadLoading: false
     }
   },
   computed: {
@@ -424,6 +429,7 @@ export default {
       //   console.log()
       this.formData.media.push({ url: res.hash, goods_id: '' })
       // }
+      this.uploadLoading = false
       // console.log('this.formData.media', this.formData.media)
     },
     // 提醒并且控制上传图片后一定要先上传关联商品才可以上传下一张
@@ -444,6 +450,7 @@ export default {
       const { uptoken } = await this.$apis.qiniuToken()
       this.dataToken.token = uptoken
       this.$loading().close()
+      this.uploadLoading = true
     },
     uploadProImgPropress (val) {
       // console.log(val)
@@ -510,7 +517,7 @@ export default {
 <style lang="scss" scoped>
 .publish-box{
   width:300px;
-  min-height:610px;
+  min-height:700px;
   background: #F7F8FA;
   padding:0 10px;
   box-sizing: border-box;
@@ -561,6 +568,9 @@ export default {
 .flex{
   display:flex;
 }
+.flex-direction-column{
+  flex-direction: column;
+}
 .align-center{
   align-items: center;
 }
@@ -602,4 +612,10 @@ export default {
 .red-tip{
   color:#F4222D;
 }
+.pb-20{
+  padding-bottom:20px;
+}
+// .text-area{
+//   min-height:100px !important;
+// }
 </style>

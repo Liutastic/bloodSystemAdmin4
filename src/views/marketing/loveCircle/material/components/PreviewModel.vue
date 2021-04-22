@@ -173,7 +173,7 @@ export default {
 <style lang="scss" scoped>
 .pre-model-box{
   width:300px;
-  min-height:610px;
+  min-height:700px;
   background: #F7F8FA;
   position:relative;
   .empty{

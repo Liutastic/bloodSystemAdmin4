@@ -84,14 +84,14 @@
             <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8"><span class="red-tip">*</span>文本内容：</div>
               <div class="flex-sub">
-                <el-input type="textarea" class="input-width-100" size="mini" v-model="formData.content" />
+                <el-input type="textarea" :rows="8" class="input-width-100" size="mini" v-model="formData.content" />
               </div>
             </div>
             <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8"><span class="red-tip">*</span>上传视频：</div>
               <div class="flex-sub">
                 <el-upload
-                  v-if="!formData.media.length"
+                  v-if="!formData.media.length && !uploadLoading"
                   class="upload-btn"
                   :action="QINIUURL"
                   :data="dataToken"
@@ -100,13 +100,17 @@
                   :before-upload="beforeUpload">
                   <i class="el-icon-plus"></i>
                 </el-upload>
-                 <div class="upload-btn cursor" @click="controlUploadProNum" v-if="formData.media.length">
+                <div class="upload-btn cursor" @click="controlUploadProNum" v-if="formData.media.length && !uploadLoading">
                   <i class="el-icon-plus color-666"></i>
+                </div>
+                <div class="upload-btn cursor flex flex-direction-column align-center justify-center"  v-if="uploadLoading">
+                  <span class="color-666 font-size-8" style="line-height:20px;">上传中</span>
+                  <i class="el-icon-loading color-666"></i>
                 </div>
               </div>
             </div>
           </div>
-          <div class="submit-btn-box">
+          <div class="submit-btn-box pb-20">
             <el-button type="primary" size="mini" @click="save">{{id ? '修改' : '保存'}}</el-button>
           </div>
         </div>
@@ -166,7 +170,9 @@ export default {
       // 编辑的素材id
       id: null,
       // 素材详情
-      materialDetail: {}
+      materialDetail: {},
+      // 图片上传状态
+      uploadLoading: false
     }
   },
   async mounted () {
@@ -362,12 +368,14 @@ export default {
       // console.log(res)
       const arr = [{ url: res.hash, goods_id: '' }]
       this.formData.media = arr
+      this.uploadLoading = false
     },
     async beforeUpload () {
       this.$loading()
       const { uptoken } = await this.$apis.qiniuToken()
       this.dataToken.token = uptoken
       this.$loading().close()
+      this.uploadLoading = true
     },
     uploadProImgPropress (val) {
       console.log(val)
@@ -433,7 +441,7 @@ export default {
 <style lang="scss" scoped>
 .publish-box{
   width:300px;
-  min-height:610px;
+  min-height:700px;
   background: #F7F8FA;
   padding:0 10px;
   box-sizing: border-box;
@@ -487,6 +495,9 @@ export default {
 .align-center{
   align-items: center;
 }
+.flex-direction-column{
+  flex-direction: column;
+}
 .justify-center{
   justify-content: center;
 }
@@ -524,5 +535,8 @@ export default {
 }
 .red-tip{
   color:#F4222D;
+}
+.pb-20{
+  padding-bottom:20px;
 }
 </style>
