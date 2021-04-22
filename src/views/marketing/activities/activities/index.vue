@@ -26,6 +26,7 @@
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 import api from './api'
+import log from '@/libs/util.log'
 export default {
   mixins: [d2CrudPlus.crud],
   methods: {
@@ -44,7 +45,6 @@ export default {
      * 新增数据
      */
     addRequest (data) {
-      console.log('新增数据data: ', data)
       const {
         title,
         release_type,
@@ -64,6 +64,51 @@ export default {
         content
       } = data
       return api.addActivityStore({
+        title,
+        release_type,
+        category_id,
+        statistics_type,
+        sign_start_at,
+        sign_end_at,
+        activity_start_at,
+        activity_end_at,
+        is_enable,
+        is_toll,
+        toll_amount,
+        is_public,
+        header_image,
+        share_image,
+        permissions,
+        content
+      })
+    },
+    /**
+     * 编辑数据
+     */
+    updateRequest (data) {
+      console.log('2132:', data)
+
+      const {
+        id,
+        title,
+        release_type,
+        category_id,
+        statistics_type,
+        sign_start_at,
+        sign_end_at,
+        activity_start_at,
+        activity_end_at,
+        is_enable,
+        is_toll,
+        toll_amount,
+        is_public,
+        header_image,
+        share_image,
+        permissions,
+        content
+      } = data
+      return api.putActivity({
+        id,
         title,
         release_type,
         category_id,
