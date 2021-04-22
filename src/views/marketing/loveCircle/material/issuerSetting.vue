@@ -22,19 +22,21 @@
           :data="dataToken"
           :show-file-list="false"
           :on-remove="handleRemove"
+          :on-progress="progressing"
           :on-success="handleSuccess"
           :before-upload="beforeUpload"
           list-type="picture-card"
         >
-          <el-image
+          <i class="el-icon-loading" v-if="showLoading"></i>
+          <img
             v-if="formData.avatar"
             :src="formData.avatar | qiniu"
             class="avatar"
-          >
-            <div slot="error">头像加载失败</div>
-            <div slot="placeholder">加载中</div>
-          </el-image>
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          />
+          <i
+            v-else-if="!formData.avatar && !showLoading"
+            class="el-icon-plus avatar-uploader-icon"
+          ></i>
         </el-upload>
       </el-form-item>
       <el-form-item prop="is_enable" label="启用状态">
@@ -123,7 +125,9 @@ export default {
       QINIUURL,
       dataToken: { token: '' }, // 上传的token
       // 发布人列表
-      issuerList: []
+      issuerList: [],
+      isShowUpload: true,
+      showLoading: false
     }
   },
   async mounted () {
@@ -137,7 +141,13 @@ export default {
         avatar: null
       }
     },
+    // 上传时钩子
+    progressing () {
+      this.showLoading = true
+    },
+    // 上传成功的钩子
     handleSuccess (res, file) {
+      this.showLoading = false
       console.log(res)
       this.formData.avatar = res.hash
     },
@@ -151,16 +161,20 @@ export default {
       })
     },
     async beforeUpload (file) {
-      this.$loading()
+      if (this.formData.avatar) {
+        this.formData.avatar = ''
+      }
+      // this.$loading()
       const { uptoken } = await this.$apis.qiniuToken()
       this.dataToken.token = uptoken
-      this.$loading().close()
+      // this.$loading().close()
       return new Promise((resolve, reject) => {
         const isJpegPng = file.type === 'image/jpeg' || file.type === 'image/png'
         if (!isJpegPng) {
           this.$message.warning('上传的图片格式需为jpg或png')
           return reject(new Error('图片格式有误'))
         } else {
+          this.isShowUpload = false
           return resolve(true)
         }
       })
@@ -246,7 +260,13 @@ export default {
   height: 145px;
   display: block;
 }
-
+.avatar-placeholder {
+  width: 145px;
+  height: 145px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
 .title {
   margin-top: 20px;
   font-weight: 500;
