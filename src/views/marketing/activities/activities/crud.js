@@ -3,6 +3,7 @@ import { IMGBASEURL } from '@/api/config'
 import { DICT_STATUS, DICT_STATIS_TYPE, DICT_YES_NO } from './dict.js'
 import API from './api'
 import util from '@/libs/util'
+import UEditorConfig from '@/api/UEditor-config'
 
 function toNooning (date) {
   if (date == null) {
@@ -246,7 +247,12 @@ export const crudOptions = vm => {
         disabled: true, // 设置true可以在行展示中隐藏
         form: {
           slot: true,
-          valueBuilder (row, key) {
+          component: {
+            show () {
+              const iShow = vm.getEditFormTemplate('permissions')?.component?.props
+                ?.dict?.dict?.length
+              return Boolean(iShow)
+            }
           }
         },
         view: {
@@ -259,6 +265,7 @@ export const crudOptions = vm => {
         key: 'permissions',
         type: 'checkbox',
         disabled: true, // 设置true可以在行展示中隐藏
+
         dict: {
           value: 'value', // 数据字典中value字段的属性名
           label: 'name', // 数据字典中label字段的属性名
@@ -288,6 +295,7 @@ export const crudOptions = vm => {
             // console.log(vm.getEditFormTemplate('permissions').component)
           }
         }
+
       },
 
       {
@@ -324,7 +332,8 @@ export const crudOptions = vm => {
               'default-time': ['00:00:00', '00:00:00'],
               'picker-options': { shortcuts: ShortCUTS }
             }
-          }
+          },
+          rules: [{ required: true, message: '请选择报名时间' }]
         },
         valueBuilder (row, key) {
           if (!StringUtils.hasEmpty(row.sign_start_at, row.sign_end_at)) {
@@ -360,9 +369,9 @@ export const crudOptions = vm => {
               'default-time': ['00:00:00', '00:00:00'],
               'picker-options': { shortcuts: ShortCUTS }
             }
-          }
+          },
+          rules: [{ required: true, message: '请选择活动时间' }]
         },
-        rules: [{ required: true, message: '请选择活动时间' }],
         formatter (row) {
           return row.activity_end_at
         },
@@ -395,7 +404,10 @@ export const crudOptions = vm => {
         //     }
         //   }
         // }
-        rowSlot: true
+        rowSlot: true,
+        form: {
+          disabled: true
+        }
       },
 
       {
@@ -464,6 +476,30 @@ export const crudOptions = vm => {
         }
       },
       {
+        title: '活动结束是否公开',
+        key: 'is_public',
+        type: 'select',
+        dict: {
+          data: DICT_YES_NO
+        },
+        search: {
+          disabled: false,
+          compnent: {
+            // 查询 使用选择框组件，并且是可以清除的
+            name: 'dict-select'
+
+          }
+        },
+        form: {
+          rules: [{ required: true, message: '请选择活动结束是否公开' }],
+          value: 1,
+          valueResolve (row, key) {
+            row[key] = row[key] ? 1 : 0
+          },
+          component: {
+            name: 'dict-switch'
+          }
+        }
       },
       {
         title: '顶栏活动标题图',
@@ -494,7 +530,14 @@ export const crudOptions = vm => {
         title: '活动内容',
         key: 'content',
         disabled: true, // 设置true可以在行展示中隐藏
-        type: 'editor-ueditor' // 富文本图片上传依赖file-uploader，请先配置好file-uploader
+        type: 'editor-ueditor', // 富文本图片上传依赖file-uploader，请先配置好file-uploader
+        form: {
+          component: {
+            props: {
+              config: UEditorConfig
+            }
+          }
+        }
       },
       {
         title: '活动分享图',

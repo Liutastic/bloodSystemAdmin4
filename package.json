@@ -7,6 +7,7 @@
     "dev": "npm run serve",
     "new": "plop",
     "build": "vue-cli-service build",
+    "build:test": "cross-env NODE_ENV=development vue-cli-service build",
     "build:preview": "NODE_OPTIONS=--max_old_space_size=4096 vue-cli-service build --mode preview",
     "lint": "vue-cli-service lint --fix",
     "test:unit": "vue-cli-service test:unit"
@@ -53,6 +54,7 @@
     "@vue/test-utils": "^1.0.2",
     "babel-eslint": "^10.0.3",
     "compression-webpack-plugin": "^3.0.1",
+    "cross-env": "^7.0.3",
     "cz-conventional-changelog": "^3.2.0",
     "eslint": "^6.8.0",
     "eslint-plugin-import": "^2.20.2",
