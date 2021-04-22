@@ -196,7 +196,7 @@ export default {
         this.formData.goods_id = data.goods.id
         this.formData.content = data.content
         this.formData.pink_circle_fictitious_forward = String(data.forward)
-        this.formData.category_child_id = data.category_child_id
+        this.formData.category_child_id = data.category_child_id ? data.category_child_id : null
         const arr = []
         data.media.forEach(val => {
           arr.push({ goods_id: val.id, url: val.url })
@@ -208,7 +208,8 @@ export default {
           const res = await this.$apis.GetProDetail(data.goods.id)
           if (res.code === 0) this.showProInfo = res.data
         }
-        this.materailClassValue = [data.category.id, data.category_child_id]
+        this.materailClassValue = [data.category.id]
+        if (data.category_child_id) this.materailClassValue.push(data.category_child_id)
         this.getCategoryList()
         this.getPermissionList()
         this.getAllIssuerList()
@@ -309,8 +310,8 @@ export default {
         })
         return
       }
-      this.formData.pink_circle_category_id = this.materailClassValue[0] ? this.materailClassValue[0] : ''
-      this.formData.category_child_id = this.materailClassValue[1] ? this.materailClassValue[1] : ''
+      this.formData.pink_circle_category_id = this.materailClassValue[0] ? this.materailClassValue[0] : null
+      this.formData.category_child_id = this.materailClassValue[1] ? this.materailClassValue[1] : null
       // console.log('上传参数', this.formData)
       // 更新编辑
       if (this.id) {
@@ -440,10 +441,16 @@ export default {
     // 获取素材分类
     async getCategoryList () {
       const { code, data } = await this.$apis.GetCategoryAllList()
-      // console.log('素材分类', code, msg, data)
+      console.log('素材分类', code, data)
       if (code === 0) {
         console.log(this.transitionKey(data))
         this.materailClassList = this.transitionKey(data)
+        this.materailClassList.map(val => {
+          if (!val.children.length) {
+            delete val.children
+          }
+          return val
+        })
       }
     },
     // 获取权限模板列表

@@ -224,7 +224,7 @@ export default {
         this.formData.goods_id = data.goods.id
         this.formData.content = data.content
         this.formData.pink_circle_fictitious_forward = String(data.forward)
-        this.formData.category_child_id = data.category_child_id
+        this.formData.category_child_id = data.category_child_id ? data.category_child_id : null
         const arr = []
         data.media.forEach(val => {
           arr.push({ goods_id: val.id, url: val.url })
@@ -237,7 +237,8 @@ export default {
           if (res.code === 0) this.showProInfo = res.data
         }
         // console.log('this.showProInfo', this.showProInfo)
-        this.materailClassValue = [data.category.id, data.category_child_id]
+        this.materailClassValue = [data.category.id]
+        if (data.category_child_id) this.materailClassValue.push(data.category_child_id)
         this.getCategoryList()
         this.getPermissionList()
         this.getAllIssuerList()
@@ -372,8 +373,8 @@ export default {
       if (!this.formData.media[this.formData.media.length - 1].url) {
         this.formData.media.splice(this.formData.media.length - 1, 1)
       }
-      this.formData.pink_circle_category_id = this.materailClassValue[0] ? this.materailClassValue[0] : ''
-      this.formData.category_child_id = this.materailClassValue[1] ? this.materailClassValue[1] : ''
+      this.formData.pink_circle_category_id = this.materailClassValue[0] ? this.materailClassValue[0] : null
+      this.formData.category_child_id = this.materailClassValue[1] ? this.materailClassValue[1] : null
       console.log('上传参数', this.formData)
       // 更新编辑
       if (this.id) {
@@ -480,7 +481,7 @@ export default {
       this.dataToken.token = uptoken
       this.$loading().close()
       return new Promise((resolve, reject) => {
-        const types = ['image/jpg', 'image/png']
+        const types = ['image/jpeg', 'image/png']
         const isImage = types.includes(file.type)
         if (!isImage) {
           this.$message({
@@ -529,10 +530,17 @@ export default {
     // 获取素材分类
     async getCategoryList () {
       const { code, data } = await this.$apis.GetCategoryAllList()
-      // console.log('素材分类', code, msg, data)
+      console.log('素材分类', code, data)
       if (code === 0) {
         // console.log(this.transitionKey(data))
         this.materailClassList = this.transitionKey(data)
+        this.materailClassList.map(val => {
+          if (!val.children.length) {
+            delete val.children
+          }
+          return val
+        })
+        console.log('this.materailClassList', this.materailClassList)
       }
     },
     // 获取权限模板列表
