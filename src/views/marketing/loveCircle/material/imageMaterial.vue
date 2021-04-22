@@ -166,7 +166,7 @@ export default {
         goods_id: null,
         content: '',
         // 虚拟转发
-        pink_circle_fictitious_forward: null,
+        pink_circle_fictitious_forward: 0,
         // media: [{ goods_id: 33889, url: 'FgxbSPy-x-rCSOt-lz1L17gQneRj' }],
         media: [],
         // 发布人id
@@ -446,6 +446,7 @@ export default {
       // console.log('this.issuerInfo', this.issuerInfo)
     },
     uploadProImgSuccess (res) {
+      console.log('成功')
       this.relatePro = {}
       this.relateProId = null
       // if (this.formData.media.length && this.formData.media[this.formData.media.length - 1].goods_id && this.formData.media[this.formData.media.length - 1].url) {
@@ -474,20 +475,24 @@ export default {
     },
     async beforeUpload (file) {
       console.log(file)
-      const types = ['image/jpg', 'image/png']
-      const isImage = types.includes(file.type)
-      if (!isImage) {
-        this.$message({
-          message: '上传图片只能是 JPG、PNG 格式喔~',
-          type: 'warning'
-        })
-        return
-      }
       this.$loading()
       const { uptoken } = await this.$apis.qiniuToken()
       this.dataToken.token = uptoken
       this.$loading().close()
-      this.uploadLoading = true
+      return new Promise((resolve, reject) => {
+        const types = ['image/jpg', 'image/png']
+        const isImage = types.includes(file.type)
+        if (!isImage) {
+          this.$message({
+            message: '上传图片只能是 JPG、PNG 格式喔~',
+            type: 'warning'
+          })
+          return reject(new Error(false))
+        } else {
+          this.uploadLoading = true
+          return resolve(true)
+        }
+      })
     },
     uploadProImgPropress (val) {
       // console.log(val)

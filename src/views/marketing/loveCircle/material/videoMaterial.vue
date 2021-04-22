@@ -129,6 +129,7 @@
 import PreviewModel from './components/PreviewModel'
 import SelProDialog from './components/SelProDialog'
 import { QINIUURL } from '@/api/config'
+import error from '@/plugin/error'
 export default {
   name: 'imageMaterial',
   components: {
@@ -150,7 +151,7 @@ export default {
         goods_id: null,
         content: '',
         // 虚拟转发
-        pink_circle_fictitious_forward: null,
+        pink_circle_fictitious_forward: 0,
         // media: [{ goods_id: 33889, url: 'FgxbSPy-x-rCSOt-lz1L17gQneRj' }],
         media: [],
         // 发布人id
@@ -386,20 +387,24 @@ export default {
     },
     async beforeUpload (file) {
       console.log(file)
-      const types = ['video/mp4']
-      const isMp4 = types.includes(file.type)
-      if (!isMp4) {
-        this.$message({
-          message: '上传视频只能是 MP4 格式喔~',
-          type: 'warning'
-        })
-        return
-      }
       this.$loading()
       const { uptoken } = await this.$apis.qiniuToken()
       this.dataToken.token = uptoken
       this.$loading().close()
-      this.uploadLoading = true
+      return new Promise((resolve, reject) => {
+        const types = ['video/mp4']
+        const isMp4 = types.includes(file.type)
+        if (!isMp4) {
+          this.$message({
+            message: '上传视频只能是 MP4 格式喔~',
+            type: 'warning'
+          })
+          return reject(new Error(false))
+        } else {
+          this.uploadLoading = true
+          return resolve(true)
+        }
+      })
     },
     uploadProImgPropress (val) {
       console.log(val)
