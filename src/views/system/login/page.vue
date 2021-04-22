@@ -23,7 +23,9 @@
           class="page-login--content-main"
           flex="dir:top main:center cross:center">
           <!-- logo -->
-          <img class="page-login--logo" src="./image/logo@2x.png">
+          <div style="background-color: gainsboro;">
+            <img class="page-login--logo" src="@/assets/logo.png">
+          </div>
           <!-- form -->
           <div class="page-login--form">
             <el-card shadow="never">
@@ -68,16 +70,16 @@
                 </el-button>
               </el-form>
             </el-card>
-            <p
+            <!-- <p
               class="page-login--options"
               flex="main:justify cross:center">
               <span><d2-icon name="question-circle"/> 忘记密码</span>
               <span>注册用户</span>
-            </p>
+            </p> -->
             <!-- quick login -->
-            <el-button class="page-login--quick" size="default" type="info" @click="dialogVisible = true">
+            <!-- <el-button class="page-login--quick" size="default" type="info" @click="dialogVisible = true">
               快速选择用户（测试功能）
-            </el-button>
+            </el-button> -->
           </div>
         </div>
         <div class="page-login--content-footer">
@@ -92,9 +94,10 @@
           <p class="page-login--content-footer-copyright">
             Copyright
             <d2-icon name="copyright"/>
-            2018 D2 Projects 开源组织出品
-            <a href="https://github.com/FairyEver">
-              @FairyEver
+              <!-- 广东各有所爱信息科技有限公司 -->
+            <a href="https://www.vodeshop.com">
+              <!-- @FairyEver -->
+              广东各有所爱信息科技有限公司
             </a>
           </p>
           <p class="page-login--content-footer-options">
@@ -277,9 +280,9 @@ export default {
   }
   // main
   .page-login--logo {
-    width: 240px;
-    margin-bottom: 2em;
-    margin-top: -2em;
+    width: 280px;
+    // margin-bottom: 2em;
+    // margin-top: -2em;
   }
   // 登录表单
   .page-login--form {
