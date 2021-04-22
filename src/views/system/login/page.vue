@@ -64,7 +64,7 @@
                 <el-button
                   size="default"
                   @click="submit"
-                  type="primary"
+                  type="danger"
                   class="button-login">
                   登录
                 </el-button>
