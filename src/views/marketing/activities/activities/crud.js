@@ -148,12 +148,8 @@ export const crudOptions = vm => {
           }
         },
         dict: {
-          getData: async (url, dict, { form, component }) => {
-            const { data } = await API.getActivityReleaseType()
-            dict.data = data
-            return data
-          },
-          cache: false,
+          url: '/svc/marketing-svc/admin/v1/activity/release-type',
+          cache: true,
           value: 'id', // 数据字典中value字段的属性名
           label: 'name', // 数据字典中label字段的属性名
           children: 'child' // 数据字典中children字段的属性名
