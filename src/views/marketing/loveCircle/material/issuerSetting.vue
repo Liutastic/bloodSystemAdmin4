@@ -151,21 +151,19 @@ export default {
       })
     },
     async beforeUpload (file) {
-      // file 回调参数
-      // const isLt1M = file.size / 1024 / 1024 < 1
-      // if (!isLt1M) {
-      //   this.$message.error('图片不可以大于1M')
-      //   return
-      // }
-      const isJpegPng = file.type === 'image/jpeg' || file.type === 'image/png'
-      if (!isJpegPng) {
-        this.$message.warning('上传的图片格式需为jpg或png格式')
-        return
-      }
       this.$loading()
       const { uptoken } = await this.$apis.qiniuToken()
       this.dataToken.token = uptoken
       this.$loading().close()
+      return new Promise((resolve, reject) => {
+        const isJpegPng = file.type === 'image/jpeg' || file.type === 'image/png'
+        if (!isJpegPng) {
+          this.$message.warning('上传的图片格式需为jpg或png')
+          return reject(new Error('图片格式有误'))
+        } else {
+          return resolve(true)
+        }
+      })
     },
     // 获取发布人分页
     async getIssuerList (params) {
