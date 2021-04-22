@@ -418,7 +418,7 @@ export default {
       // console.log(this.formData)
       this.$refs.form.validate(async valid => {
         if (valid) {
-          const { msg, code } = await this.$apis.UpdateCategory(this.formData)
+          const { msg, code } = await this.$apis.UpdateCategory(this.formData.parent_id === '' ? { ...this.formData, parent_id: 0 } : this.formData)
           if (code === 0) {
             this.$message({
               type: 'success',
