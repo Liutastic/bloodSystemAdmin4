@@ -26,11 +26,14 @@
           :before-upload="beforeUpload"
           list-type="picture-card"
         >
-          <img
+          <el-image
             v-if="formData.avatar"
             :src="formData.avatar | qiniu"
             class="avatar"
-          />
+          >
+            <div slot="error">头像加载失败</div>
+            <div slot="placeholder">加载中</div>
+          </el-image>
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </el-form-item>
@@ -78,6 +81,7 @@
       <el-pagination
         :current-page.sync="params.page"
         :page-size="params.per_page"
+        @current-change="handlePangeChange"
         layout="prev, pager, next, jumper"
         :total="total"
       >
@@ -131,8 +135,21 @@ export default {
       this.formData.avatar = res.hash
     },
     handleRemove (file) {
+
+    },
+    async handlePangeChange (cur) {
+      await this.getIssuerList({
+        page: cur,
+        per_page: 15
+      })
     },
     async beforeUpload () {
+      // file 回调参数
+      // const isLt1M = file.size / 1024 / 1024 < 1
+      // if (!isLt1M) {
+      //   this.$message.error('图片不可以大于1M')
+      //   return
+      // }
       this.$loading()
       const { uptoken } = await this.$apis.qiniuToken()
       this.dataToken.token = uptoken
