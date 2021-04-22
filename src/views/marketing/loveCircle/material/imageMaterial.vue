@@ -291,11 +291,14 @@ export default {
       this.selProDialogShow = false
       // console.log('选择商品1', item, this.chooseProType)
       if (this.chooseProType === 'show') {
+        this.idIsError = false
+        console.log(this.idIsError)
         this.formData.goods_id = item.id
         this.showProInfo = item
         // console.log('this.showProInfo', this.showProInfo)
         return
       }
+      this.relateTdIsError = false
       this.relatePro = item
       this.relateProId = item.id
       if (this.formData.media.length && this.formData.media[this.formData.media.length - 1].url && !this.formData.media[this.formData.media.length - 1].goods_id) {
@@ -374,7 +377,7 @@ export default {
       console.log('上传参数', this.formData)
       // 更新编辑
       if (this.id) {
-        const { code, msg } = await this.$apis.EditMaterial(this.formData, this.id)
+        const { code } = await this.$apis.EditMaterial(this.formData, this.id)
         // console.log(code, msg, data)
         if (code === 0) {
           this.$message({
@@ -384,9 +387,10 @@ export default {
           setTimeout(() => {
             this.$router.back(-1)
           }, 2000)
-        } else {
-          this.$message.error(msg)
         }
+        // else {
+        //   this.$message.error(msg)
+        // }
         return
       }
       // 新增
@@ -402,9 +406,10 @@ export default {
             path: '/marketing/loveCircle/allMaterial'
           })
         }, 2000)
-      } else {
-        this.$message.error(msg)
       }
+      // else {
+      //   this.$message.error(msg)
+      // }
     },
     // 预览页面删除发布人模块
     delPublisherPart () {
@@ -467,7 +472,8 @@ export default {
         type: 'warning'
       })
     },
-    async beforeUpload () {
+    async beforeUpload (file) {
+      console.log(file)
       this.$loading()
       const { uptoken } = await this.$apis.qiniuToken()
       this.dataToken.token = uptoken

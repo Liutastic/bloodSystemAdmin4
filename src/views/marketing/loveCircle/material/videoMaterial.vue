@@ -244,6 +244,7 @@ export default {
     // 选择图片链接的商品
     selHrefPro (item) {
       this.selProDialogShow = false
+      this.idIsError = false
       // console.log('选择商品1', item)
       this.formData.goods_id = item.id
       this.showProInfo = item
@@ -312,7 +313,7 @@ export default {
       // console.log('上传参数', this.formData)
       // 更新编辑
       if (this.id) {
-        const { code, msg } = await this.$apis.EditMaterial(this.formData, this.id)
+        const { code } = await this.$apis.EditMaterial(this.formData, this.id)
         // console.log(code, msg, data)
         if (code === 0) {
           this.$message({
@@ -322,13 +323,14 @@ export default {
           setTimeout(() => {
             this.$router.back(-1)
           }, 2000)
-        } else {
-          this.$message.error(msg)
         }
+        // else {
+        //   this.$message.error(msg)
+        // }
         return
       }
       // 新增
-      const { code, msg } = await this.$apis.AddVideoMaterial(this.formData)
+      const { code } = await this.$apis.AddVideoMaterial(this.formData)
       // console.log(code, msg, data)
       if (code === 0) {
         setTimeout(() => {
@@ -340,9 +342,10 @@ export default {
           message: '操作成功！',
           type: 'success'
         })
-      } else {
-        this.$message.error(msg)
       }
+      // else {
+      //   this.$message.error(msg)
+      // }
     },
     // 预览页面删除发布人模块
     delPublisherPart () {
