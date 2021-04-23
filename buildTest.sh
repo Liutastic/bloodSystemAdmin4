@@ -1,52 +1,29 @@
-#!bin/bash
-# read -p "请输入目录:" Dir
-# echo "开始打包..."
-# npm run build:devh5
-# project="super admin"
-# gitBase="git@47.107.73.162:gysa_web_mp/super-admin.git"
-# echo "开始拉取部署的项目："
-# branch="develop"
-
-# git clone -b $branch --depth=1 $gitBase deployDir
-# echo "拉取完成,开始替换文件"
-# if [ ! -d ./deployDir/$project  ];then
-#   mkdir ./deployDir/$project
-# else
-#   echo dir exist
-# fi
-# cd ./deployDir/$project && rm -rf ./*
-# cd ../../ && cp -r ./dist/dev/h5/* ./deployDir/$project
-# echo "文件替换完成，开始提交代码"
-# # now=$(date "+%Y-%m-%d")
-# cd ./deployDir && git add -A && git commit -m "buid: $project" && git pull && git push -u origin $branch
-# echo "提交完成,删除目录.."
-# cd ../ && rm -rf ./deployDir
-# echo  -e "\033[32m "操作完成\!按任意键结束" \033[0m" 
-# read -n 1
-
-
-
-
 #!/bin/bash
+# BACKUP_DIR=/www/wwwroot/admin.vodeshop.com/backup
 
-BACKUP_DIR=/www/wwwroot/admin.vodeshop.com/backup
+# WEBSITE_DIR=/www/wwwroot/admin.vodeshop.com/release
 
-WEBSITE_DIR=/www/wwwroot/admin.vodeshop.com/release
+# CODE_DIR=/www/wwwroot/admin.vodeshop.com/code
+BASE_DIR=/e/project/framwork
+BACKUP_DIR=${BASE_DIR}/backup
 
-CODE_DIR=/www/wwwroot/admin.vodeshop.com/code
+WEBSITE_DIR=${BASE_DIR}/release
+
+CODE_DIR=${BASE_DIR}/code
+
 
 TIMEPOINT=$(date +%Y-%m-%d)
+COPIES=30  # 备份天数
 
-COPIES=10
-
-cd code
+cd $CODE_DIR
 echo "开始拉取项目"
-git pull
-echo "拉取项目success"
+git checkout master && git pull
+echo "拉取项目 success 开始构建...."
 yarn build
 echo "build项目success"
 
 test ! -d "$BACKUP_DIR" && mkdir -p "$BACKUP_DIR"
+test ! -d "$WEBSITE_DIR" && mkdir -p "$WEBSITE_DIR"
 
 test ! -w $BACKUP_DIR && echo "Error: $BACKUP_DIR is un-writeable." && exit 0
 
@@ -57,7 +34,7 @@ echo "从release备份到backup文件夹压缩success"
 
 find $BACKUP_DIR -type f -mtime +$COPIES -delete
 
-cp -r $CODE_DIR/dist/* $WEBSITE_DIRoyDir/
-
+cp -r $CODE_DIR/dist/* $WEBSITE_DIR/
+echo  -e "\033[32m "部署完成" \033[0m" 
 
 
