@@ -27,7 +27,7 @@ test ! -d "$WEBSITE_DIR" && mkdir -p "$WEBSITE_DIR"
 
 test ! -w $BACKUP_DIR && echo "Error: $BACKUP_DIR is un-writeable." && exit 0
 
-umask 0077
+umask 0022
 
 tar -zcf $BACKUP_DIR/www.$TIMEPOINT.tar.gz $WEBSITE_DIR
 echo "从release备份到backup文件夹压缩success"
