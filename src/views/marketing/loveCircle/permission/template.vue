@@ -80,7 +80,7 @@ export default {
       },
       pagination: {
         page: 1,
-        per_page: 15,
+        pageSize: 15,
         total: 0
       },
       loading: false
@@ -93,7 +93,7 @@ export default {
   methods: {
     // 获取权限列表
     async getPermissionList () {
-      const { code, msg, data } = await this.$apis.GetPermissionList(this.pagination)
+      const { code, msg, data } = await this.$apis.GetPermissionList({ page: this.pagination.page, per_page: this.pagination.pageSize })
       console.log(code, msg, data)
       if (code === 0) {
         this.$loading().close()

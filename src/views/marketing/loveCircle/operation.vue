@@ -39,7 +39,8 @@ export default {
       this.$nextTick(() => {
         const myEchar = document.getElementById('myEchar')
         this.myChart = echarts.init(myEchar)
-        this.updateData({})
+        this.selRunStatus = data[0].id
+        this.updateData({ id: data[0].id, type: 0 })
       })
     }
   },
@@ -89,13 +90,14 @@ export default {
             },
             yAxis: {
               type: 'category',
-              data: data.xAxis.data
+              data: data.xAxis.data.reverse()
             },
             series: [
               {
                 name: data.series[0].name,
                 type: 'bar',
-                data: data.series[0].data,
+                barWidth: 15,
+                data: data.series[0].data.reverse(),
                 label: {
                   show: true, // 开启显示
                   position: 'right' // 在上方显示
