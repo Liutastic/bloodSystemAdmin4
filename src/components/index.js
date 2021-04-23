@@ -25,6 +25,7 @@ import {
 } from 'd2p-extends' // 源码方式引入，上传组件支持懒加载
 import pluginExport from '@d2-projects/vue-table-export'
 import d2pUploaderConfig from './d2p-uploader'
+import d2pFileUploaderConfig from './d2p-fileUploader'
 // import D2CrudX from 'd2-crud-x'
 
 // 注意 有些组件使用异步加载会有影响
@@ -38,38 +39,12 @@ Vue.use(D2CrudX, {
 
 Vue.use(pluginExport)
 Vue.use(D2pAreaSelector)
-Vue.use(D2pFileUploader, {
-  d2CrudPlus,
-  defaultType: 'qiniu', // 默认类型为腾讯云上传，可选值：【cos、qiniu、alioss】
-  qiniu: {
-    bucket: 'd2p-demo',
-    getToken (custom) {
-      return request({
-        url: BASEURL + '/api/qiniu-uptoken',
-        method: 'get'
-      }).then(ret => {
-        console.log('ret: ', ret)
-        const obj = {
-          token: ret.uptoken,
-          expires: 100000
-        }
-        return obj // {token:xxx,expires:xxx}
-      })
-    },
-    successHandle (ret) { // 上传完成后可以在此处处理结果，修改url什么的
-      console.log('success handle:', ret)
-      return ret
-    },
-    domain: 'https://image.v1.vodeshop.com'
-  }
-})
-
+Vue.use(D2pFileUploader, d2pFileUploaderConfig)
 Vue.use(D2pUploader, d2pUploaderConfig)
 
 Vue.use(D2pFullEditor, {
   ueditor: {
-
-    // serverUrl: 'https://test.api.vodeshop.com/ueditor/server'
+    serverUrl: `${BASEURL}/ueditor/server`
   }
 })
 Vue.use(D2pIconSelector)
