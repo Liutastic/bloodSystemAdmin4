@@ -64,15 +64,9 @@ export const crudOptions = {
       // sortable: true,
       align: 'center',
       // width: 100,
-      search: { key: 'user_name ', disabled: false },
+      search: { key: 'user_id', disabled: false }
       // fixed: 'left',
-      form: {
-        component: {
-          // props: { }
-          // placeholder: '左边固定1'
-          // disabled: true
-        }
-      }
+
     },
     {
       title: '活动名称',
@@ -131,6 +125,12 @@ export const crudOptions = {
         data: DIST.ACTIVITY_STATUS
       }
       // width: 300
+    },
+    {
+      title: '活动ID',
+      key: ' marketing_activity_id',
+      search: { key: 'marketing_activity_id', disabled: false }
+
     }
   ]
 

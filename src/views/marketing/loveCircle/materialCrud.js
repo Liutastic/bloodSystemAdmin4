@@ -124,6 +124,11 @@ export const crudOptions = (StatusTag, that) => {
         }
       },
       {
+        title: '素材子分类',
+        key: 'category_child_name',
+        align: 'center'
+      },
+      {
         title: '权限模板',
         key: 'competence_name',
         type: 'select',
