@@ -207,7 +207,6 @@ export const crudOptions = vm => {
             return distData
           },
           onDictChanged () {
-            console.log('11231111:', 11231111)
           }
 
         },
@@ -249,6 +248,7 @@ export const crudOptions = vm => {
           slot: true,
           component: {
             show () {
+              // 有权限列表按钮才展示
               const iShow = vm.getEditFormTemplate('permissions')?.component?.props
                 ?.dict?.dict?.length
               return Boolean(iShow)
@@ -361,6 +361,14 @@ export const crudOptions = vm => {
         title: '活动结束',
         key: 'activityDate',
         type: 'datetimerange',
+        search: {
+          title: '活动时间',
+          disabled: false,
+          span: 10,
+          compnent: {
+            // 查询 使用选择框组件，并且是可以清除的
+          }
+        },
         form: {
           title: '活动时间',
           component: {
@@ -396,15 +404,8 @@ export const crudOptions = vm => {
       {
         title: '参与人数',
         key: 'sign_count',
-        // component: {
-        //   name: 'el-button',
-        //   scopedSlots: {
-        //     default (h) {
-        //       return (11)
-        //     }
-        //   }
-        // }
         rowSlot: true,
+
         form: {
           disabled: true
         }
@@ -490,10 +491,17 @@ export const crudOptions = vm => {
         show: false,
         type: 'number',
         form: {
+          value: 0,
+          rules: [{ required: true, message: '请输入收费金额' }],
           component: {
             show (cmp) {
               return cmp.form.is_toll
             }
+          }
+        },
+        valueResolve (row, key) {
+          if (!row.is_toll) {
+            row.toll_amount = 0
           }
         }
       },
@@ -531,6 +539,8 @@ export const crudOptions = vm => {
         disabled: true, // 设置true可以在行展示中隐藏
         width: 200,
         form: {
+          rules: [{ required: true, message: '请上传顶栏活动标题图' }],
+
           component: {
             props: {
               btnSize: 'small', // type=file-uploader时按钮的大小
@@ -555,6 +565,7 @@ export const crudOptions = vm => {
         disabled: true, // 设置true可以在行展示中隐藏
         type: 'editor-ueditor', // 富文本图片上传依赖file-uploader，请先配置好file-uploader
         form: {
+          rules: [{ required: true, message: '请输入活动内容' }],
           component: {
             props: {
               config: UEditorConfig
@@ -569,6 +580,7 @@ export const crudOptions = vm => {
         disabled: true, // 设置true可以在行展示中隐藏
         width: 200,
         form: {
+          rules: [{ required: true, message: '请上传活动分享图' }],
           component: {
             props: {
               btnSize: 'small', // type=file-uploader时按钮的大小
