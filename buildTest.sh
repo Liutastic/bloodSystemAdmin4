@@ -4,7 +4,7 @@
 # WEBSITE_DIR=/www/wwwroot/admin.vodeshop.com/release
 
 # CODE_DIR=/www/wwwroot/admin.vodeshop.com/code
-BASE_DIR=/e/project/framwork
+BASE_DIR=/www/wwwroot/admin.vodeshop.com
 BACKUP_DIR=${BASE_DIR}/backup
 
 WEBSITE_DIR=${BASE_DIR}/release
