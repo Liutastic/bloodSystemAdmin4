@@ -84,7 +84,7 @@
               <div class="label color-333 font-size-8"></div>
               <div class="ml-5 red-tip font-size-8">请输入正确的商品ID</div>
             </div>
-            <div class="color-333 font-size-8 mb-9">已绑商品:{{showProInfo.name ? showProInfo.name : '暂未绑定商品'}}</div>
+            <div class="color-333 font-size-8 mb-9">已绑商品:{{showProInfo.name || '暂未绑定商品'}}</div>
             <div class="flex align-center mb-9">
               <div class="label color-333 font-size-8"><span class="red-tip">*</span>文本内容：</div>
               <div class="flex-sub">
@@ -181,7 +181,7 @@ export default {
     }
   },
   async mounted () {
-    this.id = this.$route.query.id ? this.$route.query.id : null
+    this.id = this.$route.query.id || null
     if (this.id) {
       this.$loading()
       const { code, msg, data } = await this.$apis.GetMaterialDetail({ id: this.id })
@@ -195,7 +195,7 @@ export default {
         this.formData.goods_id = data.goods.id
         this.formData.content = data.content
         this.formData.pink_circle_fictitious_forward = data.forward
-        this.formData.category_child_id = data.category_child_id ? data.category_child_id : null
+        this.formData.category_child_id = data.category_child_id || null
         const arr = []
         data.media.forEach(val => {
           arr.push({ goods_id: (val.goods && val.goods.id) ? val.goods.id : null, url: val.url })
@@ -223,6 +223,7 @@ export default {
     this.getAllIssuerList()
   },
   methods: {
+    // 控制视频的数量
     controlUploadProNum () {
       this.$message({
         message: '您已经上传视频啦~',
@@ -251,7 +252,7 @@ export default {
       this.showProInfo = item
       // console.log('this.showProInfo', this.showProInfo)
     },
-    // 上传
+    // 保存
     async save () {
       if (!this.formData.name) {
         this.$message({
@@ -309,8 +310,8 @@ export default {
         })
         return
       }
-      this.formData.pink_circle_category_id = this.materailClassValue[0] ? this.materailClassValue[0] : null
-      this.formData.category_child_id = this.materailClassValue[1] ? this.materailClassValue[1] : null
+      this.formData.pink_circle_category_id = this.materailClassValue[0] || null
+      this.formData.category_child_id = this.materailClassValue[1] || null
       // console.log('上传参数', this.formData)
       // 更新编辑
       if (this.id) {

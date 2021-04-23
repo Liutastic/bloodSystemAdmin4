@@ -100,7 +100,7 @@ export default {
           if (data) {
             id = data.id
           }
-          const temp = await _self.getProCategoryList(id)
+          const temp = await _self.getProCategoryList(id || '')
           resolve(temp)
         }
       }
@@ -136,9 +136,9 @@ export default {
     },
     // 获取商品分类列表
     async getProCategoryList (id) {
-      const { data } = await this.$apis.GetProCategoryList({ category_id: id })
+      const { code, data } = await this.$apis.GetProCategoryList({ category_id: id })
       // console.log('获取商品分类', code, msg, data)
-      return data.data
+      if (code === 0) return data
     },
     // 获取商品列表
     async getProList () {
