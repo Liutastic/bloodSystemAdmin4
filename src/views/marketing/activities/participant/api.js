@@ -1,11 +1,10 @@
 import { request } from '@/api/service'
 
 export function GetList (query) {
-  console.log(request)
   return request({
     url: '/svc/marketing-svc/admin/v1/activity-user/users',
     method: 'get',
-    data: query
+    params: query
   })
 }
 
