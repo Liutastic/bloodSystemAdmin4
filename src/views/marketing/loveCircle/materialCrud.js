@@ -1,3 +1,4 @@
+// import util from '@/libs/util'
 import StringUtils from 'd2-crud-plus/src/lib/utils/util.string'
 // import UpdateMaterialStatus from '@/api/modules/loveCircle'
 function toNooning (date) {
@@ -101,6 +102,9 @@ export const crudOptions = (StatusTag, that) => {
         search: {
           width: 233,
           key: 'name'
+        },
+        formatter (row) {
+          return row.name.length > 6 ? row.name.substring(0, 6) + '...' : row.name
         }
       },
       {
@@ -117,10 +121,32 @@ export const crudOptions = (StatusTag, that) => {
             name: 'dict-select'
           }
         },
+        // component: {
+        //   props: {
+        //     filterable: true,
+        //     multiple: false,
+        //     clearable: true
+        //   }
+        // },
+        form: {
+          component: {
+            props: {
+              filterable: true,
+              multiple: false,
+              clearable: true
+              // emitPath: false
+            }
+          }
+        },
         dict: {
           url: '/svc/marketing-svc/admin/v1/pink-circle-category/index',
           value: 'id',
-          label: 'name'
+          label: 'name',
+          children: 'children'
+          // isTree: true,
+          // transfer: data => {
+          //   return util.formatDateToTree(data, 'id')
+          // }
         }
       },
       {
