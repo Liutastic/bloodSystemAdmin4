@@ -23,7 +23,7 @@
         >
       </template>
       <template slot="sign_countSlot" slot-scope="scope">
-         <el-button type="text" size="mini">{{scope.row.sign_count}}</el-button>
+         <el-button type="text" size="mini" @click="showDetail(scope.row.id)">{{scope.row.sign_count}}</el-button>
 
       </template>
     </d2-crud-x>
@@ -34,6 +34,7 @@
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 import api from './api'
+import log from '@/libs/util.log'
 export default {
   mixins: [d2CrudPlus.crud],
   methods: {
@@ -124,6 +125,16 @@ export default {
      */
     async delRequest (row) {
       await api.deleteActivity({ id: row.id })
+    },
+
+    /**
+   * 跳转参与人记录
+   */
+    async showDetail (id) {
+      this.$router.push({
+        name: 'activitiesParticipant',
+        params: { marketing_activity_id: id }
+      })
     }
   }
 }

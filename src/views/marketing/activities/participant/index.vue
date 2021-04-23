@@ -1,31 +1,35 @@
 <template>
-  <d2-container :class="{'page-compact':crud.pageOptions.compact}">
+  <d2-container :class="{ 'page-compact': crud.pageOptions.compact }">
     <template slot="header">
       <!-- <example-helper title="帮助"  >
         <h4>请点击右下角查看本页源码</h4>
       </example-helper> -->
-
     </template>
     <d2-crud-x
-        ref="d2Crud"
-        v-bind="_crudProps"
-        v-on="_crudListeners"
-        @customHandleBtn="customHandleBtnHandle"
+      ref="d2Crud"
+      v-bind="_crudProps"
+      v-on="_crudListeners"
+      @customHandleBtn="customHandleBtnHandle"
     >
       <div slot="header">
-        <crud-search ref="search" :options="crud.searchOptions" @submit="handleSearch"  />
+        <crud-search
+          ref="search"
+          :options="crud.searchOptions"
+          @submit="handleSearch"
+        />
         <!-- <el-button size="small" type="primary" @click="addRow"><i class="el-icon-plus"/> 新增</el-button> -->
-        <crud-toolbar :search.sync="crud.searchOptions.show"
-                      :compact.sync="crud.pageOptions.compact"
-                      :columns="crud.columns"
-                      @refresh="doRefresh()"
-                      @columns-filter-changed="handleColumnsFilterChanged"/>
+        <crud-toolbar
+          :search.sync="crud.searchOptions.show"
+          :compact.sync="crud.pageOptions.compact"
+          :columns="crud.columns"
+          @refresh="doRefresh()"
+          @columns-filter-changed="handleColumnsFilterChanged"
+        />
       </div>
 
       <template slot="expandSlot" slot-scope="scope">
-        这里显示行展开数据:{{scope.row.data}}
+        这里显示行展开数据:{{ scope.row.data }}
       </template>
-
     </d2-crud-x>
   </d2-container>
 </template>
@@ -36,23 +40,29 @@ import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 // import helper from './helper'
 export default {
+  name: 'activitiesParticipant',
   mixins: [d2CrudPlus.crud],
   data () {
     return {
       // helper: helper
     }
   },
-  computed: {
+  computed: {},
+  mounted () {
+    // 将初始化推迟到mounted
+    const params = this.$route.params
+    if (params?.marketing_activity_id && this.crud?.searchOptions?.form) {
+      this.getSearch().setForm({
+        marketing_activity_id: params.marketing_activity_id
+      })
+      this.getSearch().doSearch()
+    }
   },
-  // mounted () { // 将初始化推迟到mounted
-  //   // this.initColumns()
-  //   // this._doStart()
-  // },
   methods: {
-    // _OnCreated () {
-    //   // 覆盖为空方法
-    // },
+
     pageRequest (query) {
+      console.log('query:', query)
+
       return API.GetList(query)
     },
     getCrudOptions () {
