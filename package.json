@@ -5,7 +5,7 @@
     "serve": "vue-cli-service serve --open",
     "start": "npm run serve",
     "dev": "npm run serve",
-    "deploy": "buildTest.sh",
+    "deploy": "sh buildTest.sh",
     "new": "plop",
     "build": "vue-cli-service build",
     "build:test": "cross-env NODE_ENV=development vue-cli-service build",
