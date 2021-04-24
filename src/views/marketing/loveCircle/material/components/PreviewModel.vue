@@ -5,7 +5,11 @@
     <!-- 发布者信息模块 -->
     <div v-show="isShowOnePart" class="every-temple-part border-dashed flex align-center justify-between padding-lr-8 padding-tb-10">
       <div class="flex align-center">
-        <el-image v-if="!issuerInfo.avatar" class="avatar-box" fit="cover" size="medium" src=""></el-image>
+        <el-image v-if="!issuerInfo.avatar" class="avatar-box" fit="cover" size="medium" src="">
+          <div slot="error" class="image-slot">
+            <i class="el-icon-picture-outline"></i>
+          </div>
+        </el-image>
         <el-image v-if="issuerInfo.avatar" class="avatar-box" fit="cover" size="medium" :src="issuerInfo.avatar | qiniu">
           <div slot="error" class="image-slot">
             <i class="el-icon-picture-outline"></i>
