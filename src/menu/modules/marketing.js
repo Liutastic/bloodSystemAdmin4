@@ -36,12 +36,12 @@ export default {
               title: '所有分类',
               icon: 'minus',
               path: '/marketing/loveCircle/category/allCategory'
-            },
-            {
-              title: '新增/编辑分类',
-              icon: 'edit',
-              path: '/marketing/loveCircle/category/addCategory'
             }
+            // {
+            //   title: '新增/编辑分类',
+            //   icon: 'edit',
+            //   path: '/marketing/loveCircle/category/addCategory'
+            // }
           ]
         },
         {
