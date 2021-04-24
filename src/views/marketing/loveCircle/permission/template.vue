@@ -1,6 +1,15 @@
 <template>
   <d2-container>
-    <template slot="header">权限模块</template>
+    <template slot="header">
+      <div class="header-box">
+        <div>权限模板</div>
+        <el-button type="primary" size="mini" @click="toAdd">新增<i class="el-icon-plus"></i></el-button>
+      </div>
+      <!-- <el-row type="flex" justify="space-between">
+        <el-col :span="4"><div>权限模块</div></el-col>
+        <el-col :span="2" ><el-button type="primary" size="mini">新增<i class="el-icon-plus"></i></el-button></el-col>
+      </el-row> -->
+    </template>
     <d2-crud-x
       :columns="columns"
       :data="permissionData"
@@ -87,16 +96,14 @@ export default {
     }
   },
   mounted () {
-    this.$loading()
     this.getPermissionList()
   },
   methods: {
     // 获取权限列表
     async getPermissionList () {
-      const { code, msg, data } = await this.$apis.GetPermissionList({ page: this.pagination.page, per_page: this.pagination.pageSize })
-      console.log(code, msg, data)
+      const { code, data } = await this.$apis.GetPermissionList({ page: this.pagination.page, per_page: this.pagination.pageSize })
+      // console.log(code, msg, data)
       if (code === 0) {
-        this.$loading().close()
         // this.permissionData = data.data.map(item => {
         //   return {
         //     ...item,
@@ -108,7 +115,7 @@ export default {
         // })
         this.permissionData = data.data
         this.pagination.total = data.total
-        console.log('this.permissionData', this.permissionData)
+        // console.log('this.permissionData', this.permissionData)
         this.loading = false
       }
     },
@@ -126,10 +133,16 @@ export default {
     },
     // 去编辑页面
     goEdit ({ index, row }) {
-      console.log(index, row)
+      // console.log(index, row)
       this.$router.push({
         path: '/marketing/loveCircle/permission/addTemplate',
         query: { id: row.id }
+      })
+    },
+    // 去新增页面
+    toAdd () {
+      this.$router.push({
+        path: '/marketing/loveCircle/permission/addTemplate'
       })
     },
     paginationCurrentChange (currentPage) {
@@ -139,3 +152,11 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="scss">
+.header-box{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+}
+</style>

@@ -153,7 +153,9 @@ export default {
   data () {
     return {
       QINIUURL,
+      // 展示商品输入id错误是否显示
       idIsError: false,
+      // 关联商品输入id错误是否显示
       relateTdIsError: false,
       dataToken: { token: '' }, // 上传的token
       formData: {
@@ -215,7 +217,7 @@ export default {
       this.$loading()
       const { code, msg, data } = await this.$apis.GetMaterialDetail({ id: this.id })
       if (code === 0) {
-        console.log('素材详情', data)
+        // console.log('素材详情', data)
         this.$loading().close()
         // console.log('获取素材详情', data)
         this.materialDetail = data
@@ -315,7 +317,7 @@ export default {
     },
     // 上传
     async save () {
-      console.log(this.formData)
+      // console.log(this.formData)
       if (!this.formData.name) {
         this.$message({
           message: '素材名称不能为空~',
@@ -377,7 +379,7 @@ export default {
       }
       this.formData.pink_circle_category_id = this.materailClassValue[0] || null
       this.formData.category_child_id = this.materailClassValue[1] || null
-      console.log('上传参数', this.formData)
+      // console.log('上传参数', this.formData)
       // 更新编辑
       if (this.id) {
         const { code } = await this.$apis.EditMaterial(this.formData, this.id)
@@ -397,8 +399,8 @@ export default {
         return
       }
       // 新增
-      const { code, msg, data } = await this.$apis.AddImageMaterial(this.formData)
-      console.log(code, msg, data)
+      const { code } = await this.$apis.AddImageMaterial(this.formData)
+      // console.log(code, msg, data)
       if (code === 0) {
         this.$message({
           message: '操作成功！',
@@ -432,7 +434,6 @@ export default {
     },
     // 删除商品展示模块
     delShowProPart () {
-      console.log('删除展示商品模块')
       this.showProInfo = {}
       this.formData.goods_id = null
     },
@@ -449,7 +450,6 @@ export default {
       // console.log('this.issuerInfo', this.issuerInfo)
     },
     uploadProImgSuccess (res) {
-      console.log('成功')
       this.relatePro = {}
       this.relateProId = null
       // if (this.formData.media.length && this.formData.media[this.formData.media.length - 1].goods_id && this.formData.media[this.formData.media.length - 1].url) {
@@ -477,7 +477,7 @@ export default {
       })
     },
     async beforeUpload (file) {
-      console.log(file)
+      // console.log(file)
       this.$loading()
       const { uptoken } = await this.$apis.qiniuToken()
       this.dataToken.token = uptoken
@@ -532,7 +532,7 @@ export default {
     // 获取素材分类
     async getCategoryList () {
       const { code, data } = await this.$apis.GetCategoryAllList()
-      console.log('素材分类', code, data)
+      // console.log('素材分类', code, data)
       if (code === 0) {
         // console.log(this.transitionKey(data))
         this.materailClassList = this.transitionKey(data)
@@ -542,13 +542,13 @@ export default {
           }
           return val
         })
-        console.log('this.materailClassList', this.materailClassList)
+        // console.log('this.materailClassList', this.materailClassList)
       }
     },
     // 获取权限模板列表
     async getPermissionList () {
       const { code, data } = await this.$apis.GetPermissionList({ page: 1, per_page: 1000 })
-      console.log('权限模板', code, data)
+      // console.log('权限模板', code, data)
       if (code === 0) {
         this.permissionOption = data.data.filter(val => {
           return val.status === 1

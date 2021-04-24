@@ -387,7 +387,7 @@ export default {
       this.uploadLoading = false
     },
     async beforeUpload (file) {
-      console.log(file)
+      // console.log(file)
       this.$loading()
       const { uptoken } = await this.$apis.qiniuToken()
       this.dataToken.token = uptoken
@@ -441,9 +441,9 @@ export default {
     // 获取素材分类
     async getCategoryList () {
       const { code, data } = await this.$apis.GetCategoryAllList()
-      console.log('素材分类', code, data)
+      // console.log('素材分类', code, data)
       if (code === 0) {
-        console.log(this.transitionKey(data))
+        // console.log(this.transitionKey(data))
         this.materailClassList = this.transitionKey(data)
         this.materailClassList.map(val => {
           if (!val.children.length) {

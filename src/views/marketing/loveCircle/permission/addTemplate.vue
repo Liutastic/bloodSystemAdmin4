@@ -92,16 +92,16 @@ export default {
   methods: {
     // 获取权限详细
     async getPermissionDetail () {
-      const { code, msg, data } = await this.$apis.GetPermissionDetail({ id: this.id })
-      console.log(code, msg, data)
+      const { code, data } = await this.$apis.GetPermissionDetail({ id: this.id })
+      // console.log(code, data)
       if (code === 0) {
-        console.log('成功了', data)
+        // console.log('成功了', data)
         this.formData.title = data.title
         if (data.competence.mall && data.competence.mall.length) this.mallCheckList = this.handelTagShowList(data.competence.mall, this.mallOption)
         if (data.competence.dym && data.competence.dym.length) this.dymCheckList = this.handelTagShowList(data.competence.dym, this.dymOption)
         if (data.competence.retail && data.competence.retail.length) this.retailCheckList = this.handelTagShowList(data.competence.retail, this.retailOption)
         this.isDisable = data.status !== 0
-        console.log(this.mallCheckList, this.dymCheckList, this.retailCheckList)
+        // console.log(this.mallCheckList, this.dymCheckList, this.retailCheckList)
       }
     },
     // 处理编辑回显的所选权限数据
@@ -138,15 +138,15 @@ export default {
         return
       }
       this.formData.status = this.isDisable ? 1 : 0
-      console.log(this.formData)
+      // console.log(this.formData)
       const mallTagList = this.handelTagList(this.mallCheckList, this.mallOption, 'mall_')
       const dymTagList = this.handelTagList(this.dymCheckList, this.dymOption, 'dym_')
       const retailTagList = this.handelTagList(this.retailCheckList, this.retailOption, 'retail_')
       this.formData.competence = [...mallTagList, ...dymTagList, ...retailTagList]
       if (this.id) this.formData.id = this.id
-      console.log('mallTagList', mallTagList, dymTagList, retailTagList)
-      const { code, msg, data } = await this.$apis.AddAndEditPermission(this.formData)
-      console.log(code, msg, data)
+      // console.log('mallTagList', mallTagList, dymTagList, retailTagList)
+      const { code } = await this.$apis.AddAndEditPermission(this.formData)
+      // console.log(code, msg, data)
       if (code === 0) {
         this.$message({
           message: '操作成功！',
@@ -184,9 +184,9 @@ export default {
     }
   },
   mounted () {
-    console.log('this.$route.query', this.$route.query)
+    // console.log('this.$route.query', this.$route.query)
     // 通过传参数type来判断是新增还是修改
-    this.id = this.$route.query.id ? this.$route.query.id : null
+    this.id = this.$route.query.id || null
     if (this.id) this.getPermissionDetail()
   }
 }
