@@ -53,15 +53,15 @@ export default {
           title: '上传素材',
           icon: 'paste',
           children: [
+            // {
+            //   title: '发布人身份设置',
+            //   icon: 'user',
+            //   path: '/marketing/loveCircle/material/issuerSetting'
+            // },
             {
               title: '发布人身份设置',
               icon: 'user',
               path: '/marketing/loveCircle/material/issuerSetting'
-            },
-            {
-              title: '发布人身份设置2',
-              icon: 'user',
-              path: '/marketing/loveCircle/material/issuerSetting2'
             },
             {
               title: '图文素材',

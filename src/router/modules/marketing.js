@@ -66,20 +66,20 @@ export default {
       },
       component: _import('marketing/loveCircle/allMaterial')
     },
+    // {
+    //   path: 'loveCircle/material/issuerSetting',
+    //   name: 'issuerSetting',
+    //   meta: {
+    //     title: '发布人身份设置',
+    //     auth: true
+    //   },
+    //   component: _import('marketing/loveCircle/material/issuerSetting')
+    // },
     {
       path: 'loveCircle/material/issuerSetting',
       name: 'issuerSetting',
       meta: {
         title: '发布人身份设置',
-        auth: true
-      },
-      component: _import('marketing/loveCircle/material/issuerSetting')
-    },
-    {
-      path: 'loveCircle/material/issuerSetting2',
-      name: 'issuerSetting',
-      meta: {
-        title: '发布人身份设置2',
         auth: true
       },
       component: _import('marketing/loveCircle/material/issuerSetting2')
