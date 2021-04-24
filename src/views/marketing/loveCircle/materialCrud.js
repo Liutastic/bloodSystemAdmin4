@@ -152,7 +152,10 @@ export const crudOptions = (StatusTag, that) => {
       {
         title: '素材子分类',
         key: 'category_child_name',
-        align: 'center'
+        align: 'center',
+        formatter (row) {
+          return row.category_child_name ? row.category_child_name : '无'
+        }
       },
       {
         title: '权限模板',
@@ -192,6 +195,9 @@ export const crudOptions = (StatusTag, that) => {
         search: {
           width: 233,
           key: 'goods_id'
+        },
+        formatter (row) {
+          return row.goods_name ? row.goods_name : '暂无'
         }
       },
       {

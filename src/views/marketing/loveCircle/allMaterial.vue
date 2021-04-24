@@ -12,12 +12,12 @@
           >
         </div>
       </div>
+      <crud-search
+        ref="search"
+        :options="crud.searchOptions"
+        @submit="handleSearch"
+      />
     </template>
-    <crud-search
-      ref="search"
-      :options="crud.searchOptions"
-      @submit="handleSearch"
-    />
     <d2-crud-x
       :data="filterData"
       ref="d2Crud"
@@ -143,5 +143,6 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 20px;
 }
 </style>
