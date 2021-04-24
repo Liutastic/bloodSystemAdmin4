@@ -11,6 +11,8 @@
     >
       <el-form-item prop="name" label="名称">
         <el-input
+          style="width: 200px"
+          maxlength="10"
           v-model="formData.name"
           placeholder="输入用户名称，限10个字符"
         ></el-input>
