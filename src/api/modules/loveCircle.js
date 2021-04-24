@@ -92,6 +92,13 @@ export default ({ request }) => ({
       data
     })
   },
+  UpdateIssuer (data) {
+    return request({
+      url: '/svc/marketing-svc/admin/v1/pink-circle-user/update',
+      method: 'put',
+      data
+    })
+  },
   // 查看权限模板列表
   GetAuthTemplateList (params) {
     return request({
@@ -195,7 +202,7 @@ export default ({ request }) => ({
   // 删除一个发布人
   DeleteIssuer (params) {
     return request({
-      url: `/svc/marketing-svc/admin/v1/pink-circle-user/delete?id=${params.id}`,
+      url: `/svc/marketing-svc/admin/v1/pink-circle-user/delete?id=${params}`,
       method: 'delete'
     })
   },

@@ -137,7 +137,11 @@
             ref="form"
             label-width="80px"
           >
-            <el-form-item label="上级分类" prop="parent_id">
+            <el-form-item
+              v-if="isFatherVisible"
+              label="上级分类"
+              prop="parent_id"
+            >
               <!-- <el-cascader
                 v-model="formData.parent_id"
                 placeholder="不选择则表示顶层分类"
@@ -161,10 +165,16 @@
               </el-select>
             </el-form-item>
             <el-form-item label="分类名称" prop="name">
-              <el-input v-model="formData.name"></el-input>
+              <el-input
+                style="width: 217px"
+                maxlength="6"
+                placeholder="请输入分类名称"
+                v-model="formData.name"
+              ></el-input>
             </el-form-item>
             <el-form-item label="分类排序" prop="sort">
               <el-input
+                style="width: 217px"
                 v-model.number="formData.sort"
                 placeholder="数字越小, 排序越前"
               ></el-input>
@@ -240,7 +250,9 @@ export default {
       },
       formStatus: 'create',
       // 树中选中的节点
-      selectedList: []
+      selectedList: [],
+      // 控制选择父分类组件的出现与否
+      isFatherVisible: true
     }
   },
   async mounted () {
@@ -261,6 +273,7 @@ export default {
     handleCreate (params) {
       // this.$refs.form.resetFields()
       this.$refs.form.clearValidate()
+      this.isFatherVisible = false
       this.formData = {
         pink_circle_competence_id: null,
         parent_id: '',
@@ -313,6 +326,11 @@ export default {
     // 点击树节点
     handleNodeClick (data) {
       this.formStatus = 'update'
+      this.isFatherVisible = true
+      if (data.children) {
+        // 点击的是父节点
+        this.isFatherVisible = false
+      }
       this.formData = {
         id: data.id,
         pink_circle_competence_id: data.pink_circle_competence_id,
@@ -327,6 +345,7 @@ export default {
     handleNodeCheck (data, node) {
       this.selectedList = node.checkedKeys
     },
+    // 处理数据，传到后台
     handleSwitchStatus () {
       if (this.switchStatus) {
         this.formData.is_enable = 1
@@ -371,6 +390,7 @@ export default {
         // 在父节点点击新增则新增该父节点下的子节点
         this.formData.parent_id = data.id
       } else {
+        this.isFatherVisible = true
         // 在子节点点击新增则新增和该子节点同级的分类
         this.formData.parent_id = data.parent_id
       }
@@ -401,6 +421,7 @@ export default {
         }
       })
       this.formLoading = false
+      this.isFatherVisible = true
     },
     // 提交编辑
     submitUpdate () {
@@ -426,6 +447,7 @@ export default {
           }
         }
       })
+      this.isFatherVisible = true
       this.formLoading = false
     },
     // 删除一个分类

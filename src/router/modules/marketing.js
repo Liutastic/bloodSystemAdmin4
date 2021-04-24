@@ -76,6 +76,15 @@ export default {
       component: _import('marketing/loveCircle/material/issuerSetting')
     },
     {
+      path: 'loveCircle/material/issuerSetting2',
+      name: 'issuerSetting',
+      meta: {
+        title: '发布人身份设置2',
+        auth: true
+      },
+      component: _import('marketing/loveCircle/material/issuerSetting2')
+    },
+    {
       path: 'loveCircle/material/imageMaterial',
       name: 'imageMaterial',
       meta: {

@@ -36,12 +36,12 @@ export default {
               title: '所有分类',
               icon: 'minus',
               path: '/marketing/loveCircle/category/allCategory'
-            },
-            {
-              title: '新增/编辑分类',
-              icon: 'edit',
-              path: '/marketing/loveCircle/category/addCategory'
             }
+            // {
+            //   title: '新增/编辑分类',
+            //   icon: 'edit',
+            //   path: '/marketing/loveCircle/category/addCategory'
+            // }
           ]
         },
         {
@@ -57,6 +57,11 @@ export default {
               title: '发布人身份设置',
               icon: 'user',
               path: '/marketing/loveCircle/material/issuerSetting'
+            },
+            {
+              title: '发布人身份设置2',
+              icon: 'user',
+              path: '/marketing/loveCircle/material/issuerSetting2'
             },
             {
               title: '图文素材',

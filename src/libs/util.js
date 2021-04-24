@@ -2,6 +2,7 @@ import cookies from './util.cookies'
 import db from './util.db'
 import log from './util.log'
 import dayjs from 'dayjs'
+import { IMGBASEURL } from '@/api/config'
 
 const util = {
   cookies,
@@ -90,10 +91,24 @@ util.formatDataToTree = (data, key = 'menu_id', pid = 'parent_id', parent = {}) 
 /**
  *
  * @param {*} data对象
+ * @description 日期格式化
  * @returns
  */
 util.formatDate = (data) => {
   return dayjs(data).format('YYYY-MM-DD HH:mm:ss')
+}
+/**
+ * @params {*} 文件名字符串
+ * @description 判断是否为url
+ */
+util.convertHttp = (url) => {
+  const regexp = new RegExp(/^http/)
+  if (!url) return `${IMGBASEURL}gysa-default-logo.png`
+  if (regexp.test(url)) {
+    return url
+  } else {
+    return `${IMGBASEURL}${url.replace(/\\/g, '/')}`
+  }
 }
 /**
  *
