@@ -477,7 +477,7 @@ export default {
       })
     },
     async beforeUpload (file) {
-      // console.log(file)
+      console.log(file)
       this.$loading()
       const { uptoken } = await this.$apis.qiniuToken()
       this.dataToken.token = uptoken
@@ -495,6 +495,25 @@ export default {
           this.uploadLoading = true
           return resolve(true)
         }
+        // const isOver = file.size / 1024 > 700
+        // if (!isImage || isOver) {
+        //   if (!isImage) {
+        //     this.$message({
+        //       message: '上传图片只能是 JPG、PNG 格式喔~',
+        //       type: 'warning'
+        //     })
+        //   }
+        //   if (isOver) {
+        //     this.$message({
+        //       message: '上传图片不能超过700KB喔~',
+        //       type: 'warning'
+        //     })
+        //   }
+        //   return reject(new Error(false))
+        // } else {
+        //   this.uploadLoading = true
+        //   return resolve(true)
+        // }
       })
     },
     uploadProImgPropress (val) {
