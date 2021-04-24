@@ -32,10 +32,10 @@ export default {
   },
   async mounted () {
     const { code, data } = await this.$apis.GetRunCategoryList({})
-    console.log('分类', code, data)
+    // console.log('分类', code, data)
     if (code === 0) {
       this.categoryOptions = data
-      console.log(this.categoryOptions)
+      // console.log(this.categoryOptions)
       this.$nextTick(() => {
         const myEchar = document.getElementById('myEchar')
         this.myChart = echarts.init(myEchar)
@@ -48,12 +48,12 @@ export default {
     optionChange (val) {
       // 0=素材排名(前30) 1=单个一级分类下素材排名(前15)
       this.updateData({ id: val, type: 0 })
-      console.log(val)
+      // console.log(val)
     },
     async updateData (params) {
       this.$loading()
-      const { code, msg, data } = await this.$apis.GetRunStatusData(params)
-      console.log(code, msg, data)
+      const { code, data } = await this.$apis.GetRunStatusData(params)
+      // console.log(code, msg, data)
       // data.series[0].data[0] = 500
       // data.series[0].data[3] = 100000
       if (code === 0) {
