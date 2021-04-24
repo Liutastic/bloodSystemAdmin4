@@ -44,10 +44,7 @@ function createService () {
             break
           default:
             // 不是正确的 code
-            try {
-              errorCreate(dataAxios.msg)
-            } catch (e) {}
-            return dataAxios
+            errorCreate(dataAxios.msg)
         }
       }
     },
