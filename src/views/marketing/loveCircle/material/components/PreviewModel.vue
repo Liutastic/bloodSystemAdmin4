@@ -5,7 +5,16 @@
     <!-- 发布者信息模块 -->
     <div v-show="isShowOnePart" class="every-temple-part border-dashed flex align-center justify-between padding-lr-8 padding-tb-10">
       <div class="flex align-center">
-        <el-avatar size="medium" :src="issuerInfo.avatar | qiniu"></el-avatar>
+        <el-image v-if="!issuerInfo.avatar" class="avatar-box" fit="cover" size="medium" src="">
+          <div slot="error" class="image-slot">
+            <i class="el-icon-picture-outline"></i>
+          </div>
+        </el-image>
+        <el-image v-if="issuerInfo.avatar" class="avatar-box" fit="cover" size="medium" :src="issuerInfo.avatar | qiniu">
+          <div slot="error" class="image-slot">
+            <i class="el-icon-picture-outline"></i>
+          </div>
+        </el-image>
         <div class="flex flex-direction-column ml-9">
           <span class="font-size-9 color-333">{{issuerInfo.name}}</span>
           <span class="font-size-8 color-999 mt-3">刚刚</span>
@@ -136,7 +145,7 @@ export default {
       const arr = this.proImgList.filter(val => {
         return val.url
       })
-      console.log(arr)
+      // console.log(arr)
       return arr
     },
     showVirtualNum () {
@@ -158,7 +167,7 @@ export default {
     showText () {
       const arr = []
       this.content.split('\n').forEach(item => arr.push(`<p style="margin:0;word-break: break-word;">${item.trim()}</p>`))
-      console.log(arr)
+      // console.log(arr)
       return arr.join('')
     }
   },
@@ -171,7 +180,7 @@ export default {
     },
     // 删除版块 1=发布人 2=文案 3=商品图片 4=展示商品
     delTemplate (type) {
-      console.log('删除', type)
+      // console.log('删除', type)
       switch (type) {
         case 1:
           this.$emit('delPublisherPart')
@@ -208,6 +217,14 @@ export default {
     text-align: center;
     font-size: 10px;
     font-family: PingFangSC-Medium, PingFang SC;
+  }
+  .avatar-box{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
   }
   .transmit-icon{
     width:15px;
