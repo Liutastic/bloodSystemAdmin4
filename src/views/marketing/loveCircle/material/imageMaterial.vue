@@ -68,6 +68,7 @@
                     v-for="item in publisherOption"
                     :key="item.id"
                     :label="item.name"
+                    :disabled="!item.is_enable"
                     :value="item.id">
                   </el-option>
                 </el-select>
@@ -290,7 +291,7 @@ export default {
           return
         }
         if (this.formData.media.length && !this.formData.media[this.formData.media.length - 1].url && this.formData.media[this.formData.media.length - 1].goods_id) {
-          this.formData.media[this.formData.media.length - 1].goods_id = item.id
+          this.formData.media[this.formData.media.length - 1].goods_id = data.id
           console.log('this.formData.media2', this.formData.media)
           return
         }
@@ -596,7 +597,7 @@ export default {
     // 获取发布人列表
     async getAllIssuerList () {
       const { code, data } = await this.$apis.GetAllIssuerList()
-      // console.log('发布人列表', code, msg, data)
+      // console.log('发布人列表', code, data)
       if (code === 0) {
         this.publisherOption = data
       }

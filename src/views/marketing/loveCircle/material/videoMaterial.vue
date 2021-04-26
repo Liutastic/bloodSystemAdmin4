@@ -68,6 +68,7 @@
                     v-for="item in publisherOption"
                     :key="item.id"
                     :label="item.name"
+                    :disabled="!item.is_enable"
                     :value="item.id">
                   </el-option>
                 </el-select>
