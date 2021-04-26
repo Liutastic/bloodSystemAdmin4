@@ -57,17 +57,20 @@
     </el-form>
     <el-row :gutter="20">
       <el-col :span="10">
+        <!--            -->
         <el-tree
+          highlight-current
+          show-checkbox
           class="tree-scroll"
           node-key="id"
+          ref="tree"
           :data="treeData"
           :props="treeProps"
           :filter-node-method="filterNode"
-          ref="tree"
-          highlight-current
-          show-checkbox
+          :default-expanded-keys="expandedList"
           @node-click="handleNodeClick"
           @check="handleNodeCheck"
+          @node-expand="handleNodeExpand"
         >
           <span class="custom-tree-node action" slot-scope="{ node, data }">
             <span
@@ -86,7 +89,7 @@
               <el-button
                 type="text"
                 size="mini"
-                v-if="data.children"
+                v-if="data.parent_id === 0"
                 @click.stop="handleAdd(data)"
               >
                 新增
@@ -97,8 +100,8 @@
                 size="mini"
                 @click.stop="
                   data.is_enable
-                    ? changeCategoryStatus(0)
-                    : changeCategoryStatus(1)
+                    ? changeCategoryStatusClick(data.id, 0)
+                    : changeCategoryStatusClick(data.id, 1)
                 "
               >
                 {{ data.is_enable ? "禁用" : "启用" }}
@@ -257,7 +260,9 @@ export default {
       // 树中选中的节点
       selectedList: [],
       // 控制选择父分类组件的出现与否
-      isFatherVisible: true
+      isFatherVisible: true,
+      // 默认展开的tree
+      expandedList: []
     }
   },
   async mounted () {
@@ -316,7 +321,7 @@ export default {
             })
           }
         })
-        console.log(list)
+        // console.log(list)
         this.templateList = list
       }
     },
@@ -344,11 +349,23 @@ export default {
         is_enable: data.is_enable,
         sort: data.sort
       }
-      console.log(this.formData)
+      // console.log(this.formData)
     },
     // 复选树节点
     handleNodeCheck (data, node) {
       this.selectedList = node.checkedKeys
+    },
+    // 节点展开
+    handleNodeExpand (data, node) {
+      // console.log('dataExp', data)
+      // console.log('nodeExp', node)
+      // node中的expanded和data中的id决定该节点是否展开，用数组表示
+      if (node.expanded) {
+        this.expandedList.push(data.id)
+      } else {
+        const index = this.expandedList.indexOf(data.id)
+        this.expandedList.splice(index, 1)
+      }
     },
     // 处理数据，传到后台
     handleSwitchStatus () {
@@ -358,7 +375,19 @@ export default {
         this.formData.is_enable = 0
       }
     },
-    // 改变分类状态
+    // 改变分类状态（禁用按钮）
+    async changeCategoryStatusClick (id, is_enable) {
+      const obj = {
+        id,
+        is_enable
+      }
+      const { code } = await this.$apis.UpdateCategoryStatus(obj)
+      if (code === 0) {
+        this.$message.success('修改成功')
+        this.getCategoryList()
+      }
+    },
+    // 改变分类状态（多选）
     async changeCategoryStatus (is_enable) {
       this.loading = true
       if (this.selectedList.length === 0) {
@@ -389,9 +418,9 @@ export default {
     },
     // 树节点新建btn
     handleAdd (data) {
-      console.log('dataAdd', data)
+      // console.log('dataAdd', data)
       this.formStatus = 'create'
-      if (data.children) {
+      if (data.parent_id === 0) {
         this.isFatherVisible = true
         // 在父节点点击新增则新增该父节点下的子节点
         this.formData.parent_id = data.id
@@ -459,7 +488,7 @@ export default {
     },
     // 删除一个分类
     deleteACategory (id) {
-      console.log(id)
+      // console.log(id)
       this.$confirm('确认删除该分类吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -479,7 +508,7 @@ export default {
     // 删除多个分类
     deleteCategory () {
       this.loading = true
-      console.log(this.selectedList)
+      // console.log(this.selectedList)
       if (this.selectedList.length !== 0) {
         this.$confirm('确认删除该分类吗?', '提示', {
           confirmButtonText: '确定',
