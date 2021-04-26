@@ -83,7 +83,12 @@
             >
             <span class="active">
               <span> {{ data.pink_circle_competence.title }} </span>
-              <el-button type="text" size="mini" @click.stop="handleAdd(data)">
+              <el-button
+                type="text"
+                size="mini"
+                v-if="data.children"
+                @click.stop="handleAdd(data)"
+              >
                 新增
               </el-button>
 
@@ -384,11 +389,13 @@ export default {
     },
     // 树节点新建btn
     handleAdd (data) {
-      console.log('data', data)
+      console.log('dataAdd', data)
       this.formStatus = 'create'
       if (data.children) {
+        this.isFatherVisible = true
         // 在父节点点击新增则新增该父节点下的子节点
         this.formData.parent_id = data.id
+        this.formData.name = ''
       } else {
         this.isFatherVisible = true
         // 在子节点点击新增则新增和该子节点同级的分类
