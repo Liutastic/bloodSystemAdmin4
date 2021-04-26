@@ -1,6 +1,5 @@
-// import util from '@/libs/util'
 import StringUtils from 'd2-crud-plus/src/lib/utils/util.string'
-// import UpdateMaterialStatus from '@/api/modules/loveCircle'
+import util from '@/libs/util'
 function toNooning (date) {
   if (date == null) {
     date = new Date()
@@ -229,29 +228,36 @@ export const crudOptions = (StatusTag, that) => {
         width: 180,
         search: {
           disabled: false,
-          width: 350
+          width: 350,
+          component: {
+
+          }
         },
         form: {
+          title: '创建日期',
           component: {
             props: {
               'time-arrow-control': true,
-              'default-time': ['12:00:00', '12:00:00'],
+              'default-time': ['00:00:00', '00:00:00'],
               'picker-options': { shortcuts: shortcuts }
             }
           }
         },
         valueBuilder (row, key) {
-          if (!StringUtils.hasEmpty(row.datetimerangeStart, row.datetimerangeEnd)) {
-            row.datetimerange = [new Date(row.datetimerangeStart), new Date(row.datetimerangeEnd)]
+          if (!StringUtils.hasEmpty(row.start_at, row.end_at)) {
+            row.created_at = [
+              new Date(row.start_at),
+              new Date(row.end_at)
+            ]
           }
         },
         valueResolve (row, key) {
-          if (row.datetimerange != null && !StringUtils.hasEmpty(row.datetimerange)) {
-            row.datetimerangeStart = row.datetimerange[0].getTime()
-            row.datetimerangeEnd = row.datetimerange[1].getTime()
+          if (row.created_at?.length > 1) {
+            row.start_at = util.formatDate(row.created_at[0])
+            row.end_at = util.formatDate(row.created_at[1])
           } else {
-            row.datetimerangeStart = null
-            row.datetimerangeEnd = null
+            row.start_at = null
+            row.end_at = null
           }
         }
       },
