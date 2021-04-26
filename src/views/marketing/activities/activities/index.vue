@@ -34,7 +34,6 @@
 import { crudOptions } from './crud'
 import { d2CrudPlus } from 'd2-crud-plus'
 import api from './api'
-import log from '@/libs/util.log'
 export default {
   mixins: [d2CrudPlus.crud],
   methods: {

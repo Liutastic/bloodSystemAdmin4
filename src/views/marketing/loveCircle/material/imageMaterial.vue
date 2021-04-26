@@ -68,6 +68,7 @@
                     v-for="item in publisherOption"
                     :key="item.id"
                     :label="item.name"
+                    :disabled="!item.is_enable"
                     :value="item.id">
                   </el-option>
                 </el-select>
@@ -217,7 +218,7 @@ export default {
       this.$loading()
       const { code, msg, data } = await this.$apis.GetMaterialDetail({ id: this.id })
       if (code === 0) {
-        // console.log('素材详情', data)
+        console.log('素材详情', data)
         this.$loading().close()
         // console.log('获取素材详情', data)
         this.materialDetail = data
@@ -259,6 +260,9 @@ export default {
   methods: {
     // 输入的展示商品id后调用
     async inputShowProId (e) {
+      if (!e) {
+        return
+      }
       // console.log('获取输入的展示商品id', e)
       const { code, data } = await this.$apis.GetProDetail(e)
       if (code === 0) {
@@ -272,7 +276,10 @@ export default {
     },
     // 输入的图片链接商品id后调用
     async inputRelateProId (e) {
-      // console.log('获取输入的展示商品id', e)
+      if (!e) {
+        return
+      }
+      console.log('获取输入的展示商品id', e)
       // console.log('商品详情', data)
       const { code, data } = await this.$apis.GetProDetail(e)
       if (code === 0) {
@@ -281,6 +288,11 @@ export default {
         this.relateProId = data.id
         if (this.formData.media.length && this.formData.media[this.formData.media.length - 1].url && !this.formData.media[this.formData.media.length - 1].goods_id) {
           this.formData.media[this.formData.media.length - 1].goods_id = data.id
+          return
+        }
+        if (this.formData.media.length && !this.formData.media[this.formData.media.length - 1].url && this.formData.media[this.formData.media.length - 1].goods_id) {
+          this.formData.media[this.formData.media.length - 1].goods_id = data.id
+          console.log('this.formData.media2', this.formData.media)
           return
         }
         if (!this.formData.media.length || (this.formData.media[this.formData.media.length - 1].url && this.formData.media[this.formData.media.length - 1].goods_id)) {
@@ -306,8 +318,15 @@ export default {
       this.relateTdIsError = false
       this.relatePro = item
       this.relateProId = item.id
+      console.log('this.formData.media1', this.formData.media)
       if (this.formData.media.length && this.formData.media[this.formData.media.length - 1].url && !this.formData.media[this.formData.media.length - 1].goods_id) {
         this.formData.media[this.formData.media.length - 1].goods_id = item.id
+        console.log('this.formData.media2', this.formData.media)
+        return
+      }
+      if (this.formData.media.length && !this.formData.media[this.formData.media.length - 1].url && this.formData.media[this.formData.media.length - 1].goods_id) {
+        this.formData.media[this.formData.media.length - 1].goods_id = item.id
+        console.log('this.formData.media2', this.formData.media)
         return
       }
       if (!this.formData.media.length || (this.formData.media[this.formData.media.length - 1].url && this.formData.media[this.formData.media.length - 1].goods_id)) {
@@ -317,7 +336,11 @@ export default {
     },
     // 上传
     async save () {
-      // console.log(this.formData)
+      if (!this.formData.media[this.formData.media.length - 1].url) {
+        console.log('抹去')
+        this.formData.media.splice(this.formData.media.length - 1, 1)
+      }
+      console.log(this.formData)
       if (!this.formData.name) {
         this.$message({
           message: '素材名称不能为空~',
@@ -373,9 +396,6 @@ export default {
           type: 'warning'
         })
         return
-      }
-      if (!this.formData.media[this.formData.media.length - 1].url) {
-        this.formData.media.splice(this.formData.media.length - 1, 1)
       }
       this.formData.pink_circle_category_id = this.materailClassValue[0] || null
       this.formData.category_child_id = this.materailClassValue[1] || null
@@ -452,16 +472,16 @@ export default {
     uploadProImgSuccess (res) {
       this.relatePro = {}
       this.relateProId = null
-      // if (this.formData.media.length && this.formData.media[this.formData.media.length - 1].goods_id && this.formData.media[this.formData.media.length - 1].url) {
-      //   this.formData.media[this.formData.media.length - 1].url = res.hash
-      //   return
-      // }
-      // if (!this.formData.media.length || (this.formData.media[this.formData.media.length - 1].url && this.formData.media[this.formData.media.length - 1].goods_id)) {
-      //   console.log()
-      this.formData.media.push({ url: res.hash, goods_id: '' })
-      // }
       this.uploadLoading = false
-      // console.log('this.formData.media', this.formData.media)
+      if (this.formData.media.length && this.formData.media[this.formData.media.length - 1].goods_id && !this.formData.media[this.formData.media.length - 1].url) {
+        this.formData.media[this.formData.media.length - 1].url = res.hash
+        return
+      }
+      if (!this.formData.media.length || (this.formData.media[this.formData.media.length - 1].url && this.formData.media[this.formData.media.length - 1].goods_id)) {
+        console.log()
+        this.formData.media.push({ url: res.hash, goods_id: '' })
+      }
+      console.log('this.formData.media', this.formData.media)
     },
     // 提醒并且控制上传图片后一定要先上传关联商品才可以上传下一张
     // controlUploadProRelate () {
@@ -577,7 +597,7 @@ export default {
     // 获取发布人列表
     async getAllIssuerList () {
       const { code, data } = await this.$apis.GetAllIssuerList()
-      // console.log('发布人列表', code, msg, data)
+      // console.log('发布人列表', code, data)
       if (code === 0) {
         this.publisherOption = data
       }
