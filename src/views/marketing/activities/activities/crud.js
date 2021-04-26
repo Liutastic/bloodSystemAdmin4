@@ -5,7 +5,7 @@ import API from './api'
 import util from '@/libs/util'
 import UEditorConfig from '@/api/UEditor-config'
 
-function toNooning (date) {
+function toNooning(date) {
   if (date == null) {
     date = new Date()
   }
@@ -14,13 +14,13 @@ function toNooning (date) {
   date.setSeconds(0)
   return date
 }
-function addDays (date, days) {
+function addDays(date, days) {
   date.setTime(date.getTime() + 3600 * 1000 * 24 * days)
 }
 const ShortCUTS = [
   {
     text: '今天一晚',
-    onClick (picker) {
+    onClick(picker) {
       const start = new Date()
       const end = toNooning()
       addDays(end, 1)
@@ -28,7 +28,7 @@ const ShortCUTS = [
     }
   }, {
     text: '今天两晚',
-    onClick (picker) {
+    onClick(picker) {
       const start = new Date()
       const end = toNooning()
       addDays(end, 2)
@@ -36,7 +36,7 @@ const ShortCUTS = [
     }
   }, {
     text: '今天三晚',
-    onClick (picker) {
+    onClick(picker) {
       const start = new Date()
       const end = toNooning()
       addDays(end, 3)
@@ -44,7 +44,7 @@ const ShortCUTS = [
     }
   }, {
     text: '今天四晚',
-    onClick (picker) {
+    onClick(picker) {
       const start = new Date()
       const end = toNooning()
       addDays(end, 4)
@@ -52,7 +52,7 @@ const ShortCUTS = [
     }
   }, {
     text: '明天一晚',
-    onClick (picker) {
+    onClick(picker) {
       const start = toNooning()
       const end = toNooning()
       addDays(start, 1)
@@ -61,7 +61,7 @@ const ShortCUTS = [
     }
   }, {
     text: '明天两晚',
-    onClick (picker) {
+    onClick(picker) {
       const start = new Date()
       const end = new Date()
       addDays(start, 1)
@@ -70,7 +70,7 @@ const ShortCUTS = [
     }
   }, {
     text: '明天三晚',
-    onClick (picker) {
+    onClick(picker) {
       const start = new Date()
       const end = new Date()
       addDays(start, 1)
@@ -158,7 +158,7 @@ export const crudOptions = vm => {
         form: {
           rules: [{ required: true, message: '请选择发布平台' }],
           // 同步字典
-          async valueChange (
+          async valueChange(
             key,
             value,
             form,
@@ -206,13 +206,13 @@ export const crudOptions = vm => {
             })
             return distData
           },
-          onDictChanged () {
+          onDictChanged() {
           }
 
         },
         form: {
           component: {
-            show (cmp) {
+            show(cmp) {
               return cmp.form.release_type
             }
           },
@@ -247,7 +247,7 @@ export const crudOptions = vm => {
         form: {
           slot: true,
           component: {
-            show () {
+            show() {
               // 有权限列表按钮才展示
               const iShow = vm.getEditFormTemplate('permissions')?.component?.props
                 ?.dict?.dict?.length
@@ -287,7 +287,7 @@ export const crudOptions = vm => {
             return data
           },
 
-          onReady (data, dict, { component }) {
+          onReady(data, dict, { component }) {
             console.log('data, dict, { component }:', data, dict, component)
 
             // 远程数据字典加载完成事件，每个引用该字典的组件都会触发一次
@@ -335,7 +335,7 @@ export const crudOptions = vm => {
           },
           rules: [{ required: true, message: '请选择报名时间' }]
         },
-        valueBuilder (row, key) {
+        valueBuilder(row, key) {
           if (!StringUtils.hasEmpty(row.sign_start_at, row.sign_end_at)) {
             row.signDate = [
               new Date(row.sign_start_at),
@@ -343,7 +343,7 @@ export const crudOptions = vm => {
             ]
           }
         },
-        valueResolve (row, key) {
+        valueResolve(row, key) {
           if (row.signDate?.length > 1) {
             row.sign_start_at = util.formatDate(row.signDate[0])
             row.sign_end_at = util.formatDate(row.signDate[1])
@@ -353,7 +353,7 @@ export const crudOptions = vm => {
           }
         },
 
-        formatter (row) {
+        formatter(row) {
           return row.sign_end_at
         }
       },
@@ -380,10 +380,10 @@ export const crudOptions = vm => {
           },
           rules: [{ required: true, message: '请选择活动时间' }]
         },
-        formatter (row) {
+        formatter(row) {
           return row.activity_end_at
         },
-        valueBuilder (row, key) {
+        valueBuilder(row, key) {
           if (!StringUtils.hasEmpty(row.activity_start_at, row.activity_end_at)) {
             row.activityDate = [
               new Date(row.activity_start_at),
@@ -391,7 +391,7 @@ export const crudOptions = vm => {
             ]
           }
         },
-        valueResolve (row, key) {
+        valueResolve(row, key) {
           if (row.activityDate?.length > 1) {
             row.activity_start_at = util.formatDate(row.activityDate[0])
             row.activity_end_at = util.formatDate(row.activityDate[1])
@@ -430,7 +430,7 @@ export const crudOptions = vm => {
         component: {
 
           on: {
-            click (event) {
+            click(event) {
               // 获取选中行ID
               const title = event.scope.row?.title
               const status = Math.abs(event.props.value - 1)
@@ -450,7 +450,7 @@ export const crudOptions = vm => {
         form: {
           rules: [{ required: true, message: '请选择启用状态' }],
           value: 1,
-          valueResolve (row, key) {
+          valueResolve(row, key) {
             row[key] = row[key] ? 1 : 0
           },
           component: {
@@ -475,7 +475,7 @@ export const crudOptions = vm => {
               data: DICT_YES_NO
             }
           },
-          valueChange (
+          valueChange(
             key,
             value,
             form,
@@ -494,12 +494,15 @@ export const crudOptions = vm => {
           value: 0,
           rules: [{ required: true, message: '请输入收费金额' }],
           component: {
-            show (cmp) {
+            show(cmp) {
               return cmp.form.is_toll
+            },
+            props: {
+              min: '0'
             }
           }
         },
-        valueResolve (row, key) {
+        valueResolve(row, key) {
           if (!row.is_toll) {
             row.toll_amount = 0
           }
@@ -524,7 +527,7 @@ export const crudOptions = vm => {
         form: {
           rules: [{ required: true, message: '请选择活动结束是否公开' }],
           value: 1,
-          valueResolve (row, key) {
+          valueResolve(row, key) {
             row[key] = row[key] ? 1 : 0
           },
           component: {
@@ -551,7 +554,7 @@ export const crudOptions = vm => {
                 limit: 1 // 限制上传文件数量
               },
               returnType: 'key', // 添加和编辑上传提交的值不要url，而只要key
-              buildUrl (value, item) {
+              buildUrl(value, item) {
                 // 私有下载链接，在后端构建cos签名后的url，然后redirect到该地址进行下载
                 return IMGBASEURL + value
               }
@@ -591,7 +594,7 @@ export const crudOptions = vm => {
                 limit: 1 // 限制上传文件数量
               },
               returnType: 'key', // 添加和编辑上传提交的值不要url，而只要key
-              buildUrl (value, item) {
+              buildUrl(value, item) {
                 // 私有下载链接，在后端构建cos签名后的url，然后redirect到该地址进行下载
                 return IMGBASEURL + value
               }
