@@ -498,7 +498,8 @@ export const crudOptions = vm => {
               return cmp.form.is_toll
             },
             props: {
-              min: '0',
+              min: 0,
+              step: 1,
               precision: '2'
             }
           }
@@ -583,6 +584,7 @@ export const crudOptions = vm => {
         type: 'image-uploader',
         disabled: true, // 设置true可以在行展示中隐藏
         width: 200,
+
         form: {
           rules: [{ required: true, message: '请上传活动分享图' }],
           component: {
