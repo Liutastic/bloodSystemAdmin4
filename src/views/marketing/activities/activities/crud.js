@@ -509,10 +509,8 @@ export const crudOptions = vm => {
           }
         },
         valueResolve (row, key) {
-          console.log('row:', row)
-
           if (!row.is_toll) {
-            delete row.toll_amount
+            row.toll_amount = 0
           }
         }
       },

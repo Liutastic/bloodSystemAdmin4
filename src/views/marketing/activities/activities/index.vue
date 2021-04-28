@@ -101,6 +101,7 @@ export default {
         page: query.page,
         per_page: query.per_page
       }
+      if (params.toll_amount) delete params.toll_amount
 
       return api.getActivityList(params)
     },

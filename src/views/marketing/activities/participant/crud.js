@@ -129,6 +129,7 @@ export const crudOptions = {
     {
       title: '活动ID',
       key: ' marketing_activity_id',
+      disabled: true, // 设置true可以在行展示中隐藏
       search: { key: 'marketing_activity_id', disabled: false }
 
     }
