@@ -587,6 +587,7 @@ export const crudOptions = vm => {
 
         form: {
           rules: [{ required: true, message: '请上传活动分享图' }],
+          helper: '图片比例为5:4',
           component: {
             props: {
               btnSize: 'small', // type=file-uploader时按钮的大小
