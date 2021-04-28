@@ -421,6 +421,7 @@ export const crudOptions = vm => {
         },
         search: {
           disabled: false,
+          key: 'is_enable',
           compnent: {
             // 查询 使用选择框组件，并且是可以清除的
             name: 'dict-select'
@@ -490,6 +491,9 @@ export const crudOptions = vm => {
         key: 'toll_amount',
         show: false,
         type: 'number',
+        search: {
+          disabled: true
+        },
         form: {
           value: 0,
           rules: [{ required: true, message: '请输入收费金额' }],
@@ -505,8 +509,10 @@ export const crudOptions = vm => {
           }
         },
         valueResolve (row, key) {
+          console.log('row:', row)
+
           if (!row.is_toll) {
-            row.toll_amount = 0
+            delete row.toll_amount
           }
         }
       },
