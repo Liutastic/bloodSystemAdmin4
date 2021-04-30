@@ -17,6 +17,7 @@
         :options="crud.searchOptions"
         @submit="handleSearch"
       />
+      <crud-toolbar v-bind="_crudToolbarProps" v-on="_crudToolbarListeners" />
     </template>
     <!--:pagination="pagiProps"-->
     <!--       :data="filterData" -->
@@ -26,7 +27,6 @@
       v-on="_crudListeners"
       @edit="handleClick"
     ></d2-crud-x>
-    <!-- <crud-toolbar v-bind="_crudToolbarProps" v-on="_crudToolbarListeners" /> -->
   </d2-container>
 </template>
 
